@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DHIC Portal - Darul Hasanath Islamic College</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg0:#f2f7f4;--bg1:#e9f1ec;--bg2:#ffffff;--bg3:#fbfdfc;--bg4:#e3ede6;--ac:#16a34a;--acd:#15803d;--acg:rgba(22,163,74,.08);--acg2:rgba(22,163,74,.15);--gd:#ca8a04;--gdg:rgba(202,138,4,.08);--gdg2:rgba(202,138,4,.15);--t1:#0a1a0f;--t2:#3d6b4e;--t3:#7aab8e;--bd:#d9e7dd;--dn:#dc2626;--dng:rgba(220,38,38,.07);--inf:#2563eb;--infg:rgba(37,99,235,.07);--pn:#6366f1;--png:rgba(99,102,241,.08);--pk:#db2777;--pkg:rgba(219,39,119,.07);--wn:#d97706;--wng:rgba(217,119,6,.08);--safe-b:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--bg0);color:var(--t1);min-height:100vh;min-height:100dvh;overflow-x:hidden}h1,h2,h3,h4{font-family:'Playfair Display',serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg1)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+html,body{width:100%;height:100%}
+.inp{background:#fff;border:1px solid var(--bd);color:var(--t1);padding:12px 14px;border-radius:10px;width:100%;font-family:'DM Sans',sans-serif;font-size:16px;transition:all .25s;outline:none;-webkit-appearance:none}.inp:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg)}.inp::placeholder{color:var(--t3)}select.inp{cursor:pointer}select.inp option{background:#fff}textarea.inp{resize:vertical;min-height:80px}
+.bp{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;padding:12px 22px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:all .25s;white-space:nowrap}.bp:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.25)}.bp:active{transform:scale(.97)}.bp:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.bs{background:#fff;color:var(--t2);padding:10px 18px;border-radius:10px;border:1px solid var(--bd);font-family:'DM Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;transition:all .25s}.bs:hover{background:var(--bg4);color:var(--t1);border-color:var(--acd)}.bs:active{transform:scale(.97)}
+.bd{background:var(--dng);color:var(--dn);padding:6px 12px;border-radius:8px;border:1px solid rgba(220,38,38,.2);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .2s}.bd:hover{background:rgba(220,38,38,.15)}
+.bgt{background:linear-gradient(135deg,#ca8a04,#eab308);color:#fff;padding:10px 20px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all .25s}.bgt:hover{box-shadow:0 5px 18px rgba(202,138,4,.25);transform:translateY(-1px)}
+.bap{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;padding:7px 14px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:all .2s}.bap:hover{box-shadow:0 4px 14px rgba(22,163,74,.3)}
+.brj{background:var(--dng);color:var(--dn);padding:7px 14px;border-radius:8px;border:1px solid rgba(220,38,38,.2);font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:all .2s}.brj:hover{background:rgba(220,38,38,.15)}
+.bico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);background:#fff;color:var(--t2);cursor:pointer;transition:all .2s;font-size:15px}.bico:hover{background:var(--acg);color:var(--ac);border-color:var(--acd)}
+.sidebar{background:#fff;border-right:1px solid var(--bd);z-index:50;width:250px;flex-shrink:0}
+.ni{display:flex;align-items:center;gap:11px;padding:10px 16px;border-radius:10px;cursor:pointer;transition:all .2s;color:var(--t2);font-size:13.5px;font-weight:500;margin:2px 0;position:relative}.ni:hover{background:var(--acg);color:var(--t1)}.ni.on{background:var(--acg2);color:var(--acd);font-weight:600}.ni.on::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:3px;border-radius:0 3px 3px 0;background:var(--ac)}.ni i{width:20px;text-align:center;font-size:14px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:20px;transition:all .3s;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(16,80,40,.04)}.card:hover{border-color:rgba(22,163,74,.45)}
+.card-glow::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac),var(--gd));opacity:0;transition:opacity .3s}.card-glow:hover::before{opacity:1}
+.mc{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:18px;cursor:pointer;transition:all .3s;box-shadow:0 1px 3px rgba(16,80,40,.04)}.mc:hover{border-color:var(--acd);transform:translateY(-2px);box-shadow:0 10px 25px rgba(16,80,40,.1)}.mc:active{transform:scale(.98)}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}.avs{width:40px;height:40px;font-size:14px}.avm{width:52px;height:52px;font-size:17px}.avl{width:80px;height:80px;font-size:28px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600}.ba{background:var(--gdg2);color:var(--gd);border:1px solid rgba(202,138,4,.2)}.bm{background:var(--acg2);color:var(--acd);border:1px solid rgba(22,163,74,.18)}.bin{background:var(--infg);color:var(--inf);border:1px solid rgba(37,99,235,.2)}.bpn{background:var(--dn);color:#fff;border:1px solid rgba(220,38,38,.3);font-size:9px;padding:1px 6px;min-width:18px;text-align:center;border-radius:10px;font-weight:700}
+.tab{padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent;background:transparent;color:var(--t3);font-family:'DM Sans',sans-serif}.tab:hover{color:var(--t2);background:var(--acg)}.tab.on{background:var(--acg2);color:var(--acd);border-color:rgba(22,163,74,.35)}
+.stg{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:22px;font-size:13px;background:var(--acg);color:var(--acd);border:1px solid rgba(22,163,74,.18);transition:all .2s}.stg:hover{border-color:var(--ac)}.stg .rx{cursor:pointer;opacity:.4;transition:opacity .2s;font-size:11px}.stg .rx:hover{opacity:1}
+.ach{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:16px;transition:all .2s}.ach:hover{border-color:var(--acd)}.ach.pend-ach{opacity:.9;border-left:3px solid var(--wn)}.ach.rej-ach{opacity:.7;border-left:3px solid var(--dn)}.ach.appr-ach{border-left:3px solid var(--ac)}
+.pb{height:6px;background:var(--bg1);border-radius:3px;overflow:hidden}.pf{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.25,.46,.45,.94);background:linear-gradient(90deg,var(--acd),var(--ac))}
+.toast{position:fixed;top:16px;right:16px;padding:13px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transform:translateX(130%);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);max-width:340px;box-shadow:0 10px 30px rgba(16,80,40,.18);display:flex;align-items:center;gap:8px}.toast.show{transform:translateX(0)}.tok{background:#065f46;color:#a7f3d0;border:1px solid #10b981}.terr{background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444}.tinf{background:#1e3a5f;color:#93c5fd;border:1px solid #3b82f6}
+.modal-bg{position:fixed;inset:0;background:rgba(10,26,15,.45);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:12px}.modal-bg.show{display:flex}.modal-box{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:28px;max-width:550px;width:100%;max-height:88vh;overflow-y:auto;animation:mIn .3s ease;box-shadow:0 30px 80px rgba(16,80,40,.2)}@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.fi{animation:fi .35s ease}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fl{display:block;font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.sdot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}.son{background:var(--ac);box-shadow:0 0 8px rgba(22,163,74,.5)}
+.ann-card{border-left:3px solid var(--ac);padding:16px;background:var(--bg3);border-radius:0 12px 12px 0;transition:all .2s}.ann-card:hover{background:var(--bg4)}.ann-card.imp{border-left-color:var(--dn)}
+.evt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.lb-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;transition:all .2s}.lb-row:hover{background:var(--acg)}
+.pts-big{font-size:32px;font-weight:900;font-family:'Playfair Display',serif;background:linear-gradient(135deg,var(--ac),var(--gd));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pts-break{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.pts-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600}
+.appr-item{background:var(--bg3);border:1px solid var(--bd);border-radius:14px;padding:18px;transition:all .2s}.appr-item:hover{border-color:var(--wn)}
+.notif-item{display:flex;gap:12px;padding:12px 14px;border-radius:12px;background:var(--bg3);transition:all .2s}
+.lv{display:flex;flex-direction:column;position:relative;min-height:100vh;min-height:100dvh}
+.home-link{display:inline-flex;align-items:center;gap:7px;margin:22px 28px 0;width:max-content;font:700 11px 'DM Sans',sans-serif;letter-spacing:1.8px;color:var(--t2);background:none;border:none;cursor:pointer;transition:color .2s;text-transform:uppercase}.home-link:hover{color:var(--acd)}
+.split{flex:1;display:flex;align-items:center;justify-content:space-between;gap:44px;padding:12px 5vw 44px;max-width:1280px;margin:0 auto;width:100%}
+.brand-side{flex:1;max-width:520px}
+.logo-row{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+.logo-badge{width:56px;height:56px;border-radius:17px;background:linear-gradient(135deg,var(--acd),var(--ac));display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;box-shadow:0 10px 24px rgba(22,163,74,.3);flex-shrink:0}
+.logo-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;color:var(--t1);line-height:1.2}
+.logo-sub{font-size:10px;font-weight:700;letter-spacing:2.6px;color:var(--t3);text-transform:uppercase;margin-top:2px}
+.brand-h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:50px;line-height:1.12;font-weight:800;color:var(--t1);margin-bottom:18px;letter-spacing:-1px}
+.brand-h1 .hl{color:var(--ac)}
+.brand-p{font-size:15.5px;line-height:1.65;color:var(--t2);margin-bottom:32px;max-width:400px}
+.stat-row{display:flex;gap:14px;flex-wrap:wrap}
+.stat-chip{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px 22px;min-width:118px;box-shadow:0 1px 3px rgba(16,80,40,.05)}
+.stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--acd)}
+.stat-lbl{font-size:9px;font-weight:700;letter-spacing:1.6px;color:var(--t3);text-transform:uppercase;margin-top:3px}
+.blob{position:absolute;left:-150px;bottom:-170px;width:480px;height:480px;background:radial-gradient(circle,rgba(22,163,74,.13),transparent 65%);border-radius:50%;pointer-events:none}
+.card-side{flex:1;display:flex;justify-content:flex-end;max-width:480px;width:100%}
+.login-card2{background:#fff;border-radius:26px;box-shadow:0 24px 70px rgba(16,80,40,.14);padding:38px 34px;width:100%;max-width:420px;position:relative;z-index:2}
+.lc2-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--t1)}
+.lc2-sub{font-size:13.5px;color:var(--t3);margin:5px 0 24px}
+.lc2-label{display:block;font-size:10.5px;font-weight:700;letter-spacing:1.6px;color:var(--t2);text-transform:uppercase;margin-bottom:7px}
+.adm-lbl{display:block;font-size:13.5px;font-weight:600;color:var(--t1);margin-bottom:7px}
+.inp-wrap{position:relative}
+.inp-wrap>.ic{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:13px;pointer-events:none}
+.eye-t{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:var(--t3);cursor:pointer;font-size:13px;transition:color .2s}.eye-t:hover{color:var(--acd)}
+.lc2-inp{width:100%;background:var(--bg0);border:1.5px solid var(--bd);border-radius:13px;padding:13px 42px 13px 42px;font:400 14.5px 'DM Sans',sans-serif;color:var(--t1);outline:none;transition:all .25s;-webkit-appearance:none}
+.lc2-inp:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg);background:#fff}
+.rem-row{display:flex;align-items:center;gap:8px;margin:16px 0 20px;font-size:13.5px;color:var(--t2);cursor:pointer}
+.rem-row input{width:16px;height:16px;accent-color:var(--ac);cursor:pointer}
+.lc2-btn{width:100%;background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border:none;border-radius:999px;padding:15px;font:600 15px 'DM Sans',sans-serif;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:9px}
+.lc2-btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(22,163,74,.35)}
+.lc2-btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.or-row{display:flex;align-items:center;gap:14px;margin:20px 0;color:var(--t3);font-size:11px;font-weight:700;letter-spacing:2px}
+.or-row::before,.or-row::after{content:'';flex:1;height:1px;background:var(--bd)}
+.ghost-btn{width:100%;background:#fff;border:1.5px solid var(--bd);border-radius:999px;padding:13px;font:600 14px 'DM Sans',sans-serif;color:var(--t1);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:9px}
+.ghost-btn:hover{border-color:var(--acd);color:var(--acd);background:var(--acg)}
+.swap-row{text-align:center;margin-top:22px;font-size:13px;color:var(--t3)}
+.swap-link{color:var(--acd);font-weight:700;cursor:pointer;background:none;border:none;font:700 13px 'DM Sans',sans-serif;padding:0}.swap-link:hover{text-decoration:underline}
+.l-err{margin-top:12px;text-align:center;font-size:13px;color:var(--dn);font-weight:500}
+.lv-admin{background:linear-gradient(135deg,#1c8a62,#2fae7f)}
+.lv-admin .home-link{color:rgba(255,255,255,.85)}.lv-admin .home-link:hover{color:#fff}
+.lv-admin .logo-name{color:#fff}.lv-admin .logo-sub{color:rgba(255,255,255,.75)}
+.lv-admin .brand-p{color:rgba(255,255,255,.92)}
+.adm-cluster{position:relative;height:150px;margin-bottom:14px;max-width:230px}
+.adm-semi{position:absolute;top:0;left:6px;width:96px;height:48px;border-radius:96px 96px 0 0;background:rgba(255,255,255,.22)}
+.adm-dots{position:absolute;top:66px;left:6px;width:104px;height:56px;background-image:radial-gradient(rgba(255,255,255,.42) 2.4px,transparent 2.4px);background-size:17px 17px}
+.adm-bar{position:absolute;width:26px;border-radius:13px;background:rgba(255,255,255,.26)}
+.adm-circ{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);pointer-events:none}
+#pg-land{display:none;position:relative;min-height:100vh;min-height:100dvh;background:var(--bg0);overflow:hidden;flex-direction:column}
+.ld-wrap{flex:1;display:flex;flex-direction:column;max-width:1280px;margin:0 auto;width:100%;padding:0 5vw}
+.ld-nav{display:flex;align-items:center;gap:12px;padding:22px 0}
+.ld-logo-badge{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--acd),var(--ac));display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;box-shadow:0 8px 20px rgba(22,163,74,.28)}
+.ld-logo-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--t1)}
+.ld-main{flex:1;display:flex;align-items:center;justify-content:space-between;gap:48px;padding:24px 0 40px}
+.ld-left{flex:1;max-width:560px}
+.ld-pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bd);border-radius:999px;padding:7px 16px;font:600 12px 'DM Sans',sans-serif;color:var(--acd);box-shadow:0 1px 3px rgba(16,80,40,.05);margin-bottom:22px}
+.ld-pill i{font-size:11px}
+.ld-h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:60px;line-height:1.08;font-weight:800;color:var(--t1);letter-spacing:-1.5px;margin-bottom:20px}
+.ld-h1 .grad{background:linear-gradient(90deg,var(--ac),#2563eb);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ld-p{font-size:16px;line-height:1.7;color:var(--t2);max-width:460px;margin-bottom:30px}
+.ld-cta-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.ld-cta{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border:none;border-radius:999px;padding:15px 30px;font:600 15px 'DM Sans',sans-serif;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:10px}
+.ld-cta:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(22,163,74,.35)}
+.ld-rank-link{background:none;border:none;font:600 15px 'DM Sans',sans-serif;color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 4px;transition:color .2s}.ld-rank-link:hover{color:var(--acd)}
+.ld-stats{display:flex;gap:44px;flex-wrap:wrap;padding-top:26px;border-top:1px solid var(--bd)}
+.ld-stat-n{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--t1)}
+.ld-stat-l{font-size:11.5px;color:var(--t3);margin-top:3px}
+.ld-right{flex:1;display:flex;flex-direction:column;gap:16px;max-width:560px;width:100%}
+.ld-card{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid var(--bd);border-radius:18px;padding:22px 24px;cursor:pointer;transition:all .25s;box-shadow:0 1px 4px rgba(16,80,40,.05);text-align:left;width:100%}
+.ld-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(16,80,40,.12);border-color:rgba(22,163,74,.4)}
+.ld-ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ld-ico.ind{background:var(--png);color:var(--pn)}
+.ld-ico.grn{background:var(--acg2);color:var(--acd)}
+.ld-ico.gld{background:var(--gdg2);color:var(--gd)}
+.ld-card-t{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:800;color:var(--t1)}
+.ld-card-d{font-size:12.5px;color:var(--t3);margin-top:3px}
+.ld-arrow{margin-left:auto;color:var(--t3);font-size:13px;transition:all .25s}
+.ld-card:hover .ld-arrow{color:var(--acd);transform:translateX(3px)}
+.ld-foot{text-align:center;font-size:12.5px;color:var(--t3);padding:20px 0 26px;border-top:1px solid var(--bd);margin-top:8px}
+/* ===== EXTRA SPACE BETWEEN CARDS ===== */
+.grid.gap-2{gap:14px!important}
+.grid.gap-3{gap:22px!important}
+.grid.gap-4{gap:26px!important}
+.grid.gap-2\.5{gap:16px!important}
+.mb-2{margin-bottom:10px!important}
+.mb-3{margin-bottom:14px!important}
+.mb-4{margin-bottom:22px!important}
+.mb-5{margin-bottom:30px!important}
+.mb-6{margin-bottom:34px!important}
+.space-y-1>*+*{margin-top:8px!important}
+.space-y-2>*+*{margin-top:14px!important}
+.space-y-2\.5>*+*{margin-top:16px!important}
+.space-y-3>*+*{margin-top:18px!important}
+@media(min-width:769px){.sidebar{display:flex;flex-direction:column;position:sticky;top:0;height:100vh}.mob-h{display:none!important}.mob-nav{display:none!important}#mc{padding:28px 32px;max-width:1200px;margin:0 auto}}
+@media(max-width:960px){.ld-main{flex-direction:column;align-items:flex-start;padding:16px 0 32px;gap:32px}.ld-h1{font-size:38px;letter-spacing:-.5px}.ld-p{font-size:14.5px;margin-bottom:24px}.ld-stats{gap:26px}.ld-stat-n{font-size:21px}.brand-h1{font-size:33px;margin-bottom:12px;letter-spacing:-.5px}.brand-p{margin-bottom:22px;font-size:14px}.logo-row{margin-bottom:20px}.card-side{justify-content:center;max-width:460px}.login-card2{padding:28px 22px}.stat-row{gap:10px}.stat-chip{flex:1;min-width:0;padding:12px 10px;text-align:center}.adm-cluster,.adm-circ{display:none}.home-link{margin:16px 18px 0}}
+@media(max-width:768px){.sidebar{display:none!important}.app-wrap{flex-direction:column}.main-area{width:100%;padding-bottom:calc(72px + var(--safe-b))}.mob-h{display:flex!important;position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);padding:10px 14px;align-items:center;gap:10px}.mob-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);z-index:50;padding:6px 6px calc(6px + var(--safe-b));gap:2px;justify-content:space-around;box-shadow:0 -4px 16px rgba(16,80,40,.06)}.mob-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border:none;background:none;color:var(--t3);font-size:9px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:10px;transition:all .2s}.mob-nav button i{font-size:18px;margin-bottom:1px}.mob-nav button.on{color:var(--acd);background:var(--acg)}#mc{padding:16px 14px;max-width:100%;padding-bottom:16px}.card{padding:16px;border-radius:12px}.mc{padding:14px;border-radius:12px}.stat-grid{grid-template-columns:1fr 1fr!important}.bp,.bs,.bgt{min-height:44px}.tab{min-height:40px;font-size:12px;padding:8px 14px}.inp{font-size:16px;min-height:46px}.pts-big{font-size:26px}}
+#pg-app{width:100%;min-height:100vh;min-height:100dvh}.app-wrap{display:flex;width:100%;min-height:100vh;min-height:100dvh}.main-area{flex:1;min-height:100vh;min-height:100dvh;overflow-y:auto;background:var(--bg0);width:100%}
+</style>
+</head>
+<body>
+
+<!-- EARLY GUARD -->
+<script>
+window.__pgBanner=function(msg){var b=document.getElementById('pg-err-banner');if(!b){b=document.createElement('div');b.id='pg-err-banner';b.style.cssText='position:fixed;bottom:8px;left:8px;right:8px;background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;border-radius:10px;padding:10px 14px;font:12px monospace;z-index:99999;max-height:150px;overflow:auto;white-space:pre-wrap';(document.body||document.documentElement).appendChild(b);}b.style.display='block';b.textContent+='[Portal] '+msg+'\n';};
+window.onerror=function(m,s,l){try{window.__pgBanner('Error: '+m+' (line '+l+')');}catch(e){}};
+window.__pgOK=false;
+setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never started — the saved file is likely TRUNCATED or corrupted. Re-copy the ENTIRE code (the file must end with </html>) and save again as index.html.');},1500);
+</script>
+
+<!-- LANDING (HOME) -->
+<div id="pg-land">
+<div class="ld-wrap">
+  <div class="ld-nav">
+    <div class="ld-logo-badge"><i class="fas fa-graduation-cap"></i></div>
+    <div class="ld-logo-name">DHIC Portal</div>
+  </div>
+  <div class="ld-main">
+    <div class="ld-left">
+      <div class="ld-pill"><i class="fas fa-wand-magic-sparkles" style="color:var(--ac)"></i> Next Generation Academic Management</div>
+      <h1 class="ld-h1">Empowering<br><span class="grad">Excellence</span></h1>
+      <p class="ld-p">Streamline administration, track student performance, and celebrate achievements with our integrated e-Governance platform.</p>
+      <div class="ld-cta-row">
+        <button class="ld-cta" onclick="switchPortal('member')">Get Started <i class="fas fa-arrow-right"></i></button>
+        <button class="ld-rank-link" onclick="showPublicLB()">View Public Rankings</button>
+      </div>
+      <div class="ld-stats">
+        <div><div class="ld-stat-n">100%</div><div class="ld-stat-l">Digital Workflow</div></div>
+        <div><div class="ld-stat-n">24/7</div><div class="ld-stat-l">Access Anywhere</div></div>
+        <div><div class="ld-stat-n">Real-time</div><div class="ld-stat-l">Updates</div></div>
+      </div>
+    </div>
+    <div class="ld-right">
+      <button class="ld-card" onclick="switchPortal('admin')">
+        <div class="ld-ico ind"><i class="fas fa-people-group"></i></div>
+        <div><div class="ld-card-t">Staff Portal</div><div class="ld-card-d">Manage duties, reports, and academic records.</div></div>
+        <i class="fas fa-arrow-right ld-arrow"></i>
+      </button>
+      <button class="ld-card" onclick="switchPortal('member')">
+        <div class="ld-ico grn"><i class="fas fa-graduation-cap"></i></div>
+        <div><div class="ld-card-t">Student Portal</div><div class="ld-card-d">View progress, marks, and personal achievements.</div></div>
+        <i class="fas fa-arrow-right ld-arrow"></i>
+      </button>
+      <button class="ld-card" onclick="showPublicLB()">
+        <div class="ld-ico gld"><i class="fas fa-trophy"></i></div>
+        <div><div class="ld-card-t">Public Leaderboard</div><div class="ld-card-d">Check the top performers and hall of fame.</div></div>
+        <i class="fas fa-arrow-right ld-arrow"></i>
+      </button>
+    </div>
+  </div>
+  <div class="ld-foot">© <span id="ld-year">2026</span> Darul Hasanath Islamic College.</div>
+</div>
+</div>
+
+<!-- LOGIN: STUDENT + STAFF -->
+<div id="pg-login" style="display:none">
+  <div id="lv-member" class="lv">
+    <div class="blob"></div>
+    <button class="home-link" onclick="goLand()"><i class="fas fa-arrow-left"></i> Home</button>
+    <div class="split">
+      <div class="brand-side">
+        <div class="logo-row">
+          <div class="logo-badge"><i class="fas fa-graduation-cap"></i></div>
+          <div><div class="logo-name">DHIC Portal</div><div class="logo-sub">Students Portal</div></div>
+        </div>
+        <h1 class="brand-h1">Your Success Journey<br><span class="hl">Starts Here.</span></h1>
+        <p class="brand-p">Track your achievements, view your marks, and compete on the leaderboard with fellow scholars.</p>
+        <div class="stat-row">
+          <div class="stat-chip"><div class="stat-num" id="st-m">—</div><div class="stat-lbl">Active Students</div></div>
+          <div class="stat-chip"><div class="stat-num" id="st-a">—</div><div class="stat-lbl">Achievements</div></div>
+          <div class="stat-chip"><div class="stat-num" id="st-p">∞</div><div class="stat-lbl">Merit Points</div></div>
+        </div>
+      </div>
+      <div class="card-side">
+        <div class="login-card2">
+          <div class="lc2-title">Hello! Welcome back 👋</div>
+          <div class="lc2-sub">Sign in to continue your journey</div>
+          <form onsubmit="event.preventDefault();doLogin('member');">
+            <label class="lc2-label">Username</label>
+            <div class="inp-wrap"><i class="fas fa-user ic"></i><input type="text" id="l-user" class="lc2-inp" placeholder="Enter your username" autocomplete="off"></div>
+            <label class="lc2-label" style="margin-top:16px">Password</label>
+            <div class="inp-wrap"><i class="fas fa-lock ic"></i><input type="password" id="l-pass" class="lc2-inp" placeholder="Enter your password"><i class="fas fa-eye eye-t" id="pw-ico" onclick="togglePw('l-pass','pw-ico')"></i></div>
+            <label class="rem-row"><input type="checkbox" id="l-rem"> Remember me</label>
+            <button type="submit" class="lc2-btn" id="l-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+          </form>
+          <div id="l-err" class="l-err" style="display:none"></div>
+          <div class="or-row">OR</div>
+          <button class="ghost-btn" onclick="showPublicLB()"><i class="fas fa-trophy" style="color:var(--ac)"></i> View Leaderboard</button>
+          <div class="swap-row">Are you staff? <button class="swap-link" onclick="switchPortal('admin')">Staff Portal →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="lv-admin" class="lv lv-admin" style="display:none">
+    <div class="adm-circ" style="width:250px;height:250px;right:-90px;top:10%"></div>
+    <div class="adm-circ" style="width:160px;height:160px;right:70px;bottom:-60px;background:rgba(255,255,255,.10)"></div>
+    <div style="position:absolute;width:16px;height:16px;border-radius:50%;background:#8fe3c9;right:78px;top:58%;pointer-events:none"></div>
+    <button class="home-link" onclick="goLand()"><i class="fas fa-arrow-left"></i> Back to Home</button>
+    <div class="split">
+      <div class="brand-side">
+        <div class="adm-cluster">
+          <div class="adm-semi"></div>
+          <div class="adm-dots"></div>
+          <div class="adm-bar" style="left:6px;top:66px;height:118px"></div>
+          <div class="adm-bar" style="left:44px;top:96px;height:88px"></div>
+        </div>
+        <div class="logo-row">
+          <div class="logo-badge" style="background:rgba(255,255,255,.2);box-shadow:none"><i class="fas fa-graduation-cap"></i></div>
+          <div><div class="logo-name">DHIC Portal</div><div class="logo-sub">Staff Portal</div></div>
+        </div>
+        <p class="brand-p">Manage your duties, track reports, and collaborate with your team efficiently</p>
+      </div>
+      <div class="card-side">
+        <div class="login-card2">
+          <div class="lc2-title" style="text-align:center">Hello! Welcome back</div>
+          <div class="lc2-sub" style="text-align:center">Sign in to continue</div>
+          <form onsubmit="event.preventDefault();doLogin('admin');">
+            <label class="adm-lbl">Email or Username</label>
+            <div class="inp-wrap"><i class="fas fa-envelope ic"></i><input type="text" id="a-user" class="lc2-inp" placeholder="Enter email or username" autocomplete="off"></div>
+            <label class="adm-lbl" style="margin-top:16px">Password</label>
+            <div class="inp-wrap"><i class="fas fa-lock ic"></i><input type="password" id="a-pass" class="lc2-inp" placeholder="Enter your password"><i class="fas fa-eye eye-t" id="apw-ico" onclick="togglePw('a-pass','apw-ico')"></i></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 20px">
+              <label class="rem-row" style="margin:0"><input type="checkbox" id="a-rem"> Remember me</label>
+              <button type="button" class="swap-link" onclick="showResetInfo()">Reset Password?</button>
+            </div>
+            <button type="submit" class="lc2-btn" id="a-btn">Login</button>
+          </form>
+          <div id="a-err" class="l-err" style="display:none"></div>
+          <div class="or-row">or</div>
+          <div class="swap-row">Are you a student? <button class="swap-link" onclick="switchPortal('member')">Student Portal</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="pg-app" style="display:none">
+<div class="app-wrap">
+<aside id="sb" class="sidebar">
+<div class="p-4 border-b" style="border-color:var(--bd)"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--acd),var(--ac))"><i class="fas fa-graduation-cap text-white text-xs"></i></div><div class="flex-1"><div class="font-bold text-sm">DHIC Portal</div><div class="flex items-center gap-1.5 text-xs" style="color:var(--t3)"><span class="sdot son"></span><span id="mode-lbl">Connecting…</span></div></div><button class="bico" style="position:relative" onclick="showNotifs()"><i class="fas fa-bell"></i><span id="nb1" class="bpn" style="position:absolute;top:-5px;right:-5px;display:none">0</span></button></div></div>
+<div class="p-3 border-b" style="border-color:var(--bd)"><div class="flex items-center gap-2.5"><div id="sb-av" class="av avs"></div><div class="min-w-0"><div id="sb-nm" class="font-semibold text-sm truncate"></div><div id="sb-rl" class="badge mt-0.5"></div></div></div></div>
+<nav class="flex-1 p-2 overflow-y-auto" id="sb-nav"></nav>
+<div class="p-2 border-t" style="border-color:var(--bd)"><div class="ni" onclick="doLogout()" style="color:var(--dn)"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>
+</aside>
+<div class="main-area"><div class="mob-h"><button class="bico" onclick="nav('dashboard')"><i class="fas fa-bars"></i></button><span class="font-semibold text-sm flex-1">DHIC Portal</span><button class="bico" style="position:relative" onclick="showNotifs()"><i class="fas fa-bell"></i><span id="nb2" class="bpn" style="position:absolute;top:-5px;right:-5px;display:none">0</span></button></div><div id="mc"></div></div>
+</div>
+<div class="mob-nav" id="mob-nav"></div>
+</div>
+
+<div id="toasts"></div>
+<div id="modal-bg" class="modal-bg" onclick="if(event.target===this)cmodal()"><div id="modal-box" class="modal-box"></div></div>
+
+<script>
+window.__pgOK=true;
+function showErrBanner(msg){try{window.__pgBanner(msg);}catch(e){}}
+
+/* ===== SAFE STORAGE (local + session) ===== */
+var _MEM={};
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return (_MEM[k]!==undefined)?_MEM[k]:null;}}
+function lsSet(k,val){try{localStorage.setItem(k,val);return;}catch(e){}_MEM[k]=val;}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}delete _MEM[k];}
+function ssGet(k){try{return sessionStorage.getItem(k);}catch(e){return (_MEM['s_'+k]!==undefined)?_MEM['s_'+k]:null;}}
+function ssSet(k,val){try{sessionStorage.setItem(k,val);return;}catch(e){}_MEM['s_'+k]=val;}
+function ssDel(k){try{sessionStorage.removeItem(k);}catch(e){}delete _MEM['s_'+k];}
+
+/* ===== FIREBASE CLOUD DATABASE (academic-fath) ===== */
+var FB_CONFIG={apiKey:"AIzaSyCI1zUx1u0pWpRjPZha-pVse8wnfQci8lo",authDomain:"academic-fath.firebaseapp.com",projectId:"academic-fath",storageBucket:"academic-fath.firebasestorage.app",messagingSenderId:"564402314324",appId:"1:564402314324:web:badbf2c006a84bb30a61c1",measurementId:"G-89EHVFXPKJ"};
+var CLOUD=false,DB=null;
+try{if(typeof firebase!=='undefined'){firebase.initializeApp(FB_CONFIG);DB=firebase.firestore();CLOUD=true;}}catch(e){CLOUD=false;}
+
+/* ===== CONFIG & DATA ===== */
+var DEFAULT_ADNOS=['791','806','807','0808','089','810','811','812','813','814','815','816','817','818','820','821','822','823','824','825','826','827','828','829','830','831','832','833','834','835','836','849'];
+var ACO=['#22c55e','#3b82f6','#8b5cf6','#ec4899','#f59e0b','#14b8a6','#f97316','#06b6d4','#6366f1','#84cc16'];
+var NAV=[{id:'dashboard',icon:'fa-th-large',label:'Dashboard'},{id:'profile',icon:'fa-user',label:'My Profile'},{id:'cce',icon:'fa-clipboard-check',label:'My Marks'},{id:'members',icon:'fa-users',label:'Members'},{id:'announcements',icon:'fa-bullhorn',label:'Announcements'},{id:'leaderboard',icon:'fa-ranking-star',label:'Leaderboard'},{id:'events',icon:'fa-calendar-alt',label:'Events'},{id:'settings',icon:'fa-cog',label:'Settings'}];
+var ADMIN_NAV=[{id:'admin-mem',icon:'fa-user-shield',label:'Manage Members'},{id:'admin-add',icon:'fa-user-plus',label:'Add / Remove'},{id:'admin-appr',icon:'fa-check-double',label:'Approvals',badge:true},{id:'admin-subj',icon:'fa-book-open',label:'CCE Subjects'},{id:'admin-cce',icon:'fa-pen-to-square',label:'Enter CCE Marks'},{id:'admin-ann',icon:'fa-bullhorn',label:'Post Announcement'},{id:'admin-evt',icon:'fa-calendar-plus',label:'Manage Events'}];
+var CAT_PTS={Academic:15,Sports:12,Arts:10,Community:10,Religious:10,Other:8};
+var CAT_ICO={Academic:'fa-book',Sports:'fa-running',Arts:'fa-palette',Community:'fa-hands-helping',Religious:'fa-mosque',Other:'fa-star'};
+var CAT_CLR={Academic:'var(--ac)',Sports:'var(--gd)',Arts:'var(--pk)',Community:'var(--inf)',Religious:'var(--pn)',Other:'var(--t2)'};
+
+var CU=null,CV='dashboard',VA=null,PT='details',CCE_SEL=null,cache={},CREDENTIALS={},ALL_ADNOS=[].concat(DEFAULT_ADNOS);
+try{var _sa=lsGet('pu_adnos');if(_sa){var _al=JSON.parse(_sa);if(_al&&_al.length)ALL_ADNOS=_al;}}catch(e){}
+if(!ALL_ADNOS.length){ALL_ADNOS=[].concat(DEFAULT_ADNOS);lsDel('pu_adnos');}
+CREDENTIALS['ADMINISTRATOR']='Anshif@29';
+for(var _i=0;_i<ALL_ADNOS.length;_i++){CREDENTIALS[ALL_ADNOS[_i]]=ALL_ADNOS[_i]+'@fath';}
+
+function seedAnnArr(){return[{title:'Welcome to DHIC Portal',content:'Complete your profiles and add achievements to earn points. You can also submit your own CCE marks from My Marks — the Administrator will approve them.',important:true,date:new Date().toLocaleDateString('en-GB'),author:'Administrator'}];}
+function seedEvtArr(){var n=new Date();return[{id:'evt_seed1',title:'Annual Day',date:n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-15',time:'09:00',venue:'Auditorium',description:'Annual celebration',color:'#ca8a04'}];}
+function seedSubArr(){return[{id:'sbj1',name:'Quran',max:50},{id:'sbj2',name:'Arabic',max:50},{id:'sbj3',name:'Islamic Studies',max:50},{id:'sbj4',name:'Malayalam',max:50},{id:'sbj5',name:'English',max:50},{id:'sbj6',name:'Mathematics',max:50}];}
+function defU(id){return{password:id==='ADMINISTRATOR'?'Anshif@29':id+'@fath',role:id==='ADMINISTRATOR'?'admin':'member',details:{fullName:id==='ADMINISTRATOR'?'Administrator':'',dob:'',class:'',guardian:'',motherName:'',phone:'',address:'',email:'',bloodGroup:''},skills:[],achievements:[],cce:{}};}
+
+/* ===== BOOT (cloud first, local fallback) ===== */
+var bootReady=Promise.resolve();
+function seedAll(){
+  var ids=['ADMINISTRATOR'].concat(ALL_ADNOS);
+  for(var i=0;i<ids.length;i++){if(!lsGet('pu_'+ids[i]))lsSet('pu_'+ids[i],JSON.stringify(defU(ids[i])));}
+  if(!lsGet('pu_ann'))lsSet('pu_ann',JSON.stringify(seedAnnArr()));
+  if(!lsGet('pu_evts'))lsSet('pu_evts',JSON.stringify(seedEvtArr()));
+  if(!lsGet('pu_subjects'))lsSet('pu_subjects',JSON.stringify(seedSubArr()));
+}
+if(CLOUD){
+bootReady=(function(){
+  return Promise.all([
+    DB.collection('pu_meta').doc('adnos').get(),
+    DB.collection('pu_meta').doc('ann').get(),
+    DB.collection('pu_meta').doc('evts').get(),
+    DB.collection('pu_meta').doc('subjects').get()
+  ]).then(function(docs){
+    var b=DB.batch(),w=false;
+    if(docs[0].exists&&docs[0].data().v&&docs[0].data().v.length){ALL_ADNOS=docs[0].data().v;}
+    else{ALL_ADNOS=[].concat(DEFAULT_ADNOS);b.set(DB.collection('pu_meta').doc('adnos'),{v:ALL_ADNOS});w=true;}
+    for(var i=0;i<ALL_ADNOS.length;i++)if(CREDENTIALS[ALL_ADNOS[i]]===undefined)CREDENTIALS[ALL_ADNOS[i]]=ALL_ADNOS[i]+'@fath';
+    if(!(docs[1].exists&&docs[1].data().v)){b.set(DB.collection('pu_meta').doc('ann'),{v:seedAnnArr()});w=true;}
+    if(!(docs[2].exists&&docs[2].data().v)){b.set(DB.collection('pu_meta').doc('evts'),{v:seedEvtArr()});w=true;}
+    if(!(docs[3].exists&&docs[3].data().v)){b.set(DB.collection('pu_meta').doc('subjects'),{v:seedSubArr()});w=true;}
+    return DB.collection('pu_users').get().then(function(s){
+      var have={};s.forEach(function(d){have[d.id]=true;cache[d.id]=d.data();});
+      ALL_ADNOS.concat(['ADMINISTRATOR']).forEach(function(id){if(!have[id]){b.set(DB.collection('pu_users').doc(id),defU(id));w=true;}});
+      if(w)return b.commit().catch(function(){});
+    });
+  }).catch(function(e){
+    CLOUD=false;setModeLabels();seedAll();
+    showErrBanner('Cloud init failed ('+((e&&e.code)||e.message||e)+') — check Firestore is created & Rules allow reads. Running in Local Mode for now.');
+  });
+})();
+}else{seedAll();}
+setModeLabels();
+try{updateLoginStats();}catch(e){}
+if(CLOUD){bootReady.then(function(){try{updateLoginStats();}catch(e){}}).catch(function(){});}
+try{var _saved=lsGet('portal_cur')||ssGet('portal_cur');if(_saved){
+  if(CLOUD){bootReady.then(function(){
+      if(!CLOUD){var _s2=loadUSync(_saved);if(_s2&&_s2.password){CREDENTIALS[_saved]=_s2.password;CU=_saved;showApp();}return;}
+      return DB.collection('pu_users').doc(_saved).get().then(function(d){if(d.exists&&d.data().password){cache[_saved]=d.data();CREDENTIALS[_saved]=d.data().password;CU=_saved;attachRealtime();showApp();}});
+    }).catch(function(){});}
+  else{var _su=loadUSync(_saved);if(_su&&_su.password){CREDENTIALS[_saved]=_su.password;CU=_saved;showApp();}}
+}}catch(e){try{lsDel('portal_cur');ssDel('portal_cur');}catch(e2){}CU=null;}
+try{document.getElementById('ld-year').textContent=new Date().getFullYear();}catch(e){}
+
+function setModeLabels(){var t=CLOUD?'Cloud Synced':'Local Mode';var a=document.getElementById('mode-lbl');if(a)a.textContent=t;}
+
+/* ===== CORE DATA LAYER ===== */
+function cloudSetUser(id,d){return DB.collection('pu_users').doc(String(id)).set(d).catch(function(e){try{showErrBanner('Cloud save failed: '+((e&&e.code)||e.message));}catch(e2){}});}
+function cloudSetMeta(k,val){return DB.collection('pu_meta').doc(k).set({v:val}).catch(function(){});}
+function loadU(id){if(CLOUD)return DB.collection('pu_users').doc(String(id)).get().then(function(d){var u=d.exists?d.data():null;if(u)cache[id]=u;return u||loadUSync(id);}).catch(function(){return loadUSync(id);});return Promise.resolve(loadUSync(id));}
+function loadUSync(id){if(cache[id])return cache[id];try{var ls=lsGet('pu_'+id);if(ls){var p=JSON.parse(ls);if(p&&typeof p==='object'&&p.details){cache[id]=p;return p;}}}catch(e){}var d=defU(id);cache[id]=d;lsSet('pu_'+id,JSON.stringify(d));return d;}
+function saveU(id,data){cache[id]=data;lsSet('pu_'+id,JSON.stringify(data));if(CLOUD)cloudSetUser(id,data);}
+function loadAll(){if(CLOUD){return DB.collection('pu_users').get().then(function(s){var users={};s.forEach(function(d){users[d.id]=d.data();cache[d.id]=d.data();});return users;}).catch(function(){return loadAllSync();});}return Promise.resolve(loadAllSync());}
+function loadAllSync(){var users={};var ids=['ADMINISTRATOR'].concat(ALL_ADNOS);for(var i=0;i<ids.length;i++)users[ids[i]]=loadUSync(ids[i]);return users;}
+function loadAnn(){return Promise.resolve(loadAnnSync());}
+function loadAnnSync(){try{var v=JSON.parse(lsGet('pu_ann')||'[]');return v||[];}catch(e){return[];}}
+function saveAnn(list){lsSet('pu_ann',JSON.stringify(list));if(CLOUD)cloudSetMeta('ann',list);}
+function loadEvts(){return Promise.resolve(loadEvtsSync());}
+function loadEvtsSync(){var l=[];try{l=JSON.parse(lsGet('pu_evts')||'[]');}catch(e){}if(!l||!l.length)l=[];for(var i=0;i<l.length;i++)if(!l[i].id)l[i].id='evt_x'+i;return l;}
+function saveEvts(list){lsSet('pu_evts',JSON.stringify(list));if(CLOUD)cloudSetMeta('evts',list);}
+function loadSubs(){try{var v=JSON.parse(lsGet('pu_subjects')||'[]');return v||[];}catch(e){return[];}}
+function saveSubs(list){lsSet('pu_subjects',JSON.stringify(list));if(CLOUD)cloudSetMeta('subjects',list);}
+
+/* ===== NOTIFICATIONS ===== */
+function loadNotif(id){try{var v=JSON.parse(lsGet('pu_nt_'+id)||'[]');return v||[];}catch(e){return[];}}
+function saveNotif(id,l){lsSet('pu_nt_'+id,JSON.stringify(l));if(CLOUD)DB.collection('pu_nt').doc(String(id)).set({list:l}).catch(function(){});}
+function pushNotif(id,msg,type){var l=loadNotif(id);l.unshift({msg:msg,type:type||'inf',date:new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),read:false});l=l.slice(0,50);saveNotif(id,l);if(id===CU)updateNotifDot();}
+function unreadCount(id){var l=loadNotif(id),c=0;for(var i=0;i<l.length;i++)if(!l[i].read)c++;return c;}
+function updateNotifDot(){if(!CU)return;var n=unreadCount(CU);var bs=[document.getElementById('nb1'),document.getElementById('nb2')];for(var i=0;i<bs.length;i++){var b=bs[i];if(!b)continue;if(n>0){b.style.display='inline-flex';b.textContent=n;}else{b.style.display='none';}}}
+function showNotifs(){var l=loadNotif(CU);var h='<div class="flex items-center justify-between mb-4"><h3 class="text-lg font-bold"><i class="fas fa-bell mr-2" style="color:var(--gd)"></i>Notifications</h3>'+(l.length>0?'<button class="bs" onclick="markAllRead()"><i class="fas fa-check mr-1"></i>Mark read</button>':'')+'</div>';
+if(l.length===0)h+='<div class="text-center py-8" style="color:var(--t3)"><i class="fas fa-inbox text-3xl mb-2"></i><br>No notifications yet</div>';
+else{h+='<div class="space-y-2">';for(var i=0;i<l.length;i++){var n=l[i];var ic=n.type==='ok'?'fa-check-circle':n.type==='err'?'fa-times-circle':'fa-info-circle';var cl=n.type==='ok'?'var(--ac)':n.type==='err'?'var(--dn)':'var(--inf)';var bg=n.type==='ok'?'var(--acg)':n.type==='err'?'var(--dng)':'var(--infg)';h+='<div class="notif-item" style="background:'+bg+'"><i class="fas '+ic+' mt-0.5" style="color:'+cl+'"></i><div class="flex-1 min-w-0"><div class="text-sm">'+n.msg+'</div><div class="text-xs mt-1" style="color:var(--t3)">'+n.date+'</div></div></div>';}h+='</div>';}
+openModal(h);
+var ch=false;for(var j=0;j<l.length;j++){if(!l[j].read){l[j].read=true;ch=true;}}
+if(ch){saveNotif(CU,l);updateNotifDot();}}
+function markAllRead(){var l=loadNotif(CU);for(var i=0;i<l.length;i++)l[i].read=true;saveNotif(CU,l);updateNotifDot();cmodal();toast('All notifications marked as read','ok');}
+
+/* ===== REAL-TIME SYNC ===== */
+var RT_UNSUB=[];
+function detachRealtime(){while(RT_UNSUB.length){try{RT_UNSUB.pop()();}catch(e){}}}
+function safeRerender(){var a=document.activeElement;if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'))return;if(document.getElementById('modal-bg').classList.contains('show'))return;render();}
+function attachRealtime(){if(!CLOUD)return;detachRealtime();
+RT_UNSUB.push(DB.collection('pu_users').onSnapshot(function(s){var ch=false;s.forEach(function(d){var val=d.data();if(JSON.stringify(cache[d.id])!==JSON.stringify(val)){cache[d.id]=val;lsSet('pu_'+d.id,JSON.stringify(val));ch=true;}});if(ch){updateSB();safeRerender();}},function(){}));
+RT_UNSUB.push(DB.collection('pu_nt').onSnapshot(function(s){s.forEach(function(d){lsSet('pu_nt_'+d.id,JSON.stringify(d.data().list||[]));});updateNotifDot();},function(){}));
+var mk=function(k,lsKey){RT_UNSUB.push(DB.collection('pu_meta').doc(k).onSnapshot(function(d){if(d.exists&&d.data().v){lsSet(lsKey,JSON.stringify(d.data().v));safeRerender();}},function(){}));};
+mk('adnos','pu_adnos');mk('ann','pu_ann');mk('evts','pu_evts');mk('subjects','pu_subjects');
+RT_UNSUB.push(DB.collection('pu_meta').doc('adnos').onSnapshot(function(d){if(d.exists&&d.data().v){ALL_ADNOS=d.data().v;for(var i=0;i<ALL_ADNOS.length;i++)if(CREDENTIALS[ALL_ADNOS[i]]===undefined)CREDENTIALS[ALL_ADNOS[i]]=ALL_ADNOS[i]+'@fath';updateSB();}},function(){}));
+}
+
+/* ===== UTILITIES ===== */
+function avC(id){var h=0;for(var i=0;i<String(id).length;i++)h=String(id).charCodeAt(i)+((h<<5)-h);return ACO[Math.abs(h)%ACO.length];}
+function avI(u,id){if(u.details&&u.details.fullName&&u.details.fullName.trim()){var p=u.details.fullName.trim().split(/\s+/);return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():p[0][0].toUpperCase();}return u.role==='admin'?'AD':String(id).slice(0,2).toUpperCase();}
+function avH(u,id,cls){return'<div class="av '+(cls||'avs')+'" style="background:'+avC(id)+'">'+avI(u,id)+'</div>';}
+function gdn(u,id){if(u.details&&u.details.fullName&&u.details.fullName.trim())return u.details.fullName.trim();return u.role==='admin'?'Administrator':id;}
+function comp(u){if(u.role==='admin')return 100;var f=['fullName','dob','class','guardian','phone','address'];var n=0;for(var i=0;i<f.length;i++){if(u.details[f[i]]&&u.details[f[i]].trim())n++;}var aA=(u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length;return Math.round(n/f.length*60+Math.min((u.skills||[]).length,3)/3*20+Math.min(aA,2)/2*20);}
+function calcPoints(u){if(u.role==='admin')return 0;var pts=0,achs=u.achievements||[];for(var i=0;i<achs.length;i++){if(achs[i].status==='approved'||!achs[i].status)pts+=CAT_PTS[achs[i].category]||8;}return pts;}
+function achCatBreakdown(u){var m={},achs=u.achievements||[];for(var i=0;i<achs.length;i++){var a=achs[i];if(a.status==='approved'||!a.status){var c=a.category||'Other';m[c]=(m[c]||0)+(CAT_PTS[c]||8);}}return m;}
+function catChipsHTML(u){var m=achCatBreakdown(u),ks=Object.keys(m);if(!ks.length)return'<span class="text-xs" style="color:var(--t3)">No approved achievements yet — points come from achievements only</span>';var h='';for(var i=0;i<ks.length;i++){var c=ks[i];h+='<span class="pts-chip" style="background:var(--bg4);color:'+(CAT_CLR[c]||'var(--t2)')+'"><i class="fas '+(CAT_ICO[c]||'fa-star')+'"></i> '+c+': '+m[c]+'</span>';}return h;}
+function mkOK(mk){return mk&&typeof mk.marks==='number'&&(mk.status==='approved'||!mk.status);}
+function sbjInfo(sbjId){var subs=loadSubs();for(var i=0;i<subs.length;i++)if(subs[i].id===sbjId)return subs[i];return{name:sbjId,max:0};}
+function countPending(){var all=loadAllSync(),c=0;var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+for(var i=0;i<ads.length;i++){var a=all[ads[i]].achievements||[];for(var j=0;j<a.length;j++)if(a[j].status==='pending')c++;
+var cce=all[ads[i]].cce||{};for(var k in cce){if(cce[k]&&cce[k].pending&&typeof cce[k].pending.marks==='number')c++;}}
+return c;}
+function getGrade(p){if(p>=90)return{g:'A+',c:'var(--ac)'};if(p>=80)return{g:'A',c:'var(--ac)'};if(p>=70)return{g:'B+',c:'var(--pn)'};if(p>=60)return{g:'B',c:'var(--pn)'};if(p>=50)return{g:'C+',c:'var(--gd)'};if(p>=40)return{g:'C',c:'var(--gd)'};if(p>=30)return{g:'D',c:'var(--wn)'};return{g:'E',c:'var(--dn)'};}
+function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function cceRowsHTML(u){var subs=loadSubs(),cce=u.cce||{},tot=0,mx=0,cnt=0,pd=0,h='';
+for(var i=0;i<subs.length;i++){var s=subs[i],mk=cce[s.id],has=mkOK(mk);
+var pend=mk&&mk.pending&&typeof mk.pending.marks==='number'?mk.pending:null;
+if(has){tot+=mk.marks;mx+=s.max;cnt++;}
+if(pend)pd++;
+var pct=has?Math.min(100,Math.round(mk.marks/s.max*100)):0;
+var gr=has?getGrade(pct):null;
+h+='<div class="flex items-center gap-3 p-3 rounded-lg mb-2" style="background:var(--bg1)"><div class="flex-1 min-w-0"><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max: '+s.max+'</div><div class="pb mt-1.5" style="height:5px"><div class="pf" style="width:'+(has?pct:0)+'%"></div></div>'+(pend?'<div class="text-xs mt-1" style="color:var(--wn)"><i class="fas fa-clock"></i> Pending approval: '+pend.marks+'/'+s.max+'</div>':'')+'</div><div class="text-right flex-shrink-0" style="min-width:64px">'+(has?'<div class="font-bold text-sm">'+mk.marks+'<span style="color:var(--t3)">/'+s.max+'</span></div><span class="badge" style="background:var(--bg4);color:'+(gr?gr.c:'var(--t2)')+'">'+(gr?gr.g+' · '+pct+'%':'')+'</span>':'<div class="text-sm" style="color:var(--t3)">—</div><div class="text-xs" style="color:var(--t3)">Not entered</div>')+'</div></div>';}
+return{html:h,tot:tot,mx:mx,cnt:cnt,pd:pd,nsubs:subs.length};}
+
+/* ===== VIEW ROUTING ===== */
+function showLand(){var L=document.getElementById('pg-land'),G=document.getElementById('pg-login'),A=document.getElementById('pg-app');if(L)L.style.display='flex';if(G)G.style.display='none';if(A)A.style.display='none';try{updateLoginStats();}catch(e){}}
+function goLand(){showLand();}
+function togglePw(inpId,icoId){var inp=document.getElementById(inpId||'l-pass');var ico=document.getElementById(icoId||'pw-ico');if(!inp)return;if(inp.type==='password'){inp.type='text';if(ico)ico.className='fas fa-eye-slash eye-t';}else{inp.type='password';if(ico)ico.className='fas fa-eye eye-t';}}
+function switchPortal(vx){var L=document.getElementById('pg-land'),G=document.getElementById('pg-login'),m=document.getElementById('lv-member'),a=document.getElementById('lv-admin');
+if(L)L.style.display='none';if(G)G.style.display='block';
+if(m)m.style.display=vx==='member'?'flex':'none';if(a)a.style.display=vx==='admin'?'flex':'none';
+showLE('','member');showLE('','admin');}
+function updateLoginStats(){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});var tA=0,tP=0;
+for(var i=0;i<ads.length;i++){tA+=(all[ads[i]].achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length;tP+=calcPoints(all[ads[i]]);}
+var e1=document.getElementById('st-m');if(e1)e1.textContent=ads.length+'+';
+var e2=document.getElementById('st-a');if(e2)e2.textContent=tA>0?(tA>=1000?(Math.round(tA/100)/10)+'K+':tA+'+'):'0';
+var e3=document.getElementById('st-p');if(e3)e3.textContent=tP>0?(tP>=1000?(Math.round(tP/100)/10)+'K+':tP+'+'):'∞';}).catch(function(){});}
+function showPublicLB(){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+var rows=ads.map(function(id){return{id:id,u:all[id],pts:calcPoints(all[id])};});rows.sort(function(a,b){return b.pts-a.pts;});
+var h='<h3 class="text-lg font-bold mb-1"><i class="fas fa-ranking-star mr-2" style="color:var(--gd)"></i>Public Leaderboard</h3><p class="text-xs mb-4" style="color:var(--t3)">Top performers and hall of fame — sign in to see your own rank</p>';
+if(!rows.length)h+='<p class="text-sm text-center py-4" style="color:var(--t3)">No members yet</p>';
+else{h+='<div class="space-y-1">';var n=Math.min(rows.length,10);
+for(var i=0;i<n;i++){var r=rows[i];var medal=i===0?'#ca8a04':i===1?'#6b7280':i===2?'#b45309':null;
+h+='<div class="lb-row"><div style="width:30px;text-align:center;font-weight:800;color:'+(medal||'var(--t3)')+'">'+(medal?'<i class="fas fa-medal"></i>':'#'+(i+1))+'</div>'+avH(r.u,r.id,'avm')+'<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(r.u,r.id)+'</div><div class="text-xs" style="color:var(--t3)">'+((r.u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length)+' achievements</div></div><div class="font-bold flex-shrink-0" style="color:var(--gd)">'+r.pts+' <span style="font-size:10px;color:var(--t3)">PTS</span></div></div>';}
+h+='</div>';}
+h+='<button class="bp w-full mt-4" onclick="cmodal()">Close</button>';openModal(h);});}
+function showResetInfo(){openModal('<div class="text-center"><div class="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center" style="background:var(--infg)"><i class="fas fa-key text-xl" style="color:var(--inf)"></i></div><h3 class="text-lg font-bold">Reset Password</h3><p class="text-sm mt-2" style="color:var(--t2)">Password resets are managed centrally by the institution. Please contact the administrator to have your password reset.</p><button class="bp w-full mt-4" onclick="cmodal()">Got it</button></div>');}
+
+/* ===== SHARED HELPERS ===== */
+function sc(l,val,i,c,b){return'<div class="card card-glow"><div class="flex items-center justify-between mb-2"><span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--t3)">'+l+'</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:'+b+'"><i class="fas '+i+' text-xs" style="color:'+c+'"></i></div></div><div class="text-2xl font-bold">'+val+'</div></div>';}
+function toast(msg,type){var c=document.getElementById('toasts');var d=document.createElement('div');d.className='toast '+(type==='ok'?'tok':type==='err'?'terr':'tinf');d.innerHTML='<i class="fas '+(type==='ok'?'fa-check-circle':type==='err'?'fa-times-circle':'fa-info-circle')+'"></i> '+msg;c.appendChild(d);setTimeout(function(){d.classList.add('show');},10);setTimeout(function(){d.classList.remove('show');setTimeout(function(){d.remove();},400);},3000);}
+function openModal(h){document.getElementById('modal-box').innerHTML=h;document.getElementById('modal-bg').classList.add('show');}
+function cmodal(){document.getElementById('modal-bg').classList.remove('show');}
+var _ccb=null;
+function askConfirm(msg,cb){_ccb=cb;openModal('<div class="text-center mb-5"><div class="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center" style="background:var(--dng)"><i class="fas fa-triangle-exclamation text-xl" style="color:var(--dn)"></i></div><h3 class="text-lg font-bold">Are you sure?</h3><p class="text-sm mt-2" style="color:var(--t2)">'+msg+'</p></div><div class="flex gap-3"><button class="bs flex-1" onclick="cmodal()">Cancel</button><button class="brj flex-1" style="display:flex;align-items:center;justify-content:center" onclick="doConfirmYes()"><i class="fas fa-check mr-1"></i>Yes, continue</button></div>');}
+function doConfirmYes(){cmodal();var cb=_ccb;_ccb=null;if(cb)cb();}
+
+/* ===== AUTH (dual portal) ===== */
+function showLE(msg,mode){var el=document.getElementById(mode==='admin'?'a-err':'l-err');if(!el)return;if(!msg){el.style.display='none';el.textContent='';return;}el.textContent=msg;el.style.display='block';setTimeout(function(){el.style.display='none';},6000);}
+function resetLoginBtn(mode){var btn=document.getElementById(mode==='admin'?'a-btn':'l-btn');if(btn){btn.disabled=false;btn.innerHTML=mode==='admin'?'Login':'Sign In <i class="fas fa-arrow-right"></i>';}}
+function busyLoginBtn(mode){var btn=document.getElementById(mode==='admin'?'a-btn':'l-btn');if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Verifying...';}}
+function acceptLogin(un,pw,remember,mode){var u=loadUSync(un);if(!u.password)u.password=pw;saveU(un,u);CREDENTIALS[un]=pw;CU=un;
+if(remember){lsSet('portal_cur',un);ssDel('portal_cur');}else{ssSet('portal_cur',un);lsDel('portal_cur');}
+resetLoginBtn(mode);attachRealtime();showApp();}
+function doLogin(mode){
+  var ui=document.getElementById(mode==='admin'?'a-user':'l-user'),pi=document.getElementById(mode==='admin'?'a-pass':'l-pass'),rm=document.getElementById(mode==='admin'?'a-rem':'l-rem');
+  var un=ui?ui.value.trim():'',pw=pi?pi.value.trim():'',rem=rm&&rm.checked;
+  if(!un){showLE('Enter your username',mode);return;}
+  if(!pw){showLE('Enter your password',mode);return;}
+  busyLoginBtn(mode);
+  var verify=function(){
+    try{
+      if(mode==='admin'){
+        if(un!=='ADMINISTRATOR'){
+          showLE(ALL_ADNOS.indexOf(un)>-1?'This is the Staff Portal — students must sign in via the Student Portal.':'Invalid staff credentials',mode);
+          resetLoginBtn(mode);return;
+        }
+        var ad=loadUSync('ADMINISTRATOR');
+        if((ad&&ad.password===pw)||(CREDENTIALS['ADMINISTRATOR']===pw)||pw==='Anshif@29'){acceptLogin('ADMINISTRATOR',pw,rem,mode);return;}
+        showLE('Wrong admin password',mode);resetLoginBtn(mode);return;
+      }
+      if(un==='ADMINISTRATOR'){showLE('This is the Student Portal — staff must sign in via the Staff Portal.',mode);resetLoginBtn(mode);return;}
+      var stored=loadUSync(un);
+      if(stored&&stored.password===pw){acceptLogin(un,pw,rem,mode);return;}
+      if(CREDENTIALS[un]!==undefined&&CREDENTIALS[un]===pw){acceptLogin(un,pw,rem,mode);return;}
+      if(ALL_ADNOS.indexOf(un)>-1&&pw===un+'@fath'){acceptLogin(un,pw,rem,mode);return;}
+      showLE(stored&&stored.password?'Wrong password':'Username not found',mode);resetLoginBtn(mode);
+    }catch(e){showErrBanner('login: '+((e&&e.message)||e));resetLoginBtn(mode);}
+  };
+  if(CLOUD){
+    bootReady.then(function(){
+      if(!CLOUD){verify();return;}
+      if(mode==='admin'){
+        if(un!=='ADMINISTRATOR'){showLE('This is the Staff Portal — students must sign in via the Student Portal.',mode);resetLoginBtn(mode);return Promise.resolve();}
+        return DB.collection('pu_users').doc('ADMINISTRATOR').get().then(function(d){
+          var cd=d.exists?d.data():null;
+          if(cd&&cd.password===pw){cache['ADMINISTRATOR']=cd;acceptLogin('ADMINISTRATOR',pw,rem,mode);return;}
+          if(!cd&&pw==='Anshif@29'){acceptLogin('ADMINISTRATOR',pw,rem,mode);return;}
+          showLE(cd?'Wrong admin password':'Administrator account missing',mode);resetLoginBtn(mode);
+        });
+      }
+      if(un==='ADMINISTRATOR'){showLE('This is the Student Portal — staff must sign in via the Staff Portal.',mode);resetLoginBtn(mode);return Promise.resolve();}
+      return DB.collection('pu_users').doc(un).get().then(function(d){
+        var cd=d.exists?d.data():null;
+        if(cd&&cd.password===pw){cache[un]=cd;acceptLogin(un,pw,rem,mode);return;}
+        if(!cd&&ALL_ADNOS.indexOf(un)>-1&&pw===un+'@fath'){acceptLogin(un,pw,rem,mode);return;}
+        showLE(cd?'Wrong password':'Username not found',mode);resetLoginBtn(mode);
+      });
+    }).catch(function(){verify();});
+    return;
+  }
+  setTimeout(verify,60);
+}
+function doLogout(){CU=null;detachRealtime();lsDel('portal_cur');ssDel('portal_cur');cache={};resetLoginBtn('member');resetLoginBtn('admin');showLE('','member');showLE('','admin');showLand();}
+function showApp(){document.getElementById('pg-land').style.display='none';document.getElementById('pg-login').style.display='none';document.getElementById('pg-app').style.display='block';updateSB();nav('dashboard');var un=unreadCount(CU);if(un>0)toast('You have '+un+' new notification'+(un>1?'s':''),'inf');}
+showLand();
+
+/* ===== NAVIGATION ===== */
+function updateSB(){var u=cache[CU]||loadUSync(CU);var avEl=document.getElementById('sb-av');if(avEl)avEl.outerHTML=avH(u,CU,'avs').replace('class="av avs"','id="sb-av" class="av avs"');var nmEl=document.getElementById('sb-nm');if(nmEl)nmEl.textContent=gdn(u,CU);var rb=document.getElementById('sb-rl');if(rb){rb.className='badge mt-0.5 '+(u.role==='admin'?'ba':'bm');rb.textContent=u.role==='admin'?'Admin':'Adno: '+CU;}buildNav();buildMobNav();updateNotifDot();}
+function buildNav(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var pc=isA?countPending():0;var h='<div class="mb-1 px-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--t3)">Menu</div>';
+for(var i=0;i<NAV.length;i++){var n=NAV[i];if(isA&&n.id==='cce')continue;h+='<div class="ni '+(CV===n.id?'on':'')+'" onclick="nav(\''+n.id+'\')"><i class="fas '+n.icon+'"></i><span>'+n.label+'</span></div>';}
+if(isA){h+='<div class="mt-3 mb-1 px-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Admin</div>';
+for(var j=0;j<ADMIN_NAV.length;j++){var a=ADMIN_NAV[j];var bdg='';if(a.badge&&pc>0)bdg='<span class="bpn" style="margin-left:auto">'+pc+'</span>';h+='<div class="ni '+(CV===a.id?'on':'')+'" onclick="nav(\''+a.id+'\')"><i class="fas '+a.icon+'"></i><span>'+a.label+'</span>'+bdg+'</div>';}}
+document.getElementById('sb-nav').innerHTML=h;}
+function buildMobNav(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var pc=isA?countPending():0;
+var items=isA?[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'admin-appr',icon:'fa-check-double',l:'Approve',b:pc},{id:'admin-cce',icon:'fa-pen-to-square',l:'Marks'},{id:'admin-subj',icon:'fa-book-open',l:'Subjects'},{id:'more',icon:'fa-ellipsis-h',l:'More'}]:[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'profile',icon:'fa-user',l:'Profile'},{id:'cce',icon:'fa-clipboard-check',l:'Marks'},{id:'leaderboard',icon:'fa-ranking-star',l:'Rank'},{id:'more',icon:'fa-ellipsis-h',l:'More'}];
+var h='';for(var i=0;i<items.length;i++){var it=items[i];var bdg=it.b>0?'<span class="bpn" style="margin-left:3px">'+it.b+'</span>':'';var act=it.id==='more'?'showMoreMenu()':'nav(\''+it.id+'\')';h+='<button class="'+(CV===it.id?'on':'')+'" onclick="'+act+'"><i class="fas '+it.icon+'"></i><span style="display:flex;align-items:center">'+it.l+bdg+'</span></button>';}
+document.getElementById('mob-nav').innerHTML=h;}
+function showMoreMenu(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var links=NAV.filter(function(n){return!(isA&&n.id==='cce');});if(isA)links=links.concat(ADMIN_NAV);
+var h='<h3 class="text-lg font-bold mb-4"><i class="fas fa-bars mr-2" style="color:var(--ac)"></i>Menu</h3><div class="space-y-1">';
+for(var i=0;i<links.length;i++){var n=links[i];h+='<div class="ni '+(CV===n.id?'on':'')+'" onclick="nav(\''+n.id+'\');cmodal()"><i class="fas '+n.icon+'"></i><span>'+n.label+'</span></div>';}
+h+='<div class="ni" onclick="cmodal();doLogout()" style="color:var(--dn)"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>';openModal(h);}
+function nav(vx,extra){CV=vx;if(vx==='profile'){VA=CU;PT='details';}if(vx==='member-detail'){VA=extra;PT='details';}buildNav();buildMobNav();render();}
+function render(){var c=document.getElementById('mc');if(!c)return;switch(CV){case'dashboard':rDash(c);break;case'profile':rProf(c,CU,true);break;case'cce':rCCE(c);break;case'members':rMems(c,false);break;case'member-detail':var uu=cache[CU]||loadUSync(CU);rProf(c,VA,CU===VA||uu.role==='admin');break;case'settings':rSett(c);break;case'announcements':rAnn(c,false);break;case'leaderboard':rLB(c);break;case'events':rEvts(c,false);break;case'admin-mem':rMems(c,true);break;case'admin-add':rAdminAdd(c);break;case'admin-appr':rApprovals(c);break;case'admin-subj':rAdminSubj(c);break;case'admin-cce':rAdminCCE(c);break;case'admin-ann':rAnn(c,true);break;case'admin-evt':rEvts(c,true);break;default:rDash(c);}}
+
+/* ===== DASHBOARD ===== */
+function rDash(c){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var nm=gdn(u,CU);var hr=new Date().getHours();var greet=hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening';
+loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+loadAnn().then(function(anns){loadEvts().then(function(evts){
+var nSubs=loadSubs().length;
+if(isA){
+  var tSk=0,tAc=0,tPts=0,pc=countPending();
+  for(var i=0;i<ads.length;i++){tSk+=(all[ads[i]].skills||[]).length;var aA=(all[ads[i]].achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length;tAc+=aA;tPts+=calcPoints(all[ads[i]]);}
+  c.innerHTML='<div class="fi"><div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Institution overview · '+(CLOUD?'cloud database live':'local device')+'</p></div>'+
+  '<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5 stat-grid">'+sc('Members',ads.length,'fa-users','var(--ac)','var(--acg)')+sc('Total Points',tPts,'fa-star','var(--gd)','var(--gdg)')+sc('Approved Ach.',tAc,'fa-check-circle','var(--ac)','var(--acg)')+sc('CCE Subjects',nSubs,'fa-book-open','var(--pn)','var(--png)')+'</div>'+
+  (pc>0?'<div class="card mb-5" style="border-color:rgba(217,119,6,.35);cursor:pointer" onclick="nav(\'admin-appr\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--wng)"><i class="fas fa-clock" style="color:var(--wn)"></i></div><div class="flex-1"><div class="font-semibold text-sm" style="color:var(--wn)">'+pc+' submission'+(pc>1?'s':'')+' pending approval</div><div class="text-xs" style="color:var(--t3)">Achievements & CCE marks from members — click to review</div></div><i class="fas fa-chevron-right" style="color:var(--t3)"></i></div></div>':'')+
+  '<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5"><div class="card card-glow"><h3 class="text-sm font-bold mb-3"><i class="fas fa-bullhorn mr-2" style="color:var(--ac)"></i>Announcements</h3>'+(anns.length===0?'<p class="text-sm" style="color:var(--t3)">No announcements</p>':anns.slice(0,3).map(function(a){return'<div class="ann-card '+(a.important?'imp':'')+' mb-2"><span class="font-semibold text-sm">'+a.title+'</span>'+(a.important?' <span class="badge ba">Important</span>':'')+'<p class="text-xs mt-1" style="color:var(--t2)">'+(a.content||'').slice(0,80)+'</p></div>';}).join(''))+'</div><div class="card card-glow"><h3 class="text-sm font-bold mb-3"><i class="fas fa-calendar mr-2" style="color:var(--gd)"></i>Events</h3>'+(evts.length===0?'<p class="text-sm" style="color:var(--t3)">No events</p>':evts.slice(0,4).map(function(ev){return'<div class="flex items-center gap-3 mb-2 p-2.5 rounded-lg" style="background:var(--bg1)"><div class="evt-dot" style="background:'+(ev.color||'var(--ac)')+'"></div><div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+ev.title+'</div><div class="text-xs" style="color:var(--t3)">'+(ev.date||'')+(ev.time?' · '+ev.time:'')+'</div></div></div>';}).join(''))+'</div></div></div>';
+}else{
+  var ap=calcPoints(u);
+  var subs=loadSubs(),cce=u.cce||{},ct=0,cm=0,pd=0;
+  for(var k=0;k<subs.length;k++){var mk=cce[subs[k].id];if(mkOK(mk)){ct+=mk.marks;cm+=subs[k].max;}if(mk&&mk.pending&&typeof mk.pending.marks==='number')pd++;}
+  var cpct=cm>0?Math.round(ct/cm*100):null;
+  var cceCard;
+  if(cpct===null){cceCard='<div class="card mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks</div><div class="text-xs" style="color:var(--t3)">No approved marks yet — submit yours from My Marks</div></div></div></div>';}
+  else{var og=getGrade(cpct);cceCard='<div class="card card-glow mb-5" style="cursor:pointer" onclick="nav(\'cce\')"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks: '+ct+'/'+cm+'</div><div class="text-xs" style="color:var(--t3)">'+(pd>0?'<span style="color:var(--wn)">'+pd+' submission'+(pd>1?'s':'')+' pending approval</span> · ':'')+'Tap to view & submit marks</div></div><div class="text-right"><div class="text-xl font-bold" style="color:'+og.c+'">'+og.g+'</div><div class="text-xs" style="color:var(--t3)">'+cpct+'%</div></div></div><div class="pb" style="height:8px"><div class="pf" style="width:'+cpct+'%"></div></div></div>';}
+  c.innerHTML='<div class="fi"><div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Your academic journey</p></div>'+
+  '<div class="card card-glow mb-5" style="border-color:rgba(202,138,4,.25)"><div class="flex items-center gap-5"><div><div class="pts-big">'+ap+'</div><div class="text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Total Points</div></div><div class="flex-1"><div class="pts-break" style="margin-top:0"><span class="pts-chip" style="background:var(--acg);color:var(--acd)"><i class="fas fa-trophy"></i> Achievements: '+ap+'</span></div><div class="pts-break">'+catChipsHTML(u)+'</div></div></div></div>'+
+  '<div class="grid grid-cols-2 gap-3 mb-5 stat-grid">'+sc('Profile',comp(u)+'%','fa-user','var(--ac)','var(--acg)')+sc('Skills',(u.skills||[]).length,'fa-lightbulb','var(--pn)','var(--png)')+sc('Approved',(u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length,'fa-check-circle','var(--gd)','var(--gdg)')+sc('Pending',(u.achievements||[]).filter(function(a){return a.status==='pending';}).length+pd,'fa-clock','var(--wn)','var(--wng)')+'</div>'+
+  cceCard+
+  '<div class="card card-glow mb-5"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:'+(comp(u)>=80?'var(--acg)':'var(--gdg)')+'"><i class="fas '+(comp(u)>=80?'fa-check-circle':'fa-exclamation-circle')+'" style="color:'+(comp(u)>=80?'var(--ac)':'var(--gd)')+'"></i></div><div class="flex-1"><div class="font-semibold text-sm">Profile: '+comp(u)+'%</div><div class="text-xs" style="color:var(--t3)">'+(comp(u)>=80?'Great!':'Add more details to improve.')+'</div></div></div><div class="pb" style="height:8px"><div class="pf" style="width:'+comp(u)+'%"></div></div></div>'+
+  '<div class="flex flex-wrap gap-3"><button class="bp" onclick="nav(\'profile\')"><i class="fas fa-edit mr-2"></i>Edit Profile</button><button class="bs" onclick="nav(\'cce\')"><i class="fas fa-pen-to-square mr-2"></i>Submit Marks</button><button class="bs" onclick="nav(\'leaderboard\')"><i class="fas fa-ranking-star mr-2"></i>Leaderboard</button></div></div>';
+}});});});}
+
+/* ===== PROFILE ===== */
+function rProf(c,adno,canEdit){loadU(adno).then(function(u){if(!u){c.innerHTML='<p>User not found</p>';return;}var cp2=comp(u);var dn=gdn(u,adno);var isOwn=adno===CU;var isAdminV=(cache[CU]||loadUSync(CU)).role==='admin';var ap=calcPoints(u);
+var tabH='';if(PT==='details')tabH=rDT(adno,u,canEdit);else if(PT==='skills')tabH=rST(adno,u,canEdit);else tabH=rAT(adno,u,canEdit);
+c.innerHTML='<div class="fi"><div class="card mb-5"><div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">'+avH(u,adno,'avl')+'<div class="flex-1 min-w-0" style="width:100%"><div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start"><h1 class="text-xl font-bold">'+dn+'</h1>'+(u.role==='admin'?'<span class="badge ba">Admin</span>':'<span class="badge bm">Adno: '+adno+'</span>')+'</div><div class="flex items-center gap-4 mt-2 justify-center sm:justify-start"><div class="flex items-center gap-1.5"><i class="fas fa-star" style="color:var(--gd);font-size:13px"></i><span class="font-bold text-sm" style="color:var(--gd)">'+ap+' pts</span></div><div class="pb flex-1" style="max-width:120px"><div class="pf" style="width:'+cp2+'%"></div></div><span class="text-xs font-semibold" style="color:'+(cp2>=80?'var(--ac)':'var(--gd)')+'">'+cp2+'%</span></div><div class="pts-break justify-center sm:justify-start">'+catChipsHTML(u)+'</div></div>'+(canEdit&&!isOwn?'<span class="badge ba"><i class="fas fa-shield-alt mr-1"></i>Admin Edit</span>':'')+'</div></div>'+
+'<div class="flex gap-2 mb-4 flex-wrap"><button class="tab '+(PT==='details'?'on':'')+'" onclick="PT=\'details\';render()"><i class="fas fa-id-card mr-1"></i>Details</button><button class="tab '+(PT==='skills'?'on':'')+'" onclick="PT=\'skills\';render()"><i class="fas fa-lightbulb mr-1"></i>Skills ('+(u.skills||[]).length+')</button><button class="tab '+(PT==='achievements'?'on':'')+'" onclick="PT=\'achievements\';render()"><i class="fas fa-trophy mr-1"></i>Achievements ('+(u.achievements||[]).length+')</button></div><div id="tab-c">'+tabH+'</div>'+
+(isAdminV&&!isOwn&&u.role!=='admin'?'<button class="bs mt-5" onclick="viewCCE(\''+adno+'\')"><i class="fas fa-clipboard-check mr-2"></i>View CCE Marks of '+dn+'</button>':'')+
+(isAdminV&&!isOwn?'<div class="card mt-5" style="border-color:rgba(202,138,4,.25)"><h3 class="text-sm font-bold mb-3" style="color:var(--gd)"><i class="fas fa-key mr-2"></i>Admin: Reset Password for '+adno+'</h3><div class="flex flex-col sm:flex-row gap-3"><input type="password" id="apw-'+adno+'" class="inp flex-1" placeholder="New password"><button class="bgt" onclick="admPw(\''+adno+'\')">Update</button></div></div>':'')+
+'</div>';});}
+function rDT(adno,u,ce){var d=u.details;var ro=ce?'':'readonly';var f=[{k:'fullName',l:'Full Name',i:'fa-user',t:'text'},{k:'dob',l:'Date of Birth',i:'fa-calendar',t:'date'},{k:'class',l:'Class',i:'fa-school',t:'text'},{k:'guardian',l:'Father/Guardian',i:'fa-user-tie',t:'text'},{k:'motherName',l:'Mother',i:'fa-female',t:'text'},{k:'phone',l:'Phone',i:'fa-phone',t:'tel'},{k:'email',l:'Email',i:'fa-envelope',t:'email'},{k:'bloodGroup',l:'Blood Group',i:'fa-tint',t:'text'},{k:'address',l:'Address',i:'fa-map-marker-alt',t:'textarea'}];var h='<div class="card fi"><h3 class="text-base font-bold mb-4"><i class="fas fa-id-card mr-2" style="color:var(--ac)"></i>Personal Details</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">';for(var i=0;i<f.length;i++){var fl=f[i];if(fl.t==='textarea')h+='<div class="md:col-span-2"><label class="fl"><i class="fas '+fl.i+' mr-1"></i>'+fl.l+'</label><textarea class="inp" id="f-'+fl.k+'" '+ro+'>'+(d[fl.k]||'')+'</textarea></div>';else h+='<div><label class="fl"><i class="fas '+fl.i+' mr-1"></i>'+fl.l+'</label><input type="'+fl.t+'" class="inp" id="f-'+fl.k+'" value="'+(d[fl.k]||'')+'" '+ro+'></div>';}h+='</div>';if(ce)h+='<div class="mt-5"><button class="bp" onclick="saveDet(\''+adno+'\')"><i class="fas fa-save mr-2"></i>Save</button></div>';h+='</div>';return h;}
+function rST(adno,u,ce){var sk=u.skills||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-lightbulb mr-2" style="color:var(--pn)"></i>Skills</h3><p class="text-xs mb-4" style="color:var(--t3)"><i class="fas fa-info-circle mr-1"></i>Skills do not give points — only approved achievements earn points by category.</p>';if(ce)h+='<div class="flex flex-col sm:flex-row gap-3 mb-4"><input type="text" id="nsk" class="inp flex-1" placeholder="Skill name"><select id="nsl" class="inp" style="max-width:160px"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Expert</option></select><button class="bp" onclick="addSk(\''+adno+'\')"><i class="fas fa-plus mr-1"></i>Add</button></div>';if(sk.length===0)h+='<div class="text-center py-8" style="color:var(--t3)">No skills yet</div>';else{h+='<div class="flex flex-wrap gap-2.5">';for(var i=0;i<sk.length;i++)h+='<div class="stg"><span>'+sk[i].name+'</span><span class="text-xs opacity-50">'+sk[i].level+'</span>'+(ce?'<span class="rx" onclick="rmSk(\''+adno+'\','+i+')"><i class="fas fa-times"></i></span>':'')+'</div>';h+='</div>';}h+='</div>';return h;}
+function rAT(adno,u,ce){var ach=u.achievements||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-trophy mr-2" style="color:var(--pk)"></i>Achievements</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Submitted achievements go to the Administrator for approval. Points are earned only after approval: Academic +15 · Sports +12 · Arts +10 · Community +10 · Religious +10 · Other +8.</p>';
+if(ce)h+='<div class="p-4 rounded-xl mb-4" style="background:var(--bg1);border:1px solid var(--bd)"><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3"><div><label class="fl">Title</label><input type="text" id="nat" class="inp" placeholder="Title"></div><div><label class="fl">Date</label><input type="date" id="nad" class="inp"></div></div><div class="mb-3"><label class="fl">Category</label><select id="nac" class="inp"><option>Academic</option><option>Sports</option><option>Arts</option><option>Community</option><option>Religious</option><option>Other</option></select></div><div class="mb-3"><label class="fl">Description</label><textarea id="nadc" class="inp" placeholder="Details..."></textarea></div><button class="bp w-full" onclick="addAch(\''+adno+'\')"><i class="fas fa-paper-plane mr-1"></i>Submit for Approval</button></div>';
+if(ach.length===0)h+='<div class="text-center py-8" style="color:var(--t3)"><i class="fas fa-trophy text-3xl mb-2"></i><br>No achievements yet</div>';
+else{h+='<div class="space-y-2.5">';
+for(var i=0;i<ach.length;i++){var a=ach[i];var st=a.status||'approved';var cls=st==='pending'?'pend-ach':st==='rejected'?'rej-ach':'appr-ach';
+var stb=st==='pending'?'<span class="badge" style="background:var(--wng);color:var(--wn)"><i class="fas fa-clock"></i> Pending</span>':st==='rejected'?'<span class="badge" style="background:var(--dng);color:var(--dn)"><i class="fas fa-times"></i> Rejected</span>':'<span class="badge bm"><i class="fas fa-check"></i> +'+(CAT_PTS[a.category]||8)+' pts</span>';
+h+='<div class="ach '+cls+'"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg4)"><i class="fas '+(CAT_ICO[a.category]||'fa-star')+'" style="color:'+(CAT_CLR[a.category]||'var(--t2)')+'"></i></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-semibold text-sm">'+a.title+'</span>'+stb+'</div>'+(a.description?'<div class="text-xs mt-1" style="color:var(--t2)">'+a.description+'</div>':'')+'<div class="text-xs mt-1.5" style="color:var(--t3)">'+a.category+' · '+(a.date||'—')+'</div></div>'+(ce?'<button class="bd" onclick="rmAch(\''+adno+'\','+i+')"><i class="fas fa-trash"></i></button>':'')+'</div></div>';}
+h+='</div>';}
+h+='</div>';return h;}
+function addAch(adno){var t=v('nat'),d=v('nad'),c=v('nac'),dc=v('nadc');if(!t){toast('Enter a title','err');return;}if(!d){toast('Pick a date','err');return;}
+var u=loadUSync(adno);u.achievements=u.achievements||[];u.achievements.push({title:t,date:d,category:c||'Other',description:dc,status:'pending',submitted:new Date().toLocaleDateString('en-GB')});
+saveU(adno,u);pushNotif('ADMINISTRATOR','New achievement "'+t+'" from '+gdn(u,adno)+' ('+adno+') awaits approval','inf');
+toast('Submitted! Awaiting admin approval','ok');render();}
+function rmAch(adno,i){askConfirm('Delete this achievement?',function(){var u=loadUSync(adno);u.achievements.splice(i,1);saveU(adno,u);toast('Achievement deleted','inf');render();});}
+function saveDet(adno){var u=loadUSync(adno);var f=['fullName','dob','class','guardian','motherName','phone','email','bloodGroup','address'];for(var i=0;i<f.length;i++){var e=document.getElementById('f-'+f[i]);if(e)u.details[f[i]]=e.value.trim();}saveU(adno,u);toast('Details saved successfully','ok');updateSB();render();}
+function addSk(adno){var n=v('nsk');if(!n){toast('Enter skill name','err');return;}var u=loadUSync(adno);u.skills=u.skills||[];for(var i=0;i<u.skills.length;i++)if(u.skills[i].name.toLowerCase()===n.toLowerCase()){toast('Skill already added','err');return;}u.skills.push({name:n,level:v('nsl')||'Beginner'});saveU(adno,u);toast('Skill added','ok');render();}
+function rmSk(adno,i){var u=loadUSync(adno);u.skills.splice(i,1);saveU(adno,u);toast('Skill removed','inf');render();}
+
+/* ===== MY CCE MARKS ===== */
+function rCCE(c){var u=loadUSync(CU);var r=cceRowsHTML(u);var pct=r.mx>0?Math.round(r.tot/r.mx*100):0;var g=getGrade(pct);var subs=loadSubs();
+var form='';
+if(subs.length){form='<div class="card mb-5"><h3 class="text-base font-bold mb-2"><i class="fas fa-pen-to-square mr-2" style="color:var(--ac)"></i>Submit / Update My Marks</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Your submissions go to the Administrator for approval. Leave a field empty to withdraw a pending submission.</p>';
+for(var i=0;i<subs.length;i++){var s=subs[i];var mk=u.cce[s.id];var val=mkOK(mk)?mk.marks:(mk&&mk.pending&&typeof mk.pending.marks==='number'?mk.pending.marks:'');
+form+='<div class="flex items-center gap-3 p-3 rounded-lg mb-2" style="background:var(--bg1)"><div class="flex-1 min-w-0"><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max: '+s.max+(mk&&mk.pending?' · <span style="color:var(--wn)">pending: '+mk.pending.marks+'</span>':'')+'</div></div><input type="number" id="my-mk-'+s.id+'" class="inp" style="max-width:110px;text-align:center" min="0" max="'+s.max+'" value="'+val+'" placeholder="—"></div>';}
+form+='<div class="flex justify-end mt-3"><button class="bp" onclick="saveMyCCE()"><i class="fas fa-paper-plane mr-2"></i>Submit for Approval</button></div></div>';}
+c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">My CCE Marks</h1><p class="text-sm" style="color:var(--t3)">Continuous & Comprehensive Evaluation'+(r.pd>0?' · <span style="color:var(--wn)">'+r.pd+' pending approval</span>':'')+'</p></div>'+
+(r.nsubs===0?'<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>No subjects configured yet</div>':
+'<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5 stat-grid"><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Total Score</div><div class="pts-big">'+r.tot+'</div><div class="text-xs" style="color:var(--t3)">out of '+r.mx+' (approved only)</div></div><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Percentage</div><div class="pts-big">'+pct+'%</div><div class="text-xs" style="color:var(--t3)">'+(r.cnt<r.nsubs?r.cnt+'/'+r.nsubs+' subjects entered':'All subjects entered')+'</div></div><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Overall Grade</div><div class="text-3xl font-black" style="font-family:\'Playfair Display\',serif;color:'+g.c+'">'+g.g+'</div><div class="text-xs" style="color:var(--t3)">Based on percentage</div></div></div>'+
+form+
+'<div class="card"><h3 class="text-base font-bold mb-4"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>Subject-wise Marks</h3>'+r.html+'</div>')+'</div>';}
+function saveMyCCE(){var subs=loadSubs();if(!subs.length){toast('No subjects configured','err');return;}var u=loadUSync(CU);u.cce=u.cce||{};var any=false,names=[];
+for(var i=0;i<subs.length;i++){var s=subs[i];var e=document.getElementById('my-mk-'+s.id);if(!e)continue;var val=e.value.trim();
+if(val===''){if(u.cce[s.id]&&u.cce[s.id].pending){delete u.cce[s.id].pending;any=true;}continue;}
+var n=parseFloat(val);if(isNaN(n)||n<0||n>subs[i].max){toast(subs[i].name+': enter a value between 0 and '+subs[i].max,'err');return;}
+u.cce[s.id]=u.cce[s.id]||{};u.cce[s.id].pending={marks:n,date:new Date().toLocaleDateString('en-GB')};any=true;names.push(subs[i].name);}
+saveU(CU,u);
+if(any){pushNotif('ADMINISTRATOR','CCE marks submitted by '+gdn(u,CU)+' ('+CU+') for: '+names.join(', ')+' — await approval','inf');toast('Marks submitted for admin approval','ok');}
+else{toast('No changes submitted','inf');}
+render();}
+
+/* ===== MEMBERS ===== */
+function rMems(c,adminMode){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+ads.sort(function(a,b){return calcPoints(all[b])-calcPoints(all[a]);});
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">'+(adminMode?'Manage Members':'Members')+'</h1><p class="text-sm" style="color:var(--t3)">'+ads.length+' registered members</p></div>'+
+'<div class="mb-4"><input type="text" id="mem-q" class="inp" placeholder="Search by name or admission no..." oninput="filterMems()"></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="mem-grid">';
+for(var i=0;i<ads.length;i++){var id=ads[i],u=all[id];var p=calcPoints(u);var cp=comp(u);var pd=(u.achievements||[]).filter(function(a){return a.status==='pending';}).length;var cce=all[id].cce||{};for(var k in cce){if(cce[k]&&cce[k].pending)pd++;}
+h+='<div class="mc mem-card" data-nm="'+gdn(u,id).toLowerCase()+' '+id+'" onclick="nav(\'member-detail\',\''+id+'\')"><div class="flex items-center gap-3">'+avH(u,id,'avm')+'<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(u,id)+'</div><div class="text-xs" style="color:var(--t3)">Adno: '+id+'</div></div></div><div class="flex items-center justify-between mt-3 pt-3 flex-wrap gap-2" style="border-top:1px solid var(--bd)"><span class="badge bm"><i class="fas fa-star mr-1"></i>'+p+' pts</span><span class="text-xs font-semibold" style="color:'+(cp>=80?'var(--ac)':'var(--gd)')+'">'+cp+'% complete</span></div>'+(pd>0?'<div class="mt-2"><span class="badge" style="background:var(--wng);color:var(--wn)"><i class="fas fa-clock"></i> '+pd+' pending</span></div>':'')+'</div>';}
+h+='</div></div>';c.innerHTML=h;});}
+function filterMems(){var q=(document.getElementById('mem-q').value||'').toLowerCase();var cards=document.querySelectorAll('.mem-card');for(var i=0;i<cards.length;i++){var t=(cards[i].getAttribute('data-nm')||'').toLowerCase();cards[i].style.display=t.indexOf(q)>-1?'':'none';}}
+
+/* ===== SETTINGS ===== */
+function rSett(c){var u=loadUSync(CU);
+c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Settings</h1><p class="text-sm" style="color:var(--t3)">Account & preferences</p></div>'+
+'<div class="card mb-4"><h3 class="text-sm font-bold mb-3"><i class="fas fa-database mr-2" style="color:'+(CLOUD?'var(--ac)':'var(--wn)')+'"></i>Database</h3><div class="flex items-center gap-3"><span class="sdot son"></span><div><div class="font-semibold text-sm">'+(CLOUD?'Cloud (Firebase Firestore — academic-fath)':'Local (this browser only)')+'</div><div class="text-xs" style="color:var(--t3)">'+(CLOUD?'All data syncs live across every device':'Cloud unreachable — check Firestore is created & rules allow access.')+'</div></div></div></div>'+
+'<div class="card mb-4"><h3 class="text-sm font-bold mb-4"><i class="fas fa-key mr-2" style="color:var(--gd)"></i>Change Password</h3><div class="space-y-3"><div><label class="fl">Current Password</label><input type="password" id="cp-old" class="inp"></div><div><label class="fl">New Password</label><input type="password" id="cp-new" class="inp"></div><div><label class="fl">Confirm New Password</label><input type="password" id="cp-new2" class="inp"></div><button class="bp" onclick="changePw()"><i class="fas fa-save mr-2"></i>Update Password</button></div></div>'+
+'<div class="card mb-4"><h3 class="text-sm font-bold mb-3"><i class="fas fa-info-circle mr-2" style="color:var(--inf)"></i>Account</h3><div class="text-sm space-y-2"><div class="flex justify-between"><span style="color:var(--t2)">Username</span><span class="font-semibold">'+CU+'</span></div><div class="flex justify-between"><span style="color:var(--t2)">Role</span><span class="font-semibold">'+(u.role==='admin'?'Administrator':'Member')+'</span></div><div class="flex justify-between"><span style="color:var(--t2)">Points</span><span class="font-semibold" style="color:var(--gd)">'+calcPoints(u)+' <span class="text-xs font-normal" style="color:var(--t3)">(achievements only)</span></span></div></div><button class="bd mt-4" onclick="doLogout()"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button></div>'+
+(u.role==='admin'?'<div class="card" style="border-color:rgba(220,38,38,.3)"><h3 class="text-sm font-bold mb-2" style="color:var(--dn)"><i class="fas fa-triangle-exclamation mr-2"></i>Danger Zone (Admin)</h3><p class="text-xs mb-3" style="color:var(--t3)">Erase every member, mark, announcement and event'+(CLOUD?' in the cloud database':' on this device')+'. This cannot be undone.</p><button class="bd" onclick="resetAll()"><i class="fas fa-trash mr-2"></i>Reset All Portal Data</button></div>':'')+
+'</div>';}
+function changePw(){var o=v('cp-old'),n=v('cp-new'),n2=v('cp-new2');if(!o||!n||!n2){toast('Fill all fields','err');return;}if(o!==CREDENTIALS[CU]&&o!==loadUSync(CU).password){toast('Current password is wrong','err');return;}if(n.length<4){toast('Password too short (min 4 chars)','err');return;}if(n!==n2){toast('New passwords do not match','err');return;}
+CREDENTIALS[CU]=n;var u=loadUSync(CU);u.password=n;saveU(CU,u);toast('Password updated successfully','ok');render();}
+function resetAll(){askConfirm('Reset ALL portal data? Members, marks, announcements and events will be erased. This cannot be undone.',function(){
+if(CLOUD){
+  DB.collection('pu_users').get().then(function(s){var b=DB.batch();s.forEach(function(d){b.delete(d.ref);});return b.commit();}).catch(function(){}).then(function(){
+    return DB.collection('pu_nt').get().then(function(s){var b=DB.batch();s.forEach(function(d){b.delete(d.ref);});return b.commit();}).catch(function(){});
+  }).then(function(){
+    ALL_ADNOS=[].concat(DEFAULT_ADNOS);cache={};
+    var b=DB.batch();b.set(DB.collection('pu_meta').doc('adnos'),{v:ALL_ADNOS});b.set(DB.collection('pu_meta').doc('ann'),{v:seedAnnArr()});b.set(DB.collection('pu_meta').doc('evts'),{v:seedEvtArr()});b.set(DB.collection('pu_meta').doc('subjects'),{v:seedSubArr()});
+    ALL_ADNOS.concat(['ADMINISTRATOR']).forEach(function(id){b.set(DB.collection('pu_users').doc(id),defU(id));});
+    CREDENTIALS={'ADMINISTRATOR':'Anshif@29'};for(var j=0;j<ALL_ADNOS.length;j++)CREDENTIALS[ALL_ADNOS[j]]=ALL_ADNOS[j]+'@fath';
+    return b.commit();
+  }).then(function(){toast('All cloud data reset. Logging out...','inf');setTimeout(function(){doLogout();},900);}).catch(function(e){toast('Reset failed: '+((e&&e.code)||'error'),'err');});
+}else{
+  try{var keys=[],i;for(i=0;i<localStorage.length;i++)keys.push(localStorage.key(i));for(i=0;i<keys.length;i++)if(keys[i].indexOf('pu_')===0||keys[i]==='portal_cur'){try{localStorage.removeItem(keys[i]);}catch(e){}}}catch(e){}
+  _MEM={};cache={};CREDENTIALS={'ADMINISTRATOR':'Anshif@29'};ALL_ADNOS=[].concat(DEFAULT_ADNOS);for(var j=0;j<ALL_ADNOS.length;j++)CREDENTIALS[ALL_ADNOS[j]]=ALL_ADNOS[j]+'@fath';
+  seedAll();toast('All data reset. Logging out...','inf');setTimeout(function(){doLogout();},900);
+}});}
+
+/* ===== ANNOUNCEMENTS ===== */
+function rAnn(c,adminMode){loadAnn().then(function(list){
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">'+(adminMode?'Post Announcement':'Announcements')+'</h1><p class="text-sm" style="color:var(--t3)">'+list.length+' total</p></div>';
+if(adminMode)h+='<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-pen mr-2" style="color:var(--ac)"></i>New Announcement</h3><div class="mb-3"><label class="fl">Title</label><input type="text" id="an-t" class="inp" placeholder="Title"></div><div class="mb-3"><label class="fl">Content</label><textarea id="an-c" class="inp" placeholder="Write the announcement..."></textarea></div><label class="flex items-center gap-2 mb-4 cursor-pointer" style="font-size:13px"><input type="checkbox" id="an-i" style="width:16px;height:16px;accent-color:var(--ac)"> <span>Mark as <span class="badge ba">Important</span></span></label><button class="bp" onclick="postAnn()"><i class="fas fa-bullhorn mr-2"></i>Publish</button></div>';
+if(list.length===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-bullhorn text-3xl mb-2"></i><br>No announcements yet</div>';
+else{h+='<div class="space-y-3">';for(var i=0;i<list.length;i++){var a=list[i];h+='<div class="ann-card '+(a.important?'imp':'')+'"><div class="flex items-start justify-between gap-3"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm">'+a.title+'</span>'+(a.important?'<span class="badge ba">Important</span>':'')+'</div><p class="text-sm mt-1.5" style="color:var(--t2)">'+(a.content||'')+'</p><div class="text-xs mt-2" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(a.author||'Administrator')+' · '+(a.date||'')+'</div></div>'+(adminMode?'<button class="bd" onclick="delAnn('+i+')"><i class="fas fa-trash"></i></button>':'')+'</div></div>';}h+='</div>';}
+h+='</div>';c.innerHTML=h;});}
+function postAnn(){var t=v('an-t'),ct=v('an-c');if(!t||!ct){toast('Title and content are required','err');return;}var list=loadAnnSync();var u=loadUSync(CU);var imp=document.getElementById('an-i')&&document.getElementById('an-i').checked;list.unshift({title:t,content:ct,important:imp,date:new Date().toLocaleDateString('en-GB'),author:gdn(u,CU)});saveAnn(list);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New announcement: '+t,'inf');
+toast('Announcement published to all members','ok');render();}
+function delAnn(i){askConfirm('Delete this announcement?',function(){var list=loadAnnSync();list.splice(i,1);saveAnn(list);toast('Announcement deleted','inf');render();});}
+
+/* ===== LEADERBOARD ===== */
+function rLB(c){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+var rows=ads.map(function(id){return{id:id,u:all[id],pts:calcPoints(all[id])};});
+rows.sort(function(a,b){return b.pts-a.pts;});
+var myRank=-1;for(var r0=0;r0<rows.length;r0++)if(rows[r0].id===CU){myRank=r0;break;}
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Leaderboard</h1><p class="text-sm" style="color:var(--t3)">Ranked by achievement points</p></div>';
+if(myRank>-1){var me=rows[myRank];
+h+='<div class="card card-glow mb-5" style="border-color:rgba(202,138,4,.3)"><div class="flex items-center gap-4">'+avH(me.u,me.id,'avl')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold">'+gdn(me.u,me.id)+' (You)</span><span class="badge ba">#'+(myRank+1)+' of '+rows.length+'</span></div><div class="pts-break">'+catChipsHTML(me.u)+'</div></div><div class="text-right flex-shrink-0"><div class="pts-big">'+me.pts+'</div><div class="text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Points</div></div></div></div>';}
+h+='<div class="card"><h3 class="text-sm font-bold mb-2"><i class="fas fa-ranking-star mr-2" style="color:var(--gd)"></i>Standings</h3>';
+if(rows.length===0)h+='<p class="text-sm py-4 text-center" style="color:var(--t3)">No members yet</p>';
+else{for(var i=0;i<rows.length;i++){var r=rows[i];var hl=r.id===CU?'background:var(--acg2);':'';var medal=i===0?'#ca8a04':i===1?'#6b7280':i===2?'#b45309':null;
+h+='<div class="lb-row" style="cursor:pointer;'+hl+'" onclick="nav(\'member-detail\',\''+r.id+'\')"><div style="width:34px;text-align:center;font-weight:800;font-size:'+(medal?'16px':'13px')+';color:'+(medal||'var(--t3)')+'">'+(medal?'<i class="fas fa-medal"></i>':'#'+(i+1))+'</div>'+avH(r.u,r.id,'avm')+'<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(r.u,r.id)+(r.id===CU?' <span class="badge bm">You</span>':'')+'</div><div class="text-xs" style="color:var(--t3)">'+((r.u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length)+' achievements · '+(r.u.skills||[]).length+' skills</div></div><div class="font-bold flex-shrink-0" style="color:var(--gd)">'+r.pts+' <span style="font-size:10px;color:var(--t3)">PTS</span></div></div>';}}
+h+='</div></div>';c.innerHTML=h;});}
+
+/* ===== EVENTS ===== */
+function rEvts(c,adminMode){loadEvts().then(function(evts){
+var sorted=evts.slice().sort(function(a,b){return (a.date||'').localeCompare(b.date||'');});
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">'+(adminMode?'Manage Events':'Events')+'</h1><p class="text-sm" style="color:var(--t3)">'+sorted.length+' scheduled</p></div>';
+if(adminMode)h+='<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-calendar-plus mr-2" style="color:var(--gd)"></i>Add Event</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3"><div><label class="fl">Title</label><input id="ev-t" class="inp" placeholder="Event title"></div><div><label class="fl">Date</label><input type="date" id="ev-d" class="inp"></div><div><label class="fl">Time</label><input type="time" id="ev-tm" class="inp"></div><div><label class="fl">Venue</label><input id="ev-v" class="inp" placeholder="Venue"></div></div><div class="mb-3"><label class="fl">Description</label><textarea id="ev-ds" class="inp" placeholder="Details..."></textarea></div><div class="mb-4"><label class="fl">Colour</label><select id="ev-c" class="inp" style="max-width:200px"><option value="#16a34a">Green</option><option value="#ca8a04">Gold</option><option value="#2563eb">Blue</option><option value="#6366f1">Purple</option><option value="#db2777">Pink</option><option value="#dc2626">Red</option></select></div><button class="bp" onclick="addEvt()"><i class="fas fa-plus mr-2"></i>Add Event</button></div>';
+if(sorted.length===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-calendar-alt text-3xl mb-2"></i><br>No events scheduled</div>';
+else{h+='<div class="space-y-3">';for(var i=0;i<sorted.length;i++){var e=sorted[i];var dd=e.date?new Date(e.date+'T00:00:00'):null;var day=dd?dd.getDate():'',mon=dd?dd.toLocaleString('en-GB',{month:'short'}):'';
+h+='<div class="card"><div class="flex items-start gap-4">'+(e.date?'<div class="text-center flex-shrink-0" style="width:56px;background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:8px 4px"><div class="text-xl font-bold" style="font-family:\'Playfair Display\',serif">'+day+'</div><div class="text-xs uppercase" style="color:var(--t3)">'+mon+'</div></div>':'')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="evt-dot" style="background:'+(e.color||'var(--ac)')+'"></span><span class="font-bold text-sm">'+e.title+'</span>'+(e.time?'<span class="badge bin"><i class="fas fa-clock"></i> '+e.time+'</span>':'')+'</div>'+(e.venue?'<div class="text-xs mt-1.5" style="color:var(--t2)"><i class="fas fa-map-marker-alt mr-1" style="color:var(--dn)"></i>'+e.venue+'</div>':'')+(e.description?'<p class="text-xs mt-1" style="color:var(--t3)">'+e.description+'</p>':'')+'</div>'+(adminMode?'<button class="bd" onclick="delEvt(\''+e.id+'\')"><i class="fas fa-trash"></i></button>':'')+'</div></div>';}h+='</div>';}
+h+='</div>';c.innerHTML=h;});}
+function addEvt(){var t=v('ev-t'),d=v('ev-d');if(!t||!d){toast('Title and date are required','err');return;}var l=loadEvtsSync();l.push({id:'evt'+Date.now(),title:t,date:d,time:v('ev-tm'),venue:v('ev-v'),description:v('ev-ds'),color:document.getElementById('ev-c')?document.getElementById('ev-c').value:'#16a34a'});saveEvts(l);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New event: '+t+' on '+d,'inf');
+toast('Event added','ok');render();}
+function delEvt(id){askConfirm('Delete this event?',function(){var l=loadEvtsSync();var ix=-1;for(var i=0;i<l.length;i++)if(l[i].id===id){ix=i;break;}if(ix>-1)l.splice(ix,1);saveEvts(l);toast('Event deleted','inf');render();});}
+
+/* ===== ADMIN: ADD / REMOVE MEMBERS ===== */
+function saveAdnos(){lsSet('pu_adnos',JSON.stringify(ALL_ADNOS));if(CLOUD)cloudSetMeta('adnos',ALL_ADNOS);}
+function rAdminAdd(c){var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Add / Remove Members</h1><p class="text-sm" style="color:var(--t3)">Admission numbers · default password is ADNO@fath</p></div>'+
+'<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-user-plus mr-2" style="color:var(--ac)"></i>Add Member</h3><div class="flex flex-col sm:flex-row gap-3"><input id="na-adno" class="inp flex-1" placeholder="New admission number e.g. 850"><button class="bp" onclick="addAdno()"><i class="fas fa-plus mr-2"></i>Add</button></div><p class="text-xs mt-3" style="color:var(--t3)"><i class="fas fa-info-circle mr-1"></i>The member can log in with their admission number and password <b>ADNO@fath</b>.</p></div>'+
+'<div class="card"><h3 class="text-sm font-bold mb-4"><i class="fas fa-list mr-2" style="color:var(--gd)"></i>Registered Admission Numbers ('+ALL_ADNOS.length+')</h3><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">';
+for(var i=0;i<ALL_ADNOS.length;i++){h+='<div class="flex items-center justify-between gap-2 p-2.5 rounded-lg" style="background:var(--bg1);border:1px solid var(--bd)"><span class="text-sm font-semibold">'+ALL_ADNOS[i]+'</span><button class="bd" style="padding:3px 8px" onclick="rmAdno(\''+ALL_ADNOS[i]+'\')"><i class="fas fa-times"></i></button></div>';}
+h+='</div></div></div>';c.innerHTML=h;}
+function addAdno(){var a=v('na-adno');if(!a){toast('Enter admission number','err');return;}if(ALL_ADNOS.indexOf(a)>-1){toast('Admission number already exists','err');return;}
+ALL_ADNOS.push(a);CREDENTIALS[a]=a+'@fath';saveAdnos();var nu=defU(a);cache[a]=nu;lsSet('pu_'+a,JSON.stringify(nu));if(CLOUD)cloudSetUser(a,nu);
+toast('Member '+a+' added (password: '+a+'@fath)','ok');render();}
+function rmAdno(a){askConfirm('Remove member '+a+' and delete all their data?',function(){var i=ALL_ADNOS.indexOf(a);if(i>-1)ALL_ADNOS.splice(i,1);lsDel('pu_'+a);lsDel('pu_nt_'+a);delete CREDENTIALS[a];delete cache[a];saveAdnos();
+if(CLOUD){DB.collection('pu_users').doc(a).delete().catch(function(){});DB.collection('pu_nt').doc(a).delete().catch(function(){});}
+toast('Member '+a+' removed','inf');render();});}
+
+/* ===== ADMIN: APPROVALS ===== */
+function rApprovals(c){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+var achItems=[],cceItems=[],subs=loadSubs();
+for(var i=0;i<ads.length;i++){
+  var a=all[ads[i]].achievements||[];
+  for(var j=0;j<a.length;j++)if(a[j].status==='pending')achItems.push({id:ads[i],idx:j,a:a[j]});
+  var cce=all[ads[i]].cce||{};
+  for(var k in cce){var e=cce[k];if(e&&e.pending&&typeof e.pending.marks==='number'){var si=sbjInfo(k);cceItems.push({id:ads[i],sbj:k,name:si.name,max:si.max,e:e});}}
+}
+var total=achItems.length+cceItems.length;
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Approvals</h1><p class="text-sm" style="color:var(--t3)">'+total+' pending review</p></div>';
+if(total===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style="background:var(--acg)"><i class="fas fa-check text-2xl" style="color:var(--ac)"></i></div><div class="font-semibold">All caught up!</div><p class="text-xs mt-1">No achievements or CCE marks awaiting approval</p></div>';
+else{
+  if(achItems.length){h+='<h3 class="text-sm font-bold mb-2"><i class="fas fa-trophy mr-2" style="color:var(--pk)"></i>Achievements ('+achItems.length+')</h3><div class="space-y-3 mb-6">';
+  for(var k1=0;k1<achItems.length;k1++){var it=achItems[k1];var u=all[it.id];var cc=CAT_CLR[it.a.category]||'var(--t2)';
+  h+='<div class="appr-item"><div class="flex items-start gap-3">'+avH(u,it.id,'avm')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-semibold text-sm">'+it.a.title+'</span><span class="badge" style="background:var(--bg4);color:'+cc+'"><i class="fas '+(CAT_ICO[it.a.category]||'fa-star')+'"></i> '+it.a.category+'</span><span class="badge bm">+'+(CAT_PTS[it.a.category]||8)+' pts</span></div>'+(it.a.description?'<div class="text-xs mt-1" style="color:var(--t2)">'+it.a.description+'</div>':'')+'<div class="text-xs mt-1.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+gdn(u,it.id)+' ('+it.id+') · '+(it.a.date||'')+'</div><div class="flex gap-2 mt-3"><button class="bap" onclick="apprAch(\''+it.id+'\','+it.idx+')"><i class="fas fa-check mr-1"></i>Approve</button><button class="brj" onclick="rejAch(\''+it.id+'\','+it.idx+')"><i class="fas fa-times mr-1"></i>Reject</button></div></div></div></div>';}
+  h+='</div>';}
+  if(cceItems.length){h+='<h3 class="text-sm font-bold mb-2"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>CCE Marks ('+cceItems.length+')</h3><div class="space-y-3">';
+  for(var k2=0;k2<cceItems.length;k2++){var ci=cceItems[k2];var u2=all[ci.id];
+  h+='<div class="appr-item"><div class="flex items-start gap-3">'+avH(u2,ci.id,'avm')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-semibold text-sm">'+ci.name+'</span><span class="badge bin">'+ci.e.pending.marks+(ci.max?'/'+ci.max:'')+'</span></div><div class="text-xs mt-1.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+gdn(u2,ci.id)+' ('+ci.id+') · submitted '+(ci.e.pending.date||'')+'</div><div class="flex gap-2 mt-3"><button class="bap" onclick="apprCCE(\''+ci.id+'\',\''+ci.sbj+'\')"><i class="fas fa-check mr-1"></i>Approve</button><button class="brj" onclick="rejCCE(\''+ci.id+'\',\''+ci.sbj+'\')"><i class="fas fa-times mr-1"></i>Reject</button></div></div></div></div>';}
+  h+='</div>';}
+}
+h+='</div>';c.innerHTML=h;});}
+function apprAch(id,idx){var u=loadUSync(id);if(!u.achievements||!u.achievements[idx])return;var t=u.achievements[idx].title;u.achievements[idx].status='approved';u.achievements[idx].approvedOn=new Date().toLocaleDateString('en-GB');saveU(id,u);pushNotif(id,'Achievement "'+t+'" approved! +'+(CAT_PTS[u.achievements[idx].category]||8)+' points','ok');toast('Achievement approved','ok');updateSB();render();}
+function rejAch(id,idx){var u=loadUSync(id);if(!u.achievements||!u.achievements[idx])return;var t=u.achievements[idx].title;u.achievements[idx].status='rejected';saveU(id,u);pushNotif(id,'Achievement "'+t+'" was rejected by the administrator','err');toast('Achievement rejected','inf');updateSB();render();}
+function apprCCE(id,sbj){var u=loadUSync(id);var e=u.cce&&u.cce[sbj];if(!e||!e.pending)return;var si=sbjInfo(sbj);
+e.marks=e.pending.marks;e.status='approved';e.by='Member';e.date=e.pending.date;delete e.pending;
+saveU(id,u);pushNotif(id,'Your CCE marks for '+si.name+' were approved: '+e.marks+(si.max?'/'+si.max:''),'ok');toast('CCE marks approved','ok');updateSB();render();}
+function rejCCE(id,sbj){var u=loadUSync(id);var e=u.cce&&u.cce[sbj];if(!e||!e.pending)return;var si=sbjInfo(sbj);
+delete e.pending;saveU(id,u);pushNotif(id,'Your CCE marks for '+si.name+' were rejected by the administrator','err');toast('CCE marks rejected','inf');updateSB();render();}
+
+/* ===== ADMIN: CCE SUBJECTS ===== */
+function rAdminSubj(c){var subs=loadSubs();
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">CCE Subjects</h1><p class="text-sm" style="color:var(--t3)">'+subs.length+' subjects configured</p></div>'+
+'<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Subject</h3><div class="flex flex-col sm:flex-row gap-3"><input id="sj-n" class="inp flex-1" placeholder="Subject name e.g. Physics"><input id="sj-m" type="number" class="inp" style="max-width:150px" placeholder="Max marks" value="50" min="1"><button class="bp" onclick="addSubj()"><i class="fas fa-plus mr-2"></i>Add</button></div></div>';
+if(subs.length===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>No subjects yet</div>';
+else{h+='<div class="space-y-2">';for(var i=0;i<subs.length;i++){var s=subs[i];h+='<div class="ach flex items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-book" style="color:var(--pn)"></i></div><div><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max marks: '+s.max+'</div></div></div><button class="bd" onclick="rmSubj(\''+s.id+'\')"><i class="fas fa-trash"></i></button></div>';}h+='</div>';}
+h+='</div>';c.innerHTML=h;}
+function addSubj(){var n=v('sj-n'),m=parseInt(v('sj-m'),10);if(!n){toast('Enter subject name','err');return;}if(!m||m<=0){toast('Enter valid max marks','err');return;}var l=loadSubs();for(var i=0;i<l.length;i++)if(l[i].name.toLowerCase()===n.toLowerCase()){toast('Subject already exists','err');return;}l.push({id:'sbj'+Date.now(),name:n,max:m});saveSubs(l);toast('Subject added','ok');render();}
+function rmSubj(id){askConfirm('Remove this subject? Entered marks for it will be lost.',function(){var l=loadSubs().filter(function(s){return s.id!==id;});saveSubs(l);toast('Subject removed','inf');render();});}
+
+/* ===== ADMIN: ENTER CCE MARKS ===== */
+function rAdminCCE(c){var subs=loadSubs();
+loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';}).sort();
+var opts='<option value="">— Select member —</option>';
+for(var i=0;i<ads.length;i++)opts+='<option value="'+ads[i]+'"'+(CCE_SEL===ads[i]?' selected':'')+'>'+gdn(all[ads[i]],ads[i])+' ('+ads[i]+')</option>';
+var sel=CCE_SEL?loadUSync(CCE_SEL):null;
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Enter CCE Marks</h1><p class="text-sm" style="color:var(--t3)">Direct entry — saved marks are approved immediately</p></div>'+
+'<div class="card mb-4"><label class="fl"><i class="fas fa-user mr-1"></i>Member</label><select id="cce-mem" class="inp" onchange="CCE_SEL=this.value;render()">'+opts+'</select></div>';
+if(!sel){h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-user-select text-3xl mb-2"></i><br>Select a member to enter marks</div>';}
+else if(subs.length===0){h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>Add CCE subjects first</div>';}
+else{var cce=sel.cce||{},tot=0,mx=0;
+h+='<div class="card"><h3 class="text-base font-bold mb-4"><i class="fas fa-pen-to-square mr-2" style="color:var(--ac)"></i>Marks for '+gdn(sel,CCE_SEL)+'</h3>';
+for(var j=0;j<subs.length;j++){var s=subs[j],mk=cce[s.id];var val=mkOK(mk)?mk.marks:'';if(val!=='')tot+=val;mx+=s.max;
+h+='<div class="flex items-center gap-3 p-3 rounded-lg mb-2" style="background:var(--bg1)"><div class="flex-1"><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max: '+s.max+(mk&&mk.pending?' · <span style="color:var(--wn)">member pending: '+mk.pending.marks+'</span>':'')+'</div></div><input type="number" id="mk-'+s.id+'" class="inp" style="max-width:110px;text-align:center" min="0" max="'+s.max+'" value="'+val+'" placeholder="—"></div>';}
+h+='<div class="flex items-center justify-between mt-4 p-3 rounded-lg flex-wrap gap-3" style="background:var(--acg)"><span class="font-semibold text-sm">Total: <span id="cce-tot">'+tot+'</span> / '+mx+'</span><button class="bp" onclick="saveCCE()"><i class="fas fa-paper-plane mr-2"></i>Publish Marks</button></div></div>';}
+h+='</div>';c.innerHTML=h;});}
+function saveCCE(){if(!CCE_SEL){toast('Select a member','err');return;}var subs=loadSubs();var u=loadUSync(CCE_SEL);u.cce=u.cce||{};var tot=0,any=false;
+for(var i=0;i<subs.length;i++){var e=document.getElementById('mk-'+subs[i].id);if(!e)continue;var val=e.value.trim();if(val===''){delete u.cce[subs[i].id];continue;}var n=parseFloat(val);if(isNaN(n)||n<0||n>subs[i].max){toast(subs[i].name+': enter a value between 0 and '+subs[i].max,'err');return;}u.cce[subs[i].id]={marks:n,date:new Date().toLocaleDateString('en-GB'),by:'Administrator',status:'approved'};tot+=n;any=true;}
+saveU(CCE_SEL,u);pushNotif(CCE_SEL,'CCE marks published by Administrator: total '+tot+' points','ok');toast(any?('Marks published to '+gdn(u,CCE_SEL)):'All marks cleared for '+gdn(u,CCE_SEL),any?'ok':'inf');render();}
+
+/* ===== ADMIN: VIEW MEMBER CCE (modal) ===== */
+function viewCCE(adno){var u=loadUSync(adno);var r=cceRowsHTML(u);var pct=r.mx>0?Math.round(r.tot/r.mx*100):0;var g=getGrade(pct);
+openModal('<h3 class="text-lg font-bold mb-1"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>CCE Marks — '+gdn(u,adno)+'</h3><p class="text-xs mb-4" style="color:var(--t3)">'+(r.mx?'Total '+r.tot+'/'+r.mx+' · '+pct+'% · Grade '+g.g+(r.pd?' · '+r.pd+' pending':''):'No marks entered yet')+'</p>'+(r.nsubs===0?'<p class="text-sm" style="color:var(--t3)">No subjects configured.</p>':r.html)+'<button class="bs w-full mt-4" onclick="cmodal()">Close</button>');}
+
+/* ===== ADMIN: RESET MEMBER PASSWORD ===== */
+function admPw(adno){var e=document.getElementById('apw-'+adno);var n=e?e.value:'';if(!n){toast('Enter a new password','err');return;}var u=loadUSync(adno);u.password=n;saveU(adno,u);CREDENTIALS[adno]=n;pushNotif(adno,'Your password was reset by the administrator','err');toast('Password updated for '+adno,'ok');if(e)e.value='';}
+</script>
+</body>
+</html>
