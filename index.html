@@ -659,3 +659,546 @@ function showApp(){document.getElementById('pg-land').style.display='none';docum
 try{var hb=function(){try{if(!CU)return;var u=loadUSync(CU);u.onl=Date.now();saveU(CU,u);}catch(e){}};hb();setInterval(hb,30000);}catch(e){}
 updateSB();nav('dashboard');var un=unreadCount(CU);if(un>0)toast('You have '+un+' new notification'+(un>1?'s':''),'inf');}
 showLand();
+/* ==== PART 2 continues inside the same <script> ==== */
+/* ===== NAVIGATION ===== */
+function chatTotalUnread(){var peers=Object.keys(loadAllSync()).filter(function(k){return k!==CU;});var c=0;for(var i=0;i<peers.length;i++)c+=chatUnread(msgPair(CU,peers[i]));return c;}
+function refreshChatBadges(){buildNav();buildMobNav();try{var tn=chatTotalUnread();document.title='FATH MATES'+(tn>0?' ('+tn+')':' - Darul Hasanath Islamic College');}catch(e){}}
+function updateSB(){var u=cache[CU]||loadUSync(CU);var avEl=document.getElementById('sb-av');if(avEl)avEl.outerHTML=avH(u,CU,'avs').replace('class="av','id="sb-av" class="av');var nmEl=document.getElementById('sb-nm');if(nmEl)nmEl.textContent=gdn(u,CU);var rb=document.getElementById('sb-rl');if(rb){rb.className='badge mt-0.5 '+(u.role==='admin'?'ba':'bm');rb.textContent=u.role==='admin'?'Admin':'Adno: '+CU;}buildNav();buildMobNav();updateNotifDot();}
+function buildNav(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var pc=isA?countPending():0;var cu=chatTotalUnread();var h='<div class="mb-1 px-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--t3)">Menu</div>';
+for(var i=0;i<NAV.length;i++){var n=NAV[i];if(isA&&n.id==='cce')continue;var bdg=n.id==='chat'&&cu>0?'<span class="bpn" style="margin-left:auto">'+cu+'</span>':'';h+='<div class="ni '+(CV===n.id?'on':'')+'" onclick="nav(\''+n.id+'\')"><i class="fas '+n.icon+'"></i><span>'+n.label+'</span>'+bdg+'</div>';}
+if(isA){h+='<div class="mt-3 mb-1 px-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Admin</div>';
+for(var j=0;j<ADMIN_NAV.length;j++){var a=ADMIN_NAV[j];var bdg2='';if(a.badge&&pc>0)bdg2='<span class="bpn" style="margin-left:auto">'+pc+'</span>';h+='<div class="ni '+(CV===a.id?'on':'')+'" onclick="nav(\''+a.id+'\')"><i class="fas '+a.icon+'"></i><span>'+a.label+'</span>'+bdg2+'</div>';}}
+document.getElementById('sb-nav').innerHTML=h;}
+function buildMobNav(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var pc=isA?countPending():0;var cu=chatTotalUnread();
+var items=isA?[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'chat',icon:'fa-comments',l:'Chat',b:cu},{id:'homework',icon:'fa-list-check',l:'Work'},{id:'admin-appr',icon:'fa-check-double',l:'Approve',b:pc},{id:'more',icon:'fa-ellipsis-h',l:'More'}]:[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'chat',icon:'fa-comments',l:'Chat',b:cu},{id:'homework',icon:'fa-list-check',l:'Work'},{id:'leaderboard',icon:'fa-ranking-star',l:'Rank'},{id:'more',icon:'fa-ellipsis-h',l:'More'}];
+var h='';for(var i=0;i<items.length;i++){var it=items[i];var bdg=it.b>0?'<span class="bpn" style="margin-left:3px">'+it.b+'</span>':'';var act=it.id==='more'?'showMoreMenu()':'nav(\''+it.id+'\')';h+='<button class="'+(CV===it.id?'on':'')+'" onclick="'+act+'"><i class="fas '+it.icon+'"></i><span style="display:flex;align-items:center">'+it.l+bdg+'</span></button>';}
+document.getElementById('mob-nav').innerHTML=h;}
+function showMoreMenu(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var links=NAV.filter(function(n){return!(isA&&n.id==='cce');});if(isA)links=links.concat(ADMIN_NAV);
+var h='<h3 class="text-lg font-bold mb-4"><i class="fas fa-bars mr-2" style="color:var(--ac)"></i>Menu</h3><div class="space-y-1">';
+for(var i=0;i<links.length;i++){var n=links[i];h+='<div class="ni '+(CV===n.id?'on':'')+'" onclick="nav(\''+n.id+'\');cmodal()"><i class="fas '+n.icon+'"></i><span>'+n.label+'</span></div>';}
+h+='<div class="ni" onclick="cmodal();doLogout()" style="color:var(--dn)"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>';openModal(h);}
+function nav(vx,extra){if(CV==='chat'&&vx!=='chat'){chatDetachAll();CHAT_PEER=null;REPLY=null;SELMSG=null;}
+CV=vx;if(vx==='profile'){VA=CU;PT='details';}if(vx==='member-detail'){VA=extra;PT='details';}buildNav();buildMobNav();render();}
+function render(){var c=document.getElementById('mc');if(!c)return;switch(CV){case'dashboard':rDash(c);break;case'profile':rProf(c,CU,true);break;case'cce':rCCE(c);break;case'attendance':rAtt(c);break;case'timetable':rTT(c);break;case'homework':rHW(c);break;case'polls':rPolls(c);break;case'resources':rRes(c);break;case'chat':rChat(c);break;case'members':rMems(c,false);break;case'member-detail':var uu=cache[CU]||loadUSync(CU);rProf(c,VA,CU===VA||uu.role==='admin');break;case'settings':rSett(c);break;case'announcements':rAnn(c,false);break;case'leaderboard':rLB(c);break;case'events':rEvts(c,false);break;case'admin-mem':rMems(c,true);break;case'admin-add':rAdminAdd(c);break;case'admin-appr':rApprovals(c);break;case'admin-subj':rAdminSubj(c);break;case'admin-cce':rAdminCCE(c);break;case'admin-ann':rAnn(c,true);break;case'admin-evt':rEvts(c,true);break;default:rDash(c);}}
+/* ===== DASHBOARD ===== */
+function rDash(c){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var nm=gdn(u,CU);var hr=new Date().getHours();var greet=hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening';
+loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+loadAnn().then(function(anns){loadEvts().then(function(evts){
+var nSubs=loadSubs().length;var hwOpen=loadHW().filter(function(h){return!(h.done||[]).includes(CU);}).length;
+if(isA){
+var tSk=0,tAc=0,tPts=0,pc=countPending();
+for(var i=0;i<ads.length;i++){tSk+=(all[ads[i]].skills||[]).length;var aA=(all[ads[i]].achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length;tAc+=aA;tPts+=calcPoints(all[ads[i]]);}
+c.innerHTML='<div class="fi">'+bdayBanner(all)+'<div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Institution overview · '+(CLOUD?'cloud database live':'local device')+'</p></div>'+
+'<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5 stat-grid">'+sc('Members',ads.length,'fa-users','var(--ac)','var(--acg)')+sc('Total Points',tPts,'fa-star','var(--gd)','var(--gdg)')+sc('Approved Ach.',tAc,'fa-check-circle','var(--ac)','var(--acg)')+sc('CCE Subjects',nSubs,'fa-book-open','var(--pn)','var(--png)')+'</div>'+
+(pc>0?'<div class="card mb-5" style="border-color:rgba(217,119,6,.35);cursor:pointer" onclick="nav(\'admin-appr\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--wng)"><i class="fas fa-clock" style="color:var(--wn)"></i></div><div class="flex-1"><div class="font-semibold text-sm" style="color:var(--wn)">'+pc+' submission'+(pc>1?'s':'')+' pending approval</div><div class="text-xs" style="color:var(--t3)">Achievements & CCE marks — click to review</div></div><i class="fas fa-chevron-right" style="color:var(--t3)"></i></div></div>':'')+
+'<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5 stat-grid"><div class="card card-glow" style="cursor:pointer" onclick="nav(\'attendance\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-user-check mr-1"></i> Attendance</div><div class="text-sm font-bold">Mark today →</div></div><div class="card card-glow" style="cursor:pointer" onclick="nav(\'homework\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-list-check mr-1"></i> Homework</div><div class="text-sm font-bold">'+loadHW().length+' posted</div></div><div class="card card-glow" style="cursor:pointer" onclick="nav(\'polls\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-square-poll-vertical mr-1"></i> Polls</div><div class="text-sm font-bold">'+loadPolls().length+' active</div></div><div class="card card-glow" style="cursor:pointer" onclick="nav(\'resources\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-folder-open mr-1"></i> Resources</div><div class="text-sm font-bold">'+loadRes().length+' items</div></div></div>'+
+'<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5"><div class="card card-glow"><h3 class="text-sm font-bold mb-3"><i class="fas fa-bullhorn mr-2" style="color:var(--ac)"></i>Announcements</h3>'+(anns.length===0?'<p class="text-sm" style="color:var(--t3)">No announcements</p>':anns.slice(0,3).map(function(a){return'<div class="ann-card '+(a.important?'imp':'')+' mb-2"><span class="font-semibold text-sm">'+a.title+'</span>'+(a.important?' <span class="badge ba">Important</span>':'')+'<p class="text-xs mt-1" style="color:var(--t2)">'+(a.content||'').slice(0,80)+'</p></div>';}).join(''))+'</div><div class="card card-glow"><h3 class="text-sm font-bold mb-3"><i class="fas fa-calendar mr-2" style="color:var(--gd)"></i>Events</h3>'+(evts.length===0?'<p class="text-sm" style="color:var(--t3)">No events</p>':evts.slice(0,4).map(function(ev){return'<div class="flex items-center gap-3 mb-2 p-2.5 rounded-lg" style="background:var(--bg1)"><div class="evt-dot" style="background:'+(ev.color||'var(--ac)')+'"></div><div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+ev.title+'</div><div class="text-xs" style="color:var(--t3)">'+(ev.date||'')+(ev.time?' · '+ev.time:'')+'</div></div></div>';}).join(''))+'</div></div></div>';
+}else{
+var ap=calcPoints(u);
+var subs=loadSubs(),cce=u.cce||{},ct=0,cm=0,pd=0;
+for(var k=0;k<subs.length;k++){var mk=cce[subs[k].id];if(mkOK(mk)){ct+=mk.marks;cm+=subs[k].max;}if(mk&&mk.pending&&typeof mk.pending.marks==='number')pd++;}
+var cpct=cm>0?Math.round(ct/cm*100):null;
+var att=loadAtt();var dts=Object.keys(att);var aTot=dts.length,aPr=0;for(var d2=0;d2<dts.length;d2++)if((att[dts[d2]]||[]).indexOf(CU)>-1)aPr++;
+var aPct=aTot?Math.round(aPr/aTot*100):null;
+var cceCard;
+if(cpct===null){cceCard='<div class="card mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks</div><div class="text-xs" style="color:var(--t3)">No approved marks yet — submit yours from My Marks</div></div></div></div>';}
+else{var og=getGrade(cpct);cceCard='<div class="card card-glow mb-5" style="cursor:pointer" onclick="nav(\'cce\')"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks: '+ct+'/'+cm+'</div><div class="text-xs" style="color:var(--t3)">'+(pd>0?'<span style="color:var(--wn)">'+pd+' pending</span> · ':'')+'Tap to view & submit</div></div><div class="text-right"><div class="text-xl font-bold" style="color:'+og.c+'">'+og.g+'</div><div class="text-xs" style="color:var(--t3)">'+cpct+'%</div></div></div><div class="pb" style="height:8px"><div class="pf" style="width:'+cpct+'%"></div></div></div>';}
+var attCard=aPct===null?'<div class="card mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--acg)"><i class="fas fa-user-check" style="color:var(--ac)"></i></div><div class="flex-1"><div class="font-semibold text-sm">Attendance</div><div class="text-xs" style="color:var(--t3)">No records yet</div></div></div></div>':'<div class="card card-glow mb-5" style="cursor:pointer" onclick="nav(\'attendance\')"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--acg)"><i class="fas fa-user-check" style="color:var(--ac)"></i></div><div class="flex-1"><div class="font-semibold text-sm">Attendance: '+aPct+'%</div><div class="text-xs" style="color:var(--t3)">'+aPr+' of '+aTot+' days present · tap for details</div></div></div><div class="pb"><div class="pf" style="width:'+aPct+'%"></div></div></div>';
+c.innerHTML='<div class="fi">'+bdayBanner(all)+'<div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Your academic journey</p></div>'+
+'<div class="card card-glow mb-5" style="border-color:rgba(202,138,4,.25)"><div class="flex items-center gap-5"><div><div class="pts-big">'+ap+'</div><div class="text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Total Points</div></div><div class="flex-1"><div class="pts-break" style="margin-top:0"><span class="pts-chip" style="background:var(--acg);color:var(--acd)"><i class="fas fa-trophy"></i> Achievements: '+ap+'</span></div><div class="pts-break">'+catChipsHTML(u)+'</div></div></div></div>'+
+'<div class="grid grid-cols-2 gap-3 mb-5 stat-grid">'+sc('Profile',comp(u)+'%','fa-user','var(--ac)','var(--acg)')+sc('Skills',(u.skills||[]).length,'fa-lightbulb','var(--pn)','var(--png)')+sc('Approved',(u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length,'fa-check-circle','var(--gd)','var(--gdg)')+sc('Pending',(u.achievements||[]).filter(function(a){return a.status==='pending';}).length+pd,'fa-clock','var(--wn)','var(--wng)')+'</div>'+
+cceCard+attCard+
+(hwOpen>0?'<div class="card mb-5" style="border-color:rgba(217,119,6,.35);cursor:pointer" onclick="nav(\'homework\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--wng)"><i class="fas fa-list-check" style="color:var(--wn)"></i></div><div class="flex-1"><div class="font-semibold text-sm" style="color:var(--wn)">'+hwOpen+' homework pending</div><div class="text-xs" style="color:var(--t3)">Tap to view & mark as done</div></div><i class="fas fa-chevron-right" style="color:var(--t3)"></i></div></div>':'')+
+'<div class="flex flex-wrap gap-3"><button class="bp" onclick="nav(\'profile\')"><i class="fas fa-edit mr-2"></i>Edit Profile</button><button class="bs" onclick="nav(\'chat\')"><i class="fas fa-comments mr-2"></i>Chat</button><button class="bs" onclick="nav(\'timetable\')"><i class="fas fa-table-cells mr-2"></i>Timetable</button><button class="bs" onclick="nav(\'leaderboard\')"><i class="fas fa-ranking-star mr-2"></i>Leaderboard</button></div></div>';
+}});});});}
+function bdayBanner(all){var names=[];for(var id in all){if(id!=='ADMINISTRATOR'&&isBday(all[id]))names.push(gdn(all[id],id));}
+if(!names.length)return'';return'<div class="bday"><span style="font-size:24px">🎂</span><div><div class="font-bold text-sm" style="color:var(--pk)">Happy Birthday!</div><div class="text-xs" style="color:var(--t2)">Today we celebrate: <b>'+esc(names.join(', '))+'</b> 🎉</div></div></div>';}
+/* ===== PROFILE ===== */
+function rProf(c,adno,canEdit){loadU(adno).then(function(u){if(!u){c.innerHTML='<p>User not found</p>';return;}var cp2=comp(u);var dn=gdn(u,adno);var isOwn=adno===CU;var isAdminV=(cache[CU]||loadUSync(CU)).role==='admin';var ap=calcPoints(u);
+var tabH='';if(PT==='details')tabH=rDT(adno,u,canEdit);else if(PT==='skills')tabH=rST(adno,u,canEdit);else tabH=rAT(adno,u,canEdit);
+c.innerHTML='<div class="fi"><div class="card mb-5"><div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">'+avH(u,adno,'avl')+'<div class="flex-1 min-w-0" style="width:100%"><div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start"><h1 class="text-xl font-bold">'+dn+'</h1>'+(u.role==='admin'?'<span class="badge ba">Admin</span>':'<span class="badge bm">Adno: '+adno+'</span>')+'</div><div class="flex items-center gap-4 mt-2 justify-center sm:justify-start"><div class="flex items-center gap-1.5"><i class="fas fa-star" style="color:var(--gd);font-size:13px"></i><span class="font-bold text-sm" style="color:var(--gd)">'+ap+' pts</span></div><div class="pb flex-1" style="max-width:120px"><div class="pf" style="width:'+cp2+'%"></div></div><span class="text-xs font-semibold" style="color:'+(cp2>=80?'var(--ac)':'var(--gd)')+'">'+cp2+'%</span></div><div class="pts-break justify-center sm:justify-start">'+catChipsHTML(u)+'</div></div>'+(canEdit&&!isOwn?'<span class="badge ba"><i class="fas fa-shield-alt mr-1"></i>Admin Edit</span>':'')+'</div></div>'+
+'<div class="flex gap-2 mb-4 flex-wrap"><button class="tab '+(PT==='details'?'on':'')+'" onclick="PT=\'details\';render()"><i class="fas fa-id-card mr-1"></i>Details</button><button class="tab '+(PT==='skills'?'on':'')+'" onclick="PT=\'skills\';render()"><i class="fas fa-lightbulb mr-1"></i>Skills ('+(u.skills||[]).length+')</button><button class="tab '+(PT==='achievements'?'on':'')+'" onclick="PT=\'achievements\';render()"><i class="fas fa-trophy mr-1"></i>Achievements ('+(u.achievements||[]).length+')</button></div><div id="tab-c">'+tabH+'</div>'+
+(isAdminV&&!isOwn&&u.role!=='admin'?'<button class="bs mt-5" onclick="viewCCE(\''+adno+'\')"><i class="fas fa-clipboard-check mr-2"></i>View CCE Marks of '+dn+'</button>':'')+
+(isAdminV&&!isOwn?'<div class="card mt-5" style="border-color:rgba(202,138,4,.25)"><h3 class="text-sm font-bold mb-3" style="color:var(--gd)"><i class="fas fa-key mr-2"></i>Admin: Reset Password for '+adno+'</h3><div class="flex flex-col sm:flex-row gap-3"><input type="password" id="apw-'+adno+'" class="inp flex-1" placeholder="New password"><button class="bgt" onclick="admPw(\''+adno+'\')">Update</button></div></div>':'')+
+'</div>';});}
+function rDT(adno,u,ce){var d=u.details;var ro=ce?'':'readonly';
+var photoRow='<div style="display:flex;align-items:center;gap:18px;margin-bottom:20px;flex-wrap:wrap">'+avH(u,adno,'avl')+'<div style="display:flex;gap:10px;flex-wrap:wrap">'+(ce?'<button class="bs" onclick="dpPick(\''+adno+'\')"><i class="fas fa-camera mr-1"></i> Change Photo</button>'+((u.details&&u.details.photo)?'<button class="bd" onclick="dpRemove(\''+adno+'\')"><i class="fas fa-trash mr-1"></i> Remove</button>':'')+'<input type="file" id="dp-file" accept="image/*" style="display:none" onchange="dpChange(event,\''+adno+'\')">':'<span class="text-xs" style="color:var(--t3)"><i class="fas fa-image mr-1"></i>Profile photo</span>')+'</div></div>';
+var f=[{k:'fullName',l:'Full Name',i:'fa-user',t:'text'},{k:'dob',l:'Date of Birth',i:'fa-calendar',t:'date'},{k:'class',l:'Class',i:'fa-school',t:'text'},{k:'guardian',l:'Father/Guardian',i:'fa-user-tie',t:'text'},{k:'motherName',l:'Mother',i:'fa-female',t:'text'},{k:'phone',l:'Phone',i:'fa-phone',t:'tel'},{k:'email',l:'Email',i:'fa-envelope',t:'email'},{k:'bloodGroup',l:'Blood Group',i:'fa-tint',t:'text'},{k:'address',l:'Address',i:'fa-map-marker-alt',t:'textarea'}];
+var h='<div class="card fi">'+photoRow+'<h3 class="text-base font-bold mb-4"><i class="fas fa-id-card mr-2" style="color:var(--ac)"></i>Personal Details</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+for(var i=0;i<f.length;i++){var fl=f[i];if(fl.t==='textarea')h+='<div class="md:col-span-2"><label class="fl"><i class="fas '+fl.i+' mr-1"></i>'+fl.l+'</label><textarea class="inp" id="f-'+fl.k+'" '+ro+'>'+(d[fl.k]||'')+'</textarea></div>';else h+='<div><label class="fl"><i class="fas '+fl.i+' mr-1"></i>'+fl.l+'</label><input type="'+fl.t+'" class="inp" id="f-'+fl.k+'" value="'+(d[fl.k]||'')+'" '+ro+'></div>';}
+h+='</div>';if(ce)h+='<div class="mt-5"><button class="bp" onclick="saveDet(\''+adno+'\')"><i class="fas fa-save mr-2"></i>Save</button></div>';h+='</div>';return h;}
+function rST(adno,u,ce){var sk=u.skills||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-lightbulb mr-2" style="color:var(--pn)"></i>Skills</h3><p class="text-xs mb-4" style="color:var(--t3)"><i class="fas fa-info-circle mr-1"></i>Skills do not give points — only approved achievements earn points by category.</p>';if(ce)h+='<div class="flex flex-col sm:flex-row gap-3 mb-4"><input type="text" id="nsk" class="inp flex-1" placeholder="Skill name"><select id="nsl" class="inp" style="max-width:160px"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Expert</option></select><button class="bp" onclick="addSk(\''+adno+'\')"><i class="fas fa-plus mr-1"></i>Add</button></div>';if(sk.length===0)h+='<div class="text-center py-8" style="color:var(--t3)">No skills yet</div>';else{h+='<div class="flex flex-wrap gap-2.5">';for(var i=0;i<sk.length;i++)h+='<div class="stg"><span>'+sk[i].name+'</span><span class="text-xs opacity-50">'+sk[i].level+'</span>'+(ce?'<span class="rx" onclick="rmSk(\''+adno+'\','+i+')"><i class="fas fa-times"></i></span>':'')+'</div>';h+='</div>';}h+='</div>';return h;}
+function rAT(adno,u,ce){var ach=u.achievements||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-trophy mr-2" style="color:var(--pk)"></i>Achievements</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Submitted achievements go to the Administrator for approval. Points after approval: Academic +15 · Sports +12 · Arts +10 · Community +10 · Religious +10 · Other +8.</p>';
+if(ce)h+='<div class="p-4 rounded-xl mb-4" style="background:var(--bg1);border:1px solid var(--bd)"><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3"><div><label class="fl">Title</label><input type="text" id="nat" class="inp" placeholder="Title"></div><div><label class="fl">Date</label><input type="date" id="nad" class="inp"></div></div><div class="mb-3"><label class="fl">Category</label><select id="nac" class="inp"><option>Academic</option><option>Sports</option><option>Arts</option><option>Community</option><option>Religious</option><option>Other</option></select></div><div class="mb-3"><label class="fl">Description</label><textarea id="nadc" class="inp" placeholder="Details..."></textarea></div><button class="bp w-full" onclick="addAch(\''+adno+'\')"><i class="fas fa-paper-plane mr-1"></i>Submit for Approval</button></div>';
+if(ach.length===0)h+='<div class="text-center py-8" style="color:var(--t3)"><i class="fas fa-trophy text-3xl mb-2"></i><br>No achievements yet</div>';
+else{h+='<div class="space-y-2.5">';
+for(var i=0;i<ach.length;i++){var a=ach[i];var st=a.status||'approved';var cls=st==='pending'?'pend-ach':st==='rejected'?'rej-ach':'appr-ach';
+var stb=st==='pending'?'<span class="badge" style="background:var(--wng);color:var(--wn)"><i class="fas fa-clock"></i> Pending</span>':st==='rejected'?'<span class="badge" style="background:var(--dng);color:var(--dn)"><i class="fas fa-times"></i> Rejected</span>':'<span class="badge bm"><i class="fas fa-check"></i> +'+(CAT_PTS[a.category]||8)+' pts</span>';
+h+='<div class="ach '+cls+'"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg4)"><i class="fas '+(CAT_ICO[a.category]||'fa-star')+'" style="color:'+(CAT_CLR[a.category]||'var(--t2)')+'"></i></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-semibold text-sm">'+a.title+'</span>'+stb+'</div>'+(a.description?'<div class="text-xs mt-1" style="color:var(--t2)">'+a.description+'</div>':'')+'<div class="text-xs mt-1.5" style="color:var(--t3)">'+a.category+' · '+(a.date||'—')+'</div></div>'+(ce?'<button class="bd" onclick="rmAch(\''+adno+'\','+i+')"><i class="fas fa-trash"></i></button>':'')+'</div></div>';}
+h+='</div>';}
+h+='</div>';return h;}
+function addAch(adno){var t=v('nat'),d=v('nad'),c=v('nac'),dc=v('nadc');if(!t){toast('Enter a title','err');return;}if(!d){toast('Pick a date','err');return;}
+var u=loadUSync(adno);u.achievements=u.achievements||[];u.achievements.push({title:t,date:d,category:c||'Other',description:dc,status:'pending',submitted:new Date().toLocaleDateString('en-GB')});
+saveU(adno,u);pushNotif('ADMINISTRATOR','New achievement "'+t+'" from '+gdn(u,adno)+' ('+adno+') awaits approval','inf');
+toast('Submitted! Awaiting admin approval','ok');render();}
+function rmAch(adno,i){askConfirm('Delete this achievement?',function(){var u=loadUSync(adno);u.achievements.splice(i,1);saveU(adno,u);toast('Achievement deleted','inf');render();});}
+function saveDet(adno){var u=loadUSync(adno);var f=['fullName','dob','class','guardian','motherName','phone','email','bloodGroup','address'];for(var i=0;i<f.length;i++){var e=document.getElementById('f-'+f[i]);if(e)u.details[f[i]]=e.value.trim();}saveU(adno,u);toast('Details saved successfully','ok');updateSB();render();}
+function addSk(adno){var n=v('nsk');if(!n){toast('Enter skill name','err');return;}var u=loadUSync(adno);u.skills=u.skills||[];for(var i=0;i<u.skills.length;i++)if(u.skills[i].name.toLowerCase()===n.toLowerCase()){toast('Skill already added','err');return;}u.skills.push({name:n,level:v('nsl')||'Beginner'});saveU(adno,u);toast('Skill added','ok');render();}
+function rmSk(adno,i){var u=loadUSync(adno);u.skills.splice(i,1);saveU(adno,u);toast('Skill removed','inf');render();}
+/* ===== ATTENDANCE ===== */
+function rAtt(c){var u=loadUSync(CU);var isA=u.role==='admin';var att=loadAtt();var dates=Object.keys(att).sort().reverse();
+var tot=dates.length,pr=0;for(var i=0;i<tot;i++)if((att[dates[i]]||[]).indexOf(CU)>-1)pr++;
+var pct=tot?Math.round(pr/tot*100):null;
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Attendance</h1><p class="text-sm" style="color:var(--t3)">Daily presence records</p></div>';
+if(tot){h+='<div class="card card-glow mb-5"><div class="flex items-center gap-4"><div class="pts-big">'+pct+'%</div><div class="flex-1"><div class="font-semibold text-sm">Your attendance</div><div class="text-xs" style="color:var(--t3)">'+pr+' of '+tot+' recorded days present</div><div class="pb mt-2"><div class="pf" style="width:'+pct+'%"></div></div></div></div></div>';}else{h+='<div class="card mb-5 text-center py-8" style="color:var(--t3)"><i class="fas fa-user-check text-3xl mb-2"></i><br>No attendance recorded yet</div>';}
+if(dates.length){h+='<div class="card mb-5"><h3 class="text-sm font-bold mb-3"><i class="fas fa-calendar-day mr-2" style="color:var(--ac)"></i>Recent days</h3>';
+var n=Math.min(dates.length,14);
+for(var j=0;j<n;j++){var dd=dates[j];var p2=(att[dd]||[]).indexOf(CU)>-1;
+h+='<div class="flex items-center justify-between p-2.5 rounded-lg mb-2" style="background:var(--bg1)"><span class="text-sm font-semibold">'+dd+'</span>'+(p2?'<span class="badge bm"><i class="fas fa-check"></i> Present</span>':'<span class="badge" style="background:var(--dng);color:var(--dn)"><i class="fas fa-times"></i> Absent</span>')+'</div>';}
+h+='</div>';}
+if(isA){var today=new Date().toISOString().slice(0,10);var cur=att[today]||[];
+h+='<div class="card"><h3 class="text-sm font-bold mb-1"><i class="fas fa-user-pen mr-2" style="color:var(--gd)"></i>Mark Attendance (Admin)</h3><p class="text-xs mb-4" style="color:var(--t3)">Tick present members and save. Everyone sees updates live.</p>'+
+'<div class="mb-4"><label class="fl">Date</label><input type="date" id="att-date" class="inp" style="max-width:220px" value="'+today+'" onchange="render()"></div><div id="att-list">';
+var all=loadAllSync();var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';}).sort();
+for(var m=0;m<ads.length;m++){var id2=ads[m],mu=all[id2];
+h+='<label class="flex items-center gap-3 p-2.5 rounded-lg mb-2" style="background:var(--bg1);cursor:pointer"><input type="checkbox" class="att-chk" value="'+id2+'" style="width:18px;height:18px;accent-color:var(--ac)"'+(cur.indexOf(id2)>-1?' checked':'')+'>'+avH(mu,id2,'avs')+'<span class="text-sm font-semibold flex-1">'+gdn(mu,id2)+'</span><span class="text-xs" style="color:var(--t3)">'+id2+'</span></label>';}
+h+='</div><button class="bp mt-4" onclick="attSave()"><i class="fas fa-save mr-2"></i>Save Attendance</button></div>';}
+h+='</div>';c.innerHTML=h;}
+function attSave(){var d=document.getElementById('att-date')?document.getElementById('att-date').value:'';if(!d){toast('Pick a date','err');return;}
+var boxes=document.querySelectorAll('.att-chk');var sel=[];for(var i=0;i<boxes.length;i++)if(boxes[i].checked)sel.push(boxes[i].value);
+var att=loadAtt();att[d]=sel;saveAtt(att);toast('Attendance saved for '+d+' ('+sel.length+' present)','ok');render();}
+/* ===== TIMETABLE ===== */
+function rTT(c){var tt=loadTT();var isA=loadUSync(CU).role==='admin';
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Timetable</h1><p class="text-sm" style="color:var(--t3)">Weekly class schedule</p></div>';
+var any=false;var grid='<div class="tt-grid">';
+for(var d=0;d<TTDAYS.length;d++){var day=TTDAYS[d];var slots=tt[day]||[];
+if(slots.length)any=true;
+grid+='<div class="tt-day"><div class="font-bold text-sm mb-1" style="color:var(--acd)"><i class="fas fa-calendar-day mr-1"></i>'+day+'</div>';
+if(!slots.length)grid+='<div class="text-xs" style="color:var(--t3)">No classes</div>';
+for(var s=0;s<slots.length;s++){grid+='<div class="tt-slot"><span><b>'+esc(slots[s].s)+'</b>'+(slots[s].t?' <span style="color:var(--t3)">'+esc(slots[s].t)+'</span>':'')+'</span>'+(isA?'<button class="bd" style="padding:2px 7px" onclick="ttDel(\''+day+'\','+s+')"><i class="fas fa-times"></i></button>':'')+'</div>';}
+grid+='</div>';}
+grid+='</div>';
+h+=(any?'<div class="card">'+grid+'</div>':'<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-table-cells text-3xl mb-2"></i><br>Timetable not published yet</div>');
+if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Class Slot</h3><div class="grid grid-cols-1 sm:grid-cols-4 gap-3"><div><label class="fl">Day</label><select id="tt-day" class="inp">';
+for(var d2=0;d2<TTDAYS.length;d2++)h+='<option>'+TTDAYS[d2]+'</option>';
+h+='</select></div><div><label class="fl">Subject</label><input id="tt-s" class="inp" placeholder="e.g. Quran"></div><div><label class="fl">Time</label><input id="tt-t" class="inp" placeholder="e.g. 8:00 AM"></div><div style="display:flex;align-items:flex-end"><button class="bp w-full" onclick="ttAdd()"><i class="fas fa-plus mr-1"></i> Add</button></div></div></div>';}
+h+='</div>';c.innerHTML=h;}
+function ttAdd(){var d=v('tt-day'),s=v('tt-s'),t=v('tt-t');if(!d||!s){toast('Day and subject required','err');return;}
+var tt=loadTT();tt[d]=tt[d]||[];tt[d].push({s:s,t:t});saveTT(tt);toast('Slot added','ok');render();}
+function ttDel(d,i){var tt=loadTT();tt[d].splice(i,1);if(!tt[d].length)delete tt[d];saveTT(tt);render();}
+/* ===== HOMEWORK ===== */
+function rHW(c){var u=loadUSync(CU);var isA=u.role==='admin';var hw=loadHW().slice().sort(function(a,b){return(b.due||'').localeCompare(a.due||'');});
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Homework</h1><p class="text-sm" style="color:var(--t3)">Assignments &amp; your progress</p></div>';
+if(!hw.length)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-list-check text-3xl mb-2"></i><br>No homework posted yet</div>';
+else{h+='<div class="space-y-3">';
+for(var i=0;i<hw.length;i++){var w=hw[i];var done=(w.done||[]).indexOf(CU)>-1;var dc=(w.done||[]).length;
+h+='<div class="card '+(done?'hw-done':'')+'"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:'+(done?'var(--acg)':'var(--wng)')+'"><i class="fas '+(done?'fa-check':'fa-pen')+'" style="color:'+(done?'var(--ac)':'var(--wn)')+'"></i></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="htitle font-bold text-sm">'+esc(w.title)+'</span>'+(w.due?'<span class="badge bin"><i class="fas fa-calendar"></i> Due '+w.due+'</span>':'')+(done?'<span class="badge bm"><i class="fas fa-check"></i> Done</span>':'')+'</div>'+(w.desc?'<p class="text-xs mt-1" style="color:var(--t2)">'+esc(w.desc)+'</p>':'')+'<div class="text-xs mt-1.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(w.by||'Administrator')+' · <i class="fas fa-users mr-1"></i>'+dc+' completed</div></div>'+(isA?'<button class="bd" onclick="hwDel(\''+w.id+'\')"><i class="fas fa-trash"></i></button>':'<button class="'+(done?'bs':'bap')+'" onclick="hwDone(\''+w.id+'\')">'+(done?'<i class="fas fa-rotate-left mr-1"></i> Undo':'<i class="fas fa-check mr-1"></i> Mark done')+'</button>')+'</div></div>';}
+h+='</div>';}
+if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Post Homework</h3><div class="mb-3"><label class="fl">Title</label><input id="hw-t" class="inp" placeholder="e.g. Memorize Surah Al-Mulk"></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3"><div class="sm:col-span-2"><label class="fl">Description</label><input id="hw-d" class="inp" placeholder="Details (optional)"></div><div><label class="fl">Due date</label><input type="date" id="hw-due" class="inp"></div></div><button class="bp" onclick="hwAdd()"><i class="fas fa-paper-plane mr-2"></i>Post to all members</button></div>';}
+h+='</div>';c.innerHTML=h;}
+function hwDone(id){var hw=loadHW();for(var i=0;i<hw.length;i++)if(hw[i].id===id){hw[i].done=hw[i].done||[];var ix=hw[i].done.indexOf(CU);if(ix>-1)hw[i].done.splice(ix,1);else hw[i].done.push(CU);break;}saveHW(hw);render();}
+function hwAdd(){var t=v('hw-t');if(!t){toast('Enter a title','err');return;}var hw=loadHW();hw.unshift({id:'hw'+Date.now(),title:t,desc:v('hw-d'),due:v('hw-due'),by:gdn(loadUSync(CU),CU),date:new Date().toLocaleDateString('en-GB'),done:[]});saveHW(hw);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New homework: '+t,'inf');
+toast('Homework posted','ok');render();}
+function hwDel(id){askConfirm('Delete this homework?',function(){var hw=loadHW().filter(function(w){return w.id!==id;});saveHW(hw);toast('Deleted','inf');render();});}
+/* ===== POLLS ===== */
+function rPolls(c){var u=loadUSync(CU);var isA=u.role==='admin';var ps=loadPolls();
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Polls</h1><p class="text-sm" style="color:var(--t3)">Vote and see live results</p></div>';
+if(!ps.length)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-square-poll-vertical text-3xl mb-2"></i><br>No polls yet</div>';
+else{h+='<div class="space-y-3">';
+for(var i=0;i<ps.length;i++){var p=ps[i];var votes=p.votes||{};var tot=Object.keys(votes).length;var my=votes[CU];
+h+='<div class="card"><div class="flex items-start justify-between gap-3 flex-wrap"><div class="flex-1"><div class="font-bold text-sm">'+esc(p.q)+'</div><div class="text-xs mt-1" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(p.by||'Administrator')+' · '+tot+' vote'+(tot===1?'':'s')+(p.closed?' · <span style="color:var(--dn)">closed</span>':'')+'</div></div>'+(isA?'<div style="display:flex;gap:6px"><button class="bs" style="padding:5px 10px" onclick="pollClose(\''+p.id+'\')">'+(p.closed?'Reopen':'Close')+'</button><button class="bd" onclick="pollDel(\''+p.id+'\')"><i class="fas fa-trash"></i></button></div>':'')+'</div><div class="mt-3">';
+for(var o=0;o<(p.options||[]).length;o++){var cnt=0;for(var uid in votes)if(votes[uid]===o)cnt++;
+var pct=tot?Math.round(cnt/tot*100):0;var mine=my===o;
+if(my===undefined&&!p.closed){h+='<button class="pollbar" style="width:100%" onclick="pollVote(\''+p.id+'\','+o+')"><span class="polllbl"><span>'+esc(p.options[o])+'</span><span style="color:var(--t3)">tap to vote</span></span></button>';}
+else{h+='<div class="pollbar" onclick="'+(p.closed?'':'pollVote(\''+p.id+'\','+o+')')+'"><div class="pollfill" style="width:'+pct+'%"></div><span class="polllbl"><span>'+(mine?'<b style="color:var(--acd)">'+esc(p.options[o])+' ✓</b>':esc(p.options[o]))+'</span><span>'+cnt+' · '+pct+'%</span></span></div>';}}
+h+='</div></div>';}
+h+='</div>';}
+if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Create Poll</h3><div class="mb-3"><label class="fl">Question</label><input id="pl-q" class="inp" placeholder="e.g. Best day for the study tour?"></div><div class="mb-3"><label class="fl">Options (comma separated, 2–6)</label><input id="pl-o" class="inp" placeholder="Friday, Saturday, Sunday"></div><button class="bp" onclick="pollAdd()"><i class="fas fa-paper-plane mr-2"></i>Publish Poll</button></div>';}
+h+='</div>';c.innerHTML=h;}
+function pollVote(id,idx){var ps=loadPolls();for(var i=0;i<ps.length;i++)if(ps[i].id===id){if(ps[i].closed){toast('Poll is closed','err');return;}ps[i].votes=ps[i].votes||{};
+if(ps[i].votes[CU]!==undefined){askConfirm('Change your vote?',(function(pid,oi){return function(){var ps2=loadPolls();for(var j=0;j<ps2.length;j++)if(ps2[j].id===pid){ps2[j].votes[CU]=oi;}savePolls(ps2);toast('Vote updated','ok');render();};})(id,idx));return;}
+ps[i].votes[CU]=idx;break;}}savePolls(ps);toast('Vote recorded!','ok');render();}
+function pollAdd(){var q=v('pl-q'),opts=v('pl-o').split(',').map(function(s){return s.trim();}).filter(Boolean);
+if(!q||opts.length<2){toast('Question and at least 2 options required','err');return;}
+if(opts.length>6){toast('Max 6 options','err');return;}
+var ps=loadPolls();ps.unshift({id:'pl'+Date.now(),q:q,options:opts,by:gdn(loadUSync(CU),CU),votes:{},closed:false});savePolls(ps);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New poll: '+q,'inf');
+toast('Poll published','ok');render();}
+function pollClose(id){var ps=loadPolls();for(var i=0;i<ps.length;i++)if(ps[i].id===id){ps[i].closed=!ps[i].closed;break;}savePolls(ps);render();}
+function pollDel(id){askConfirm('Delete this poll?',function(){var ps=loadPolls().filter(function(p){return p.id!==id;});savePolls(ps);toast('Poll deleted','inf');render();});}
+/* ===== RESOURCES ===== */
+function rRes(c){var u=loadUSync(CU);var isA=u.role==='admin';var rs=loadRes();
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Resources</h1><p class="text-sm" style="color:var(--t3)">Notes, links & study materials</p></div>';
+if(!rs.length)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-folder-open text-3xl mb-2"></i><br>No resources yet</div>';
+else{h+='<div class="space-y-2">';
+for(var i=0;i<rs.length;i++){var r=rs[i];
+h+='<div class="res-item"><div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--png)"><i class="fas fa-link" style="color:var(--pn)"></i></div><div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+esc(r.title)+'</div><div class="text-xs truncate" style="color:var(--t3)">'+esc(r.url)+'</div><div class="text-xs mt-0.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(r.by||'Administrator')+' · '+(r.date||'')+'</div></div><a class="bap" href="'+esc(r.url)+'" target="_blank" rel="noopener" style="text-decoration:none"><i class="fas fa-up-right-from-square mr-1"></i> Open</a>'+(isA?'<button class="bd" onclick="resDel(\''+r.id+'\')"><i class="fas fa-trash"></i></button>':'')+'</div>';}
+h+='</div>';}
+if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Resource</h3><div class="mb-3"><label class="fl">Title</label><input id="rs-t" class="inp" placeholder="e.g. Hifz revision planner"></div><div class="mb-3"><label class="fl">URL</label><input id="rs-u" class="inp" placeholder="https://…"></div><button class="bp" onclick="resAdd()"><i class="fas fa-paper-plane mr-2"></i>Add for everyone</button></div>';}
+h+='</div>';c.innerHTML=h;}
+function resAdd(){var t=v('rs-t'),url=v('rs-u');if(!t||!url){toast('Title and URL required','err');return;}
+if(!/^https?:\/\//i.test(url)){url='https://'+url;}
+var rs=loadRes();rs.unshift({id:'rs'+Date.now(),title:t,url:url,by:gdn(loadUSync(CU),CU),date:new Date().toLocaleDateString('en-GB')});saveRes(rs);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New resource: '+t,'inf');
+toast('Resource added','ok');render();}
+function resDel(id){askConfirm('Delete this resource?',function(){var rs=loadRes().filter(function(r){return r.id!==id;});saveRes(rs);toast('Resource deleted','inf');render();});}
+/* ===== WHATSAPP-STYLE CHAT ===== */
+function msgPair(a,b){return[String(a),String(b)].sort().join('__');}
+function msgLocal(pair){try{var v2=JSON.parse(lsGet('pu_msg_'+pair)||'[]');return v2||[];}catch(e){return[];}}
+function chatPeers(){var all=loadAllSync();return Object.keys(all).filter(function(k){return k!==CU;});}
+function chatUnread(pair){var l=msgLocal(pair);var lr=parseInt(lsGet('chat_lr_'+pair)||'0',10);var c=0;for(var i=0;i<l.length;i++)if(l[i].ts>lr&&l[i].f!==CU&&!l[i].del)c++;return c;}
+function chatDetachAll(){while(MSG_UNSUBS.length){try{MSG_UNSUBS.pop()();}catch(e){}}}
+function pruneChat(l){var bytes=0,i;for(i=0;i<l.length;i++)bytes+=(l[i].t?l[i].t.length:0)+60;
+while(l.length>150||(bytes>600000&&l.length>12)){var x=l.shift();bytes-=(x.t?x.t.length:0)+60;}return l;}
+function mutChat(pair,fn){
+if(CLOUD){return DB.collection('pu_msg').doc(pair).get().then(function(d){
+var dd=d.exists?d.data():{};var res=fn(dd.list||[],dd);if(!res)return null;
+return DB.collection('pu_msg').doc(pair).set({list:pruneChat(res.list),typing:res.typing||{},read:res.read||{}});}).catch(function(e){toast('Chat sync failed','err');});}
+else{var l=msgLocal(pair);var r=fn(l,{typing:{},read:{}});if(r)lsSet('pu_msg_'+pair,JSON.stringify(pruneChat(r.list)));return Promise.resolve();}}
+function chatMarkRead(pair){lsSet('chat_lr_'+pair,String(Date.now()));
+if(!CLOUD)return;DB.collection('pu_msg').doc(pair).get().then(function(d){var dd=d.exists?d.data():{};var rd=Object.assign({},dd.read||{});rd[CU]=Date.now();
+return DB.collection('pu_msg').doc(pair).set({list:dd.list||[],typing:dd.typing||{},read:rd});}).catch(function(){});}
+function chatPing(){if(!CLOUD||!CHAT_PEER)return;var now=Date.now();if(now-TYP_LAST<1200)return;TYP_LAST=now;
+DB.collection('pu_msg').doc(msgPair(CU,CHAT_PEER)).get().then(function(d){var dd=d.exists?d.data():{};var ty=Object.assign({},dd.typing||{});ty[CU]=now;
+return DB.collection('pu_msg').doc(msgPair(CU,CHAT_PEER)).set({list:dd.list||[],typing:ty,read:dd.read||{}});}).catch(function(){});}
+function chatWatchAll(){chatDetachAll();if(!CLOUD)return;var peers=chatPeers();
+for(var i=0;i<peers.length;i++){(function(peer){var pair=msgPair(CU,peer);
+MSG_UNSUBS.push(DB.collection('pu_msg').doc(pair).onSnapshot(function(d){
+var dd=d.exists?d.data():{};var l=dd.list||[];
+var lastTs=l.length?l[l.length-1].ts:0;
+if(LAST_TS[pair]!==undefined&&lastTs>LAST_TS[pair]&&l.length&&l[l.length-1].f!==CU&&!l[l.length-1].del){try{playBeep();}catch(e){}}
+LAST_TS[pair]=lastTs;
+lsSet('pu_msg_'+pair,JSON.stringify(l));
+READMAP[pair]=dd.read||{};
+PEER_TYPING[peer]=(dd.typing&&dd.typing[peer]>Date.now()-4000)?dd.typing[peer]:0;
+if(CV!=='chat')return;
+if(CHAT_PEER===peer){lsSet('chat_lr_'+pair,String(Date.now()));renderChatPanel(true);}
+else{var lb=document.getElementById('chat-list-box');if(lb)lb.innerHTML=chatListHTML();refreshChatBadges();}
+},function(){}));})(peers[i]);}}
+function chatOpen(peer){CHAT_PEER=peer;REPLY=null;SELMSG=null;chatMarkRead(msgPair(CU,peer));render();}
+function chatBack(){CHAT_PEER=null;REPLY=null;SELMSG=null;render();}
+function chatSearch(){CHATQ=v('chat-q')||'';var lb=document.getElementById('chat-list-box');if(lb)lb.innerHTML=chatListHTML();}
+function chatListHTML(){var all=loadAllSync();var peers=chatPeers();
+peers.sort(function(a,b){var la=msgLocal(msgPair(CU,a)),lb2=msgLocal(msgPair(CU,b));
+var ta=la.length?la[la.length-1].ts:0,tb=lb2.length?lb2[lb2.length-1].ts:0;
+if(ta!==tb)return tb-ta;return gdn(all[a],a).localeCompare(gdn(all[b],b));});
+var q=CHATQ.toLowerCase();
+var h='<div class="chat-search"><input type="text" id="chat-q" class="inp" placeholder="Search chats…" value="'+esc(CHATQ)+'" oninput="chatSearch()" style="padding:9px 14px;border-radius:999px"></div><div class="chat-peers">';
+var shown=0;
+for(var i=0;i<peers.length;i++){var id=peers[i],u=all[id];var nm=gdn(u,id);
+if(q&&nm.toLowerCase().indexOf(q)===-1&&String(id).indexOf(q)===-1)continue;shown++;
+var pair=msgPair(CU,id);var l=msgLocal(pair);var last=null;
+for(var j=l.length-1;j>=0;j--){if(!l[j].del){last=l[j];break;}}
+var un=chatUnread(pair);var prev='No messages yet';
+if(last){var pfx=last.f===CU?'You: ':'';var ic=last.ty==='i'?'<i class="fas fa-image"></i> ':last.ty==='a'?'<i class="fas fa-microphone"></i> ':'';
+prev=pfx+ic+(last.t?esc(String(last.t).slice(0,26)):'');}
+var lt=last?last.ts:0;var tstr=lt?(new Date(lt).toDateString()===new Date().toDateString()?new Date(lt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):new Date(lt).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit'})):'';
+h+='<div class="chat-peer'+(CHAT_PEER===id?' on':'')+'" onclick="chatOpen(\''+id+'\')">'+avW(u,id,'avm')+
+'<div class="flex-1 min-w-0"><div style="display:flex;align-items:center;gap:6px"><span class="font-semibold text-sm truncate" style="flex:1">'+nm+'</span><span class="chat-time">'+tstr+'</span>'+(un>0?'<span class="bpn">'+un+'</span>':'')+'</div><div class="chat-prev">'+prev+'</div></div></div>';}
+if(!shown)h+='<div class="text-center py-6 text-sm" style="color:var(--t3)">No chats found</div>';
+h+='</div>';return h;}
+function peerStatus(peer){var u=loadUSync(peer);
+if(PEER_TYPING[peer]&&Date.now()-PEER_TYPING[peer]<4000)return'<span class="typedots" style="color:var(--ac)"><i></i><i></i><i></i></span> <span style="color:var(--ac)">typing…</span>';
+if(isOnline(u))return'<span style="color:var(--ac)">online</span>';
+if(u&&u.onl)return'last seen '+relTime(u.onl);
+return'offline';}
+function dayLabel(ts){var d=new Date(ts),n=new Date();var y=new Date(n.getTime()-86400000);
+var s1=d.toDateString();if(s1===n.toDateString())return'Today';if(s1===y.toDateString())return'Yesterday';
+return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function tickHTML(m,pair){if(m.f!==CU)return'';
+if(!CLOUD)return'<span class="tk">✓</span>';
+var rd=(READMAP[pair]&&READMAP[pair][CHAT_PEER])||0;
+if(rd>=m.ts)return'<span class="tk tkb">✓✓</span>';
+return'<span class="tk">✓✓</span>';}
+function reCount(l,id){var m=null;for(var i=0;i<l.length;i++)if(l[i].id===id){m=l[i];break;}
+if(!m||!m.rj)return'';var agg={};for(var uid in m.rj){var e=m.rj[uid];agg[e]=(agg[e]||0)+1;}
+var ks=Object.keys(agg);if(!ks.length)return'';var h='<div class="rchips">';
+for(var i2=0;i2<ks.length;i2++)h+='<span class="rchip">'+ks[i2]+(agg[ks[i2]]>1?' '+agg[ks[i2]]:'')+'</span>';
+return h+'</div>';}
+function msgBubble(m,pair){if(m.del)return'<div class="bub xmsg '+(m.f===CU?'me':'them')+'"><i class="fas fa-ban"></i> This message was deleted<span class="bt">'+(m.d||'')+'</span></div>';
+var inner='';
+if(m.rep){inner+='<div class="bquote"><b>'+(m.rep.f===CU?'You':esc(gdn(loadUSync(m.rep.f),m.rep.f)))+'</b>'+(m.rep.ty==='i'?'<i class="fas fa-image"></i> Photo':m.rep.ty==='a'?'<i class="fas fa-microphone"></i> Voice':esc(String(m.rep.t||'').slice(0,60)))+'</div>';}
+if(m.ty==='i')inner+='<img class="bimg" src="'+m.t+'" onclick="lbImg(this.src)" alt="photo">';
+else if(m.ty==='a')inner+='<div style="display:flex;align-items:center;gap:8px"><audio controls preload="metadata" src="'+m.t+'" style="height:36px;max-width:200px"></audio><span class="text-xs" style="color:var(--t3)">0:'+String(m.dur||0).padStart(2,'0')+'</span></div>';
+else inner+=linkify(esc(m.t)).replace(/\n/g,'<br>');
+inner+='<span class="bt">'+(m.d||'')+tickHTML(m,pair)+'</span>';
+inner+=reCount(msgLocal(pair),m.id);
+var cls=m.f===CU?'me':'them';
+return'<div id="msg-'+m.id+'" class="bub '+cls+'" onclick="msgTap(\''+m.id+'\')">'+inner+'</div>';}
+function msgsHTML(pair){var l=msgLocal(pair).slice().sort(function(a,b){return(a.ts||0)-(b.ts||0);});
+var h='',pd='';
+for(var i=0;i<l.length;i++){var m=l[i];var dl=dayLabel(m.ts||Date.now());
+if(dl!==pd){h+='<div class="day-div">'+dl+'</div>';pd=dl;}
+h+=msgBubble(m,pair);
+if(SELMSG===m.id){h+='<div class="mtools"><button title="Reply" onclick="msgReply(\''+m.id+'\')"><i class="fas fa-reply" style="color:var(--acd)"></i></button>'+(m.ty==='t'?'<button title="Copy" onclick="msgCopy(\''+m.id+'\')"><i class="far fa-copy"></i></button>':'')+'<button onclick="msgReact(\''+m.id+'\',\'❤️\')">❤️</button><button onclick="msgReact(\''+m.id+'\',\'👍\')">👍</button><button onclick="msgReact(\''+m.id+'\',\'😂\')">😂</button><button onclick="msgReact(\''+m.id+'\',\'😢\')">😢</button>'+(m.f===CU?'<button class="del" title="Delete" onclick="msgDel(\''+m.id+'\')"><i class="fas fa-trash"></i></button>':'')+'</div>';}}
+if(!l.length)h='<div style="text-align:center;color:var(--t3);margin:auto" class="text-sm"><i class="fas fa-lock text-xl mb-2"></i><br>Messages are private between you two<br><span class="text-xs">Say hello 👋</span></div>';
+return h;}
+function lbImg(src){openModal('<img src="'+src+'" style="width:100%;border-radius:12px" onclick="cmodal()"><button class="bs w-full mt-3" onclick="cmodal()">Close</button>');}
+function msgTap(id){SELMSG=(SELMSG===id)?null:id;renderChatPanel(true);}
+function msgCopy(id){var pair=msgPair(CU,CHAT_PEER);var l=msgLocal(pair);var m=null;
+for(var i=0;i<l.length;i++)if(l[i].id===id){m=l[i];break;}if(!m)return;
+try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(m.t||'');}else{var ta=document.createElement('textarea');ta.value=m.t||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+toast('Copied to clipboard','ok');}catch(e){}}
+function msgReply(id){var pair=msgPair(CU,CHAT_PEER);var l=msgLocal(pair);var m=null;
+for(var i=0;i<l.length;i++)if(l[i].id===id){m=l[i];break;}if(!m)return;
+REPLY={id:id,f:m.f,ty:m.ty,t:m.del?'':String(m.t||'').slice(0,60)};SELMSG=null;renderChatPanel(true);}
+function msgReact(id,emo){var pair=msgPair(CU,CHAT_PEER);
+mutChat(pair,function(l,dd){for(var i=0;i<l.length;i++)if(l[i].id===id){l[i].rj=l[i].rj||{};if(l[i].rj[CU]===emo)delete l[i].rj[CU];else l[i].rj[CU]=emo;break;}
+return{list:l,typing:dd.typing||{},read:dd.read||{}};}).then(function(){SELMSG=null;renderChatPanel(true);});}
+function msgDel(id){var pair=msgPair(CU,CHAT_PEER);
+mutChat(pair,function(l,dd){for(var i=0;i<l.length;i++)if(l[i].id===id){l[i].del=true;l[i].ty='x';l[i].t='';break;}
+return{list:l,typing:dd.typing||{},read:dd.read||{}};}).then(function(){SELMSG=null;renderChatPanel(true);toast('Message deleted','inf');});}
+function msgSend(obj){if(!CHAT_PEER)return;var pair=msgPair(CU,CHAT_PEER);
+var m=Object.assign({id:'m'+Date.now()+Math.floor(Math.random()*999),f:CU,d:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),ts:Date.now()},obj);
+if(REPLY){m.rep={id:REPLY.id,f:REPLY.f,ty:REPLY.ty,t:REPLY.t};REPLY=null;}
+mutChat(pair,function(l,dd){l.push(m);var ty=Object.assign({},dd.typing||{});ty[CU]=0;return{list:l,typing:ty,read:dd.read||{}};}).then(function(){SELMSG=null;renderChatPanel(true);});}
+function chatSend(){var inp=document.getElementById('chat-in');if(!inp)return;var t=inp.value.trim();if(!t)return;inp.value='';msgSend({ty:'t',t:t});}
+function emojiToggle(){var p=document.getElementById('emoji-pop');if(p){p.remove();return;}
+var row=document.getElementById('chat-inrow');if(!row)return;
+var d=document.createElement('div');d.id='emoji-pop';d.className='emoji-pop';
+for(var i=0;i<EMOJIS.length;i++){(function(e){var b=document.createElement('button');b.type='button';b.textContent=e;
+b.onclick=function(ev){ev.stopPropagation();var inp=document.getElementById('chat-in');if(inp){inp.value+=e;inp.focus();}};d.appendChild(b);})(EMOJIS[i]);}
+row.appendChild(d);}
+function chatPickImg(){var f=document.getElementById('chat-img');if(f){f.value='';f.click();}}
+function chatImgChange(ev){var f=ev.target&&ev.target.files?ev.target.files[0]:null;if(!f)return;
+if(!f.type.match('image.*')){toast('Choose an image','err');return;}
+if(f.size>6*1024*1024){toast('Image too large','err');return;}
+var r=new FileReader();
+r.onload=function(e){var img=new Image();
+img.onload=function(){try{
+var max=480,sc2=Math.min(1,max/Math.max(img.width,img.height));
+var cv=document.createElement('canvas');cv.width=Math.round(img.width*sc2);cv.height=Math.round(img.height*sc2);
+cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+var data=cv.toDataURL('image/jpeg',0.55);
+if(data.length>700000){toast('Photo too large after compression','err');return;}
+msgSend({ty:'i',t:data});
+}catch(ex){showErrBanner('img: '+((ex&&ex.message)||ex));}};
+img.onerror=function(){toast('Could not read image','err');};
+img.src=e.target.result;};
+r.readAsDataURL(f);}
+function chatMic(){if(!CHAT_PEER)return;
+if(REC){try{REC.rec.stop();}catch(e){}return;}
+if(!navigator.mediaDevices||!window.MediaRecorder){toast('Voice notes not supported here','err');return;}
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+var mt='';try{if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))mt='audio/webm;codecs=opus';else if(MediaRecorder.isTypeSupported('audio/mp4'))mt='audio/mp4';}catch(e){}
+var rec=new MediaRecorder(stream,mt?{mimeType:mt}:{});var chunks=[];
+REC={rec:rec,chunks:chunks,t0:Date.now(),stream:stream};
+rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data);};
+rec.onstop=function(){var dur=Math.max(1,Math.round((Date.now()-REC.t0)/1000));
+try{stream.getTracks().forEach(function(t){t.stop();});}catch(e){}
+if(REC.timer)clearInterval(REC.timer);
+var blob=new Blob(chunks,{type:chunks.length&&chunks[0].type?chunks[0].type:'audio/webm'});REC=null;renderChatPanel(true);
+if(blob.size>400000){toast('Voice note too long (max ~90s)','err');return;}
+var r=new FileReader();r.onload=function(e){msgSend({ty:'a',t:e.target.result,dur:dur});};r.readAsDataURL(blob);};
+rec.start();renderChatPanel(true);
+REC.timer=setInterval(function(){var b=document.getElementById('rec-t');if(b)b.textContent='0:'+String(Math.floor((Date.now()-REC.t0)/1000)).padStart(2,'0');
+if(Date.now()-REC.t0>90000)chatMic();},400);
+}).catch(function(){toast('Mic permission denied','err');});}
+function avView(id){var u=loadUSync(id);if(!u)return;
+openModal('<div style="text-align:center">'+avH(u,id,'avl')+'<h3 class="text-lg font-bold mt-3">'+gdn(u,id)+'</h3><p class="text-xs" style="color:var(--t3)">'+(u.role==='admin'?'Administrator':'Admission No: '+id)+' · '+(isOnline(u)?'<span style="color:var(--ac)">online</span>':'last seen '+(u.onl?relTime(u.onl):'unknown'))+'</p><div class="text-sm mt-2" style="color:var(--t2)">'+calcPoints(u)+' merit points · '+comp(u)+'% profile</div><div style="display:flex;gap:10px;justify-content:center;margin-top:16px" class="flex-wrap">'+(id!==CU?'<button class="bp" onclick="cmodal();CHAT_PEER=\''+id+'\';nav(\'chat\')"><i class="fas fa-comments mr-1"></i> Message</button>':'')+'<button class="bs" onclick="cmodal();nav(\'member-detail\',\''+id+'\')"><i class="fas fa-user mr-1"></i> Profile</button></div></div>');}
+function renderChatPanel(keep){var box=document.getElementById('chat-panel-box');if(!box)return;
+var inp=keep?document.getElementById('chat-in'):null;var val=inp?inp.value:null;
+box.innerHTML=chatPanelHTML();
+var wrap=document.getElementById('chat-wrap');if(wrap&&CHAT_PEER)wrap.classList.add('open');
+var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;
+if(val!==null){var ni=document.getElementById('chat-in');if(ni){ni.value=val;if(window.innerWidth>768)ni.focus();}}}
+function chatPanelHTML(){var u=CHAT_PEER?loadUSync(CHAT_PEER):null;
+if(!CHAT_PEER||!u)return'<div class="chat-panel" style="align-items:center;justify-content:center;color:var(--t3);text-align:center;padding:20px"><i class="fas fa-comments text-4xl mb-3" style="opacity:.3"></i><div class="font-semibold text-sm">Select a chat to start messaging</div><div class="text-xs mt-1">Photos · voice notes · replies · reactions · read ticks</div></div>';
+var pair=msgPair(CU,CHAT_PEER);
+var repHTML='';
+if(REPLY)repHTML='<div class="replybar"><div class="rb"><b>'+(REPLY.f===CU?'You':esc(gdn(loadUSync(REPLY.f),REPLY.f)))+'</b>'+(REPLY.ty==='i'?'<i class="fas fa-image"></i> Photo':REPLY.ty==='a'?'<i class="fas fa-microphone"></i> Voice':esc(REPLY.t||''))+'</div><button class="bico" onclick="REPLY=null;renderChatPanel(true)" style="width:32px;height:32px"><i class="fas fa-times"></i></button></div>';
+var recHTML='';
+if(REC)recHTML='<div class="chat-inrow" id="chat-inrow"><div class="recrow"><span class="rec-dot"></span><span class="rt" id="rec-t">0:00</span><span>Recording… tap to stop & send</span><button class="chat-send" style="background:var(--dn)" onclick="chatMic()"><i class="fas fa-stop"></i></button></div></div>';
+else recHTML='<div class="chat-inrow" id="chat-inrow">'+
+'<button class="cbtn" onclick="emojiToggle()" title="Emoji"><i class="far fa-face-smile"></i></button>'+
+'<input type="text" id="chat-in" class="chat-in" placeholder="Type a message…" autocomplete="off" oninput="chatPing()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();chatSend();}">'+
+'<button class="cbtn" onclick="chatPickImg()" title="Photo"><i class="fas fa-image"></i></button><input type="file" id="chat-img" accept="image/*" style="display:none" onchange="chatImgChange(event)">'+
+'<button class="cbtn" onclick="chatMic()" title="Voice note"><i class="fas fa-microphone"></i></button>'+
+'<button class="chat-send" onclick="chatSend()" title="Send"><i class="fas fa-paper-plane"></i></button></div>';
+return'<div class="chat-panel"><div class="chat-head"><button class="bico chat-back" onclick="chatBack()"><i class="fas fa-arrow-left"></i></button><span style="cursor:pointer" onclick="avView(\''+CHAT_PEER+'\')">'+avW(u,CHAT_PEER,'avm')+'</span>'+
+'<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(u,CHAT_PEER)+'</div><div class="text-xs" style="min-height:15px">'+peerStatus(CHAT_PEER)+'</div></div>'+(u.role==='admin'?'<span class="badge ba">Admin</span>':'')+'</div>'+
+'<div class="chat-msgs wall" id="chat-msgs">'+msgsHTML(pair)+'</div>'+repHTML+recHTML+'</div>';}
+function rChat(c){var lbx='<div id="chat-list-box" style="display:contents">'+chatListHTML()+'</div>';
+c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Chat</h1><p class="text-sm" style="color:var(--t3)">WhatsApp-style messaging · '+(CLOUD?'live cloud sync':'local device only')+'</p></div>'+
+'<div class="chat-wrap'+(CHAT_PEER?' open':'')+'" id="chat-wrap">'+lbx+'<div id="chat-panel-box">'+chatPanelHTML()+'</div></div></div>';
+chatWatchAll();
+var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;
+if(_chatTick)clearInterval(_chatTick);
+_chatTick=setInterval(function(){if(CV==='chat'&&CHAT_PEER){var p=document.querySelector('.chat-head .text-xs');if(p)p.innerHTML=peerStatus(CHAT_PEER);var lb=document.getElementById('chat-list-box');if(lb)lb.innerHTML=chatListHTML();}},15000);}
+/* ===== MY CCE MARKS ===== */
+function rCCE(c){var u=loadUSync(CU);var r=cceRowsHTML(u);var pct=r.mx>0?Math.round(r.tot/r.mx*100):0;var g=getGrade(pct);var subs=loadSubs();
+var form='';
+if(subs.length){form='<div class="card mb-5"><h3 class="text-base font-bold mb-2"><i class="fas fa-pen-to-square mr-2" style="color:var(--ac)"></i>Submit / Update My Marks</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Your submissions go to the Administrator for approval. Leave a field empty to withdraw a pending submission.</p>';
+for(var i=0;i<subs.length;i++){var s=subs[i];var mk=u.cce[s.id];var val=mkOK(mk)?mk.marks:(mk&&mk.pending&&typeof mk.pending.marks==='number'?mk.pending.marks:'');
+form+='<div class="flex items-center gap-3 p-3 rounded-lg mb-2" style="background:var(--bg1)"><div class="flex-1 min-w-0"><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max: '+s.max+(mk&&mk.pending?' · <span style="color:var(--wn)">pending: '+mk.pending.marks+'</span>':'')+'</div></div><input type="number" id="my-mk-'+s.id+'" class="inp" style="max-width:110px;text-align:center" min="0" max="'+s.max+'" value="'+val+'" placeholder="—"></div>';}
+form+='<div class="flex justify-end mt-3 gap-2 flex-wrap"><button class="bs" onclick="window.print()"><i class="fas fa-print mr-2"></i>Print Marksheet</button><button class="bp" onclick="saveMyCCE()"><i class="fas fa-paper-plane mr-2"></i>Submit for Approval</button></div></div>';}
+c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">My CCE Marks</h1><p class="text-sm" style="color:var(--t3)">Continuous & Comprehensive Evaluation'+(r.pd>0?' · <span style="color:var(--wn)">'+r.pd+' pending approval</span>':'')+'</p></div>'+
+(r.nsubs===0?'<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>No subjects configured yet</div>':
+'<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5 stat-grid"><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Total Score</div><div class="pts-big">'+r.tot+'</div><div class="text-xs" style="color:var(--t3)">out of '+r.mx+' (approved only)</div></div><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Percentage</div><div class="pts-big">'+pct+'%</div><div class="text-xs" style="color:var(--t3)">'+(r.cnt<r.nsubs?r.cnt+'/'+r.nsubs+' subjects entered':'All subjects entered')+'</div></div><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Overall Grade</div><div class="text-3xl font-black" style="font-family:\'Playfair Display\',serif;color:'+g.c+'">'+g.g+'</div><div class="text-xs" style="color:var(--t3)">Based on percentage</div></div></div>'+
+form+
+'<div class="card"><h3 class="text-base font-bold mb-4"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>Subject-wise Marks</h3>'+r.html+'</div>')+'</div>';}
+function saveMyCCE(){var subs=loadSubs();if(!subs.length){toast('No subjects configured','err');return;}var u=loadUSync(CU);u.cce=u.cce||{};var any=false,names=[];
+for(var i=0;i<subs.length;i++){var s=subs[i];var e=document.getElementById('my-mk-'+s.id);if(!e)continue;var val=e.value.trim();
+if(val===''){if(u.cce[s.id]&&u.cce[s.id].pending){delete u.cce[s.id].pending;any=true;}continue;}
+var n=parseFloat(val);if(isNaN(n)||n<0||n>subs[i].max){toast(subs[i].name+': enter a value between 0 and '+subs[i].max,'err');return;}
+u.cce[s.id]=u.cce[s.id]||{};u.cce[s.id].pending={marks:n,date:new Date().toLocaleDateString('en-GB')};any=true;names.push(subs[i].name);}
+saveU(CU,u);
+if(any){pushNotif('ADMINISTRATOR','CCE marks submitted by '+gdn(u,CU)+' ('+CU+') for: '+names.join(', ')+' — await approval','inf');toast('Marks submitted for admin approval','ok');}
+else{toast('No changes submitted','inf');}
+render();}
+/* ===== MEMBERS ===== */
+function rMems(c,adminMode){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+ads.sort(function(a,b){return calcPoints(all[b])-calcPoints(all[a]);});
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">'+(adminMode?'Manage Members':'Members')+'</h1><p class="text-sm" style="color:var(--t3)">'+ads.length+' registered members</p></div>'+
+'<div class="mb-4"><input type="text" id="mem-q" class="inp" placeholder="Search by name or admission no..." oninput="filterMems()"></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="mem-grid">';
+for(var i=0;i<ads.length;i++){var id=ads[i],u=all[id];var p=calcPoints(u);var cp=comp(u);var pd=(u.achievements||[]).filter(function(a){return a.status==='pending';}).length;var cce=all[id].cce||{};for(var k in cce){if(cce[k]&&cce[k].pending)pd++;}
+h+='<div class="mc mem-card" data-nm="'+gdn(u,id).toLowerCase()+' '+id+'" onclick="nav(\'member-detail\',\''+id+'\')"><div class="flex items-center gap-3">'+avH(u,id,'avm')+'<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(u,id)+'</div><div class="text-xs" style="color:var(--t3)">Adno: '+id+'</div></div></div><div class="flex items-center justify-between mt-3 pt-3 flex-wrap gap-2" style="border-top:1px solid var(--bd)"><span class="badge bm"><i class="fas fa-star mr-1"></i>'+p+' pts</span><span class="text-xs font-semibold" style="color:'+(cp>=80?'var(--ac)':'var(--gd)')+'">'+cp+'% complete</span></div>'+(pd>0?'<div class="mt-2"><span class="badge" style="background:var(--wng);color:var(--wn)"><i class="fas fa-clock"></i> '+pd+' pending</span></div>':'')+'</div>';}
+h+='</div></div>';c.innerHTML=h;});}
+function filterMems(){var q=(document.getElementById('mem-q').value||'').toLowerCase();var cards=document.querySelectorAll('.mem-card');for(var i=0;i<cards.length;i++){var t=(cards[i].getAttribute('data-nm')||'').toLowerCase();cards[i].style.display=t.indexOf(q)>-1?'':'none';}}
+/* ===== SETTINGS ===== */
+function rSett(c){var u=loadUSync(CU);
+c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Settings</h1><p class="text-sm" style="color:var(--t3)">Account & preferences</p></div>'+
+'<div class="card mb-4"><h3 class="text-sm font-bold mb-3"><i class="fas fa-database mr-2" style="color:'+(CLOUD?'var(--ac)':'var(--wn)')+'"></i>Database</h3><div class="flex items-center gap-3"><span class="sdot son"></span><div><div class="font-semibold text-sm">'+(CLOUD?'Cloud (Firebase Firestore — academic-fath)':'Local (this browser only)')+'</div><div class="text-xs" style="color:var(--t3)">'+(CLOUD?'All data, photos and chats sync live across every device':'Cloud unreachable — check Firestore is created & rules allow access.')+'</div></div></div></div>'+
+'<div class="card mb-4"><h3 class="text-sm font-bold mb-4"><i class="fas fa-key mr-2" style="color:var(--gd)"></i>Change Password</h3><div class="space-y-3"><div><label class="fl">Current Password</label><input type="password" id="cp-old" class="inp"></div><div><label class="fl">New Password</label><input type="password" id="cp-new" class="inp"></div><div><label class="fl">Confirm New Password</label><input type="password" id="cp-new2" class="inp"></div><button class="bp" onclick="changePw()"><i class="fas fa-save mr-2"></i>Update Password</button></div></div>'+
+'<div class="card mb-4"><h3 class="text-sm font-bold mb-3"><i class="fas fa-info-circle mr-2" style="color:var(--inf)"></i>Account</h3><div class="text-sm space-y-2"><div class="flex justify-between"><span style="color:var(--t2)">Username</span><span class="font-semibold">'+CU+'</span></div><div class="flex justify-between"><span style="color:var(--t2)">Role</span><span class="font-semibold">'+(u.role==='admin'?'Administrator':'Member')+'</span></div><div class="flex justify-between"><span style="color:var(--t2)">Points</span><span class="font-semibold" style="color:var(--gd)">'+calcPoints(u)+' <span class="text-xs font-normal" style="color:var(--t3)">(achievements only)</span></span></div></div><button class="bd mt-4" onclick="doLogout()"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button></div>'+
+(u.role==='admin'?'<div class="card" style="border-color:rgba(220,38,38,.3)"><h3 class="text-sm font-bold mb-2" style="color:var(--dn)"><i class="fas fa-triangle-exclamation mr-2"></i>Danger Zone (Admin)</h3><p class="text-xs mb-3" style="color:var(--t3)">Erase every member, mark, announcement and event'+(CLOUD?' in the cloud database':' on this device')+'. This cannot be undone.</p><button class="bd" onclick="resetAll()"><i class="fas fa-trash mr-2"></i>Reset All Portal Data</button></div>':'')+
+'</div>';}
+function changePw(){var o=v('cp-old'),n=v('cp-new'),n2=v('cp-new2');if(!o||!n||!n2){toast('Fill all fields','err');return;}if(o!==CREDENTIALS[CU]&&o!==loadUSync(CU).password){toast('Current password is wrong','err');return;}if(n.length<4){toast('Password too short (min 4 chars)','err');return;}if(n!==n2){toast('New passwords do not match','err');return;}
+CREDENTIALS[CU]=n;var u=loadUSync(CU);u.password=n;saveU(CU,u);toast('Password updated successfully','ok');render();}
+function resetAll(){askConfirm('Reset ALL portal data? Members, marks, announcements and events will be erased. This cannot be undone.',function(){
+if(CLOUD){
+DB.collection('pu_users').get().then(function(s){var b=DB.batch();s.forEach(function(d){b.delete(d.ref);});return b.commit();}).catch(function(){}).then(function(){
+return DB.collection('pu_nt').get().then(function(s){var b=DB.batch();s.forEach(function(d){b.delete(d.ref);});return b.commit();}).catch(function(){});
+}).then(function(){
+return DB.collection('pu_msg').get().then(function(s){var b=DB.batch();s.forEach(function(d){b.delete(d.ref);});return b.commit();}).catch(function(){});
+}).then(function(){
+ALL_ADNOS=[].concat(DEFAULT_ADNOS);cache={};
+var b=DB.batch();b.set(DB.collection('pu_meta').doc('adnos'),{v:ALL_ADNOS});b.set(DB.collection('pu_meta').doc('ann'),{v:seedAnnArr()});b.set(DB.collection('pu_meta').doc('evts'),{v:seedEvtArr()});b.set(DB.collection('pu_meta').doc('subjects'),{v:seedSubArr()});
+ALL_ADNOS.concat(['ADMINISTRATOR']).forEach(function(id){b.set(DB.collection('pu_users').doc(id),defU(id));});
+CREDENTIALS={'ADMINISTRATOR':'Anshif@29'};for(var j=0;j<ALL_ADNOS.length;j++)CREDENTIALS[ALL_ADNOS[j]]=ALL_ADNOS[j]+'@fath';
+return b.commit();
+}).then(function(){toast('All cloud data reset. Logging out...','inf');setTimeout(function(){doLogout();},900);}).catch(function(e){toast('Reset failed: '+((e&&e.code)||'error'),'err');});
+}else{
+try{var keys=[],i;for(i=0;i<localStorage.length;i++)keys.push(localStorage.key(i));for(i=0;i<keys.length;i++)if(keys[i].indexOf('pu_')===0||keys[i]==='portal_cur'){try{localStorage.removeItem(keys[i]);}catch(e){}}}catch(e){}
+_MEM={};cache={};CREDENTIALS={'ADMINISTRATOR':'Anshif@29'};ALL_ADNOS=[].concat(DEFAULT_ADNOS);for(var j=0;j<ALL_ADNOS.length;j++)CREDENTIALS[ALL_ADNOS[j]]=ALL_ADNOS[j]+'@fath';
+seedAll();toast('All data reset. Logging out...','inf');setTimeout(function(){doLogout();},900);
+}});}
+/* ===== ANNOUNCEMENTS ===== */
+function rAnn(c,adminMode){loadAnn().then(function(list){
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">'+(adminMode?'Post Announcement':'Announcements')+'</h1><p class="text-sm" style="color:var(--t3)">'+list.length+' total</p></div>';
+if(adminMode)h+='<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-pen mr-2" style="color:var(--ac)"></i>New Announcement</h3><div class="mb-3"><label class="fl">Title</label><input type="text" id="an-t" class="inp" placeholder="Title"></div><div class="mb-3"><label class="fl">Content</label><textarea id="an-c" class="inp" placeholder="Write the announcement..."></textarea></div><label class="flex items-center gap-2 mb-4 cursor-pointer" style="font-size:13px"><input type="checkbox" id="an-i" style="width:16px;height:16px;accent-color:var(--ac)"> <span>Mark as <span class="badge ba">Important</span></span></label><button class="bp" onclick="postAnn()"><i class="fas fa-bullhorn mr-2"></i>Publish</button></div>';
+if(list.length===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-bullhorn text-3xl mb-2"></i><br>No announcements yet</div>';
+else{h+='<div class="space-y-3">';for(var i=0;i<list.length;i++){var a=list[i];h+='<div class="ann-card '+(a.important?'imp':'')+'"><div class="flex items-start justify-between gap-3"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-sm">'+a.title+'</span>'+(a.important?'<span class="badge ba">Important</span>':'')+'</div><p class="text-sm mt-1.5" style="color:var(--t2)">'+(a.content||'')+'</p><div class="text-xs mt-2" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(a.author||'Administrator')+' · '+(a.date||'')+'</div></div>'+(adminMode?'<button class="bd" onclick="delAnn('+i+')"><i class="fas fa-trash"></i></button>':'')+'</div></div>';}h+='</div>';}
+h+='</div>';c.innerHTML=h;});}
+function postAnn(){var t=v('an-t'),ct=v('an-c');if(!t||!ct){toast('Title and content are required','err');return;}var list=loadAnnSync();var u=loadUSync(CU);var imp=document.getElementById('an-i')&&document.getElementById('an-i').checked;list.unshift({title:t,content:ct,important:imp,date:new Date().toLocaleDateString('en-GB'),author:gdn(u,CU)});saveAnn(list);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New announcement: '+t,'inf');
+toast('Announcement published to all members','ok');render();}
+function delAnn(i){askConfirm('Delete this announcement?',function(){var list=loadAnnSync();list.splice(i,1);saveAnn(list);toast('Announcement deleted','inf');render();});}
+/* ===== LEADERBOARD ===== */
+function rLB(c){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+var rows=ads.map(function(id){return{id:id,u:all[id],pts:calcPoints(all[id])};});
+rows.sort(function(a,b){return b.pts-a.pts;});
+var myRank=-1;for(var r0=0;r0<rows.length;r0++)if(rows[r0].id===CU){myRank=r0;break;}
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Leaderboard</h1><p class="text-sm" style="color:var(--t3)">Ranked by achievement points</p></div>';
+if(myRank>-1){var me=rows[myRank];
+h+='<div class="card card-glow mb-5" style="border-color:rgba(202,138,4,.3)"><div class="flex items-center gap-4">'+avH(me.u,me.id,'avl')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold">'+gdn(me.u,me.id)+' (You)</span><span class="badge ba">#'+(myRank+1)+' of '+rows.length+'</span></div><div class="pts-break">'+catChipsHTML(me.u)+'</div></div><div class="text-right flex-shrink-0"><div class="pts-big">'+me.pts+'</div><div class="text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Points</div></div></div></div>';}
+h+='<div class="card"><h3 class="text-sm font-bold mb-2"><i class="fas fa-ranking-star mr-2" style="color:var(--gd)"></i>Standings</h3>';
+if(rows.length===0)h+='<p class="text-sm py-4 text-center" style="color:var(--t3)">No members yet</p>';
+else{for(var i=0;i<rows.length;i++){var r=rows[i];var hl=r.id===CU?'background:var(--acg2);':'';var medal=i===0?'#ca8a04':i===1?'#6b7280':i===2?'#b45309':null;
+h+='<div class="lb-row" style="cursor:pointer;'+hl+'" onclick="nav(\'member-detail\',\''+r.id+'\')"><div style="width:34px;text-align:center;font-weight:800;font-size:'+(medal?'16px':'13px')+';color:'+(medal||'var(--t3)')+'">'+(medal?'<i class="fas fa-medal"></i>':'#'+(i+1))+'</div>'+avH(r.u,r.id,'avm')+'<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(r.u,r.id)+(r.id===CU?' <span class="badge bm">You</span>':'')+'</div><div class="text-xs" style="color:var(--t3)">'+((r.u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length)+' achievements · '+(r.u.skills||[]).length+' skills</div></div><div class="font-bold flex-shrink-0" style="color:var(--gd)">'+r.pts+' <span style="font-size:10px;color:var(--t3)">PTS</span></div></div>';}}
+h+='</div></div>';c.innerHTML=h;});}
+/* ===== EVENTS ===== */
+function rEvts(c,adminMode){loadEvts().then(function(evts){
+var sorted=evts.slice().sort(function(a,b){return(a.date||'').localeCompare(b.date||'');});
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">'+(adminMode?'Manage Events':'Events')+'</h1><p class="text-sm" style="color:var(--t3)">'+sorted.length+' scheduled</p></div>';
+if(adminMode)h+='<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-calendar-plus mr-2" style="color:var(--gd)"></i>Add Event</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3"><div><label class="fl">Title</label><input id="ev-t" class="inp" placeholder="Event title"></div><div><label class="fl">Date</label><input type="date" id="ev-d" class="inp"></div><div><label class="fl">Time</label><input type="time" id="ev-tm" class="inp"></div><div><label class="fl">Venue</label><input id="ev-v" class="inp" placeholder="Venue"></div></div><div class="mb-3"><label class="fl">Description</label><textarea id="ev-ds" class="inp" placeholder="Details..."></textarea></div><div class="mb-4"><label class="fl">Colour</label><select id="ev-c" class="inp" style="max-width:200px"><option value="#16a34a">Green</option><option value="#ca8a04">Gold</option><option value="#2563eb">Blue</option><option value="#6366f1">Purple</option><option value="#db2777">Pink</option><option value="#dc2626">Red</option></select></div><button class="bp" onclick="addEvt()"><i class="fas fa-plus mr-2"></i>Add Event</button></div>';
+if(sorted.length===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-calendar-alt text-3xl mb-2"></i><br>No events scheduled</div>';
+else{h+='<div class="space-y-3">';for(var i=0;i<sorted.length;i++){var e=sorted[i];var dd=e.date?new Date(e.date+'T00:00:00'):null;var day=dd?dd.getDate():'',mon=dd?dd.toLocaleString('en-GB',{month:'short'}):'';
+h+='<div class="card"><div class="flex items-start gap-4">'+(e.date?'<div class="text-center flex-shrink-0" style="width:56px;background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:8px 4px"><div class="text-xl font-bold" style="font-family:\'Playfair Display\',serif">'+day+'</div><div class="text-xs uppercase" style="color:var(--t3)">'+mon+'</div></div>':'')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="evt-dot" style="background:'+(e.color||'var(--ac)')+'"></span><span class="font-bold text-sm">'+e.title+'</span>'+(e.time?'<span class="badge bin"><i class="fas fa-clock"></i> '+e.time+'</span>':'')+'</div>'+(e.venue?'<div class="text-xs mt-1.5" style="color:var(--t2)"><i class="fas fa-map-marker-alt mr-1" style="color:var(--dn)"></i>'+e.venue+'</div>':'')+(e.description?'<p class="text-xs mt-1" style="color:var(--t3)">'+e.description+'</p>':'')+'</div>'+(adminMode?'<button class="bd" onclick="delEvt(\''+e.id+'\')"><i class="fas fa-trash"></i></button>':'')+'</div></div>';}h+='</div>';}
+h+='</div>';c.innerHTML=h;});}
+function addEvt(){var t=v('ev-t'),d=v('ev-d');if(!t||!d){toast('Title and date are required','err');return;}var l=loadEvtsSync();l.push({id:'evt'+Date.now(),title:t,date:d,time:v('ev-tm'),venue:v('ev-v'),description:v('ev-ds'),color:document.getElementById('ev-c')?document.getElementById('ev-c').value:'#16a34a'});saveEvts(l);
+for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New event: '+t+' on '+d,'inf');
+toast('Event added','ok');render();}
+function delEvt(id){askConfirm('Delete this event?',function(){var l=loadEvtsSync();var ix=-1;for(var i=0;i<l.length;i++)if(l[i].id===id){ix=i;break;}if(ix>-1)l.splice(ix,1);saveEvts(l);toast('Event deleted','inf');render();});}
+/* ===== ADMIN: MEMBERS ===== */
+function saveAdnos(){lsSet('pu_adnos',JSON.stringify(ALL_ADNOS));if(CLOUD)cloudSetMeta('adnos',ALL_ADNOS);}
+function rAdminAdd(c){var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Add / Remove Members</h1><p class="text-sm" style="color:var(--t3)">Admission numbers · default password is ADNO@fath</p></div>'+
+'<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-user-plus mr-2" style="color:var(--ac)"></i>Add Member</h3><div class="flex flex-col sm:flex-row gap-3"><input id="na-adno" class="inp flex-1" placeholder="New admission number e.g. 850"><button class="bp" onclick="addAdno()"><i class="fas fa-plus mr-2"></i>Add</button></div><p class="text-xs mt-3" style="color:var(--t3)"><i class="fas fa-info-circle mr-1"></i>The member can log in with their admission number and password <b>ADNO@fath</b>.</p></div>'+
+'<div class="card"><h3 class="text-sm font-bold mb-4"><i class="fas fa-list mr-2" style="color:var(--gd)"></i>Registered Admission Numbers ('+ALL_ADNOS.length+')</h3><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">';
+for(var i=0;i<ALL_ADNOS.length;i++){h+='<div class="flex items-center justify-between gap-2 p-2.5 rounded-lg" style="background:var(--bg1);border:1px solid var(--bd)"><span class="text-sm font-semibold">'+ALL_ADNOS[i]+'</span><button class="bd" style="padding:3px 8px" onclick="rmAdno(\''+ALL_ADNOS[i]+'\')"><i class="fas fa-times"></i></button></div>';}
+h+='</div></div></div>';c.innerHTML=h;}
+function addAdno(){var a=v('na-adno');if(!a){toast('Enter admission number','err');return;}if(ALL_ADNOS.indexOf(a)>-1){toast('Admission number already exists','err');return;}
+ALL_ADNOS.push(a);CREDENTIALS[a]=a+'@fath';saveAdnos();var nu=defU(a);cache[a]=nu;lsSet('pu_'+a,JSON.stringify(nu));if(CLOUD)cloudSetUser(a,nu);
+toast('Member '+a+' added (password: '+a+'@fath)','ok');render();}
+function rmAdno(a){askConfirm('Remove member '+a+' and delete all their data?',function(){var i=ALL_ADNOS.indexOf(a);if(i>-1)ALL_ADNOS.splice(i,1);lsDel('pu_'+a);lsDel('pu_nt_'+a);delete CREDENTIALS[a];delete cache[a];saveAdnos();
+if(CLOUD){DB.collection('pu_users').doc(a).delete().catch(function(){});DB.collection('pu_nt').doc(a).delete().catch(function(){});}
+toast('Member '+a+' removed','inf');render();});}
+/* ===== ADMIN: APPROVALS ===== */
+function rApprovals(c){loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
+var achItems=[],cceItems=[],subs=loadSubs();
+for(var i=0;i<ads.length;i++){
+var a=all[ads[i]].achievements||[];
+for(var j=0;j<a.length;j++)if(a[j].status==='pending')achItems.push({id:ads[i],idx:j,a:a[j]});
+var cce=all[ads[i]].cce||{};
+for(var k in cce){var e=cce[k];if(e&&e.pending&&typeof e.pending.marks==='number'){var si=sbjInfo(k);cceItems.push({id:ads[i],sbj:k,name:si.name,max:si.max,e:e});}}
+}
+var total=achItems.length+cceItems.length;
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Approvals</h1><p class="text-sm" style="color:var(--t3)">'+total+' pending review</p></div>';
+if(total===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style="background:var(--acg)"><i class="fas fa-check text-2xl" style="color:var(--ac)"></i></div><div class="font-semibold">All caught up!</div><p class="text-xs mt-1">No achievements or CCE marks awaiting approval</p></div>';
+else{
+if(achItems.length){h+='<h3 class="text-sm font-bold mb-2"><i class="fas fa-trophy mr-2" style="color:var(--pk)"></i>Achievements ('+achItems.length+')</h3><div class="space-y-3 mb-6">';
+for(var k1=0;k1<achItems.length;k1++){var it=achItems[k1];var u=all[it.id];var cc=CAT_CLR[it.a.category]||'var(--t2)';
+h+='<div class="appr-item"><div class="flex items-start gap-3">'+avH(u,it.id,'avm')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-semibold text-sm">'+it.a.title+'</span><span class="badge" style="background:var(--bg4);color:'+cc+'"><i class="fas '+(CAT_ICO[it.a.category]||'fa-star')+'"></i> '+it.a.category+'</span><span class="badge bm">+'+(CAT_PTS[it.a.category]||8)+' pts</span></div>'+(it.a.description?'<div class="text-xs mt-1" style="color:var(--t2)">'+it.a.description+'</div>':'')+'<div class="text-xs mt-1.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+gdn(u,it.id)+' ('+it.id+') · '+(it.a.date||'')+'</div><div class="flex gap-2 mt-3"><button class="bap" onclick="apprAch(\''+it.id+'\','+it.idx+')"><i class="fas fa-check mr-1"></i>Approve</button><button class="brj" onclick="rejAch(\''+it.id+'\','+it.idx+')"><i class="fas fa-times mr-1"></i>Reject</button></div></div></div></div>';}
+h+='</div>';}
+if(cceItems.length){h+='<h3 class="text-sm font-bold mb-2"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>CCE Marks ('+cceItems.length+')</h3><div class="space-y-3">';
+for(var k2=0;k2<cceItems.length;k2++){var ci=cceItems[k2];var u2=all[ci.id];
+h+='<div class="appr-item"><div class="flex items-start gap-3">'+avH(u2,ci.id,'avm')+'<div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-semibold text-sm">'+ci.name+'</span><span class="badge bin">'+ci.e.pending.marks+(ci.max?'/'+ci.max:'')+'</span></div><div class="text-xs mt-1.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+gdn(u2,ci.id)+' ('+ci.id+') · submitted '+(ci.e.pending.date||'')+'</div><div class="flex gap-2 mt-3"><button class="bap" onclick="apprCCE(\''+ci.id+'\',\''+ci.sbj+'\')"><i class="fas fa-check mr-1"></i>Approve</button><button class="brj" onclick="rejCCE(\''+ci.id+'\',\''+ci.sbj+'\')"><i class="fas fa-times mr-1"></i>Reject</button></div></div></div></div>';}
+h+='</div>';}
+}
+h+='</div>';c.innerHTML=h;});}
+function apprAch(id,idx){var u=loadUSync(id);if(!u.achievements||!u.achievements[idx])return;var t=u.achievements[idx].title;u.achievements[idx].status='approved';u.achievements[idx].approvedOn=new Date().toLocaleDateString('en-GB');saveU(id,u);pushNotif(id,'Achievement "'+t+'" approved! +'+(CAT_PTS[u.achievements[idx].category]||8)+' points','ok');toast('Achievement approved','ok');updateSB();render();}
+function rejAch(id,idx){var u=loadUSync(id);if(!u.achievements||!u.achievements[idx])return;var t=u.achievements[idx].title;u.achievements[idx].status='rejected';saveU(id,u);pushNotif(id,'Achievement "'+t+'" was rejected by the administrator','err');toast('Achievement rejected','inf');updateSB();render();}
+function apprCCE(id,sbj){var u=loadUSync(id);var e=u.cce&&u.cce[sbj];if(!e||!e.pending)return;var si=sbjInfo(sbj);
+e.marks=e.pending.marks;e.status='approved';e.by='Member';e.date=e.pending.date;delete e.pending;
+saveU(id,u);pushNotif(id,'Your CCE marks for '+si.name+' were approved: '+e.marks+(si.max?'/'+si.max:''),'ok');toast('CCE marks approved','ok');updateSB();render();}
+function rejCCE(id,sbj){var u=loadUSync(id);var e=u.cce&&u.cce[sbj];if(!e||!e.pending)return;var si=sbjInfo(sbj);
+delete e.pending;saveU(id,u);pushNotif(id,'Your CCE marks for '+si.name+' were rejected by the administrator','err');toast('CCE marks rejected','inf');updateSB();render();}
+/* ===== ADMIN: SUBJECTS ===== */
+function rAdminSubj(c){var subs=loadSubs();
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">CCE Subjects</h1><p class="text-sm" style="color:var(--t3)">'+subs.length+' subjects configured</p></div>'+
+'<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Subject</h3><div class="flex flex-col sm:flex-row gap-3"><input id="sj-n" class="inp flex-1" placeholder="Subject name e.g. Physics"><input id="sj-m" type="number" class="inp" style="max-width:150px" placeholder="Max marks" value="50" min="1"><button class="bp" onclick="addSubj()"><i class="fas fa-plus mr-2"></i>Add</button></div></div>';
+if(subs.length===0)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>No subjects yet</div>';
+else{h+='<div class="space-y-2">';for(var i=0;i<subs.length;i++){var s=subs[i];h+='<div class="ach flex items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-book" style="color:var(--pn)"></i></div><div><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max marks: '+s.max+'</div></div></div><button class="bd" onclick="rmSubj(\''+s.id+'\')"><i class="fas fa-trash"></i></button></div>';}h+='</div>';}
+h+='</div>';c.innerHTML=h;}
+function addSubj(){var n=v('sj-n'),m=parseInt(v('sj-m'),10);if(!n){toast('Enter subject name','err');return;}if(!m||m<=0){toast('Enter valid max marks','err');return;}var l=loadSubs();for(var i=0;i<l.length;i++)if(l[i].name.toLowerCase()===n.toLowerCase()){toast('Subject already exists','err');return;}l.push({id:'sbj'+Date.now(),name:n,max:m});saveSubs(l);toast('Subject added','ok');render();}
+function rmSubj(id){askConfirm('Remove this subject? Entered marks for it will be lost.',function(){var l=loadSubs().filter(function(s){return s.id!==id;});saveSubs(l);toast('Subject removed','inf');render();});}
+/* ===== ADMIN: ENTER CCE ===== */
+function rAdminCCE(c){var subs=loadSubs();
+loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';}).sort();
+var opts='<option value="">— Select member —</option>';
+for(var i=0;i<ads.length;i++)opts+='<option value="'+ads[i]+'"'+(CCE_SEL===ads[i]?' selected':'')+'>'+gdn(all[ads[i]],ads[i])+' ('+ads[i]+')</option>';
+var sel=CCE_SEL?loadUSync(CCE_SEL):null;
+var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Enter CCE Marks</h1><p class="text-sm" style="color:var(--t3)">Direct entry — saved marks are approved immediately</p></div>'+
+'<div class="card mb-4"><label class="fl"><i class="fas fa-user mr-1"></i>Member</label><select id="cce-mem" class="inp" onchange="CCE_SEL=this.value;render()">'+opts+'</select></div>';
+if(!sel){h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-user-select text-3xl mb-2"></i><br>Select a member to enter marks</div>';}
+else if(subs.length===0){h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>Add CCE subjects first</div>';}
+else{var cce=sel.cce||{},tot=0,mx=0;
+h+='<div class="card"><h3 class="text-base font-bold mb-4"><i class="fas fa-pen-to-square mr-2" style="color:var(--ac)"></i>Marks for '+gdn(sel,CCE_SEL)+'</h3>';
+for(var j=0;j<subs.length;j++){var s=subs[j],mk=cce[s.id];var val=mkOK(mk)?mk.marks:'';if(val!=='')tot+=val;mx+=s.max;
+h+='<div class="flex items-center gap-3 p-3 rounded-lg mb-2" style="background:var(--bg1)"><div class="flex-1"><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max: '+s.max+(mk&&mk.pending?' · <span style="color:var(--wn)">member pending: '+mk.pending.marks+'</span>':'')+'</div></div><input type="number" id="mk-'+s.id+'" class="inp" style="max-width:110px;text-align:center" min="0" max="'+s.max+'" value="'+val+'" placeholder="—"></div>';}
+h+='<div class="flex items-center justify-between mt-4 p-3 rounded-lg flex-wrap gap-3" style="background:var(--acg)"><span class="font-semibold text-sm">Total: <span id="cce-tot">'+tot+'</span> / '+mx+'</span><button class="bp" onclick="saveCCE()"><i class="fas fa-paper-plane mr-2"></i>Publish Marks</button></div></div>';}
+h+='</div>';c.innerHTML=h;});}
+function saveCCE(){if(!CCE_SEL){toast('Select a member','err');return;}var subs=loadSubs();var u=loadUSync(CCE_SEL);u.cce=u.cce||{};var tot=0,any=false;
+for(var i=0;i<subs.length;i++){var e=document.getElementById('mk-'+subs[i].id);if(!e)continue;var val=e.value.trim();if(val===''){delete u.cce[subs[i].id];continue;}var n=parseFloat(val);if(isNaN(n)||n<0||n>subs[i].max){toast(subs[i].name+': enter a value between 0 and '+subs[i].max,'err');return;}u.cce[subs[i].id]={marks:n,date:new Date().toLocaleDateString('en-GB'),by:'Administrator',status:'approved'};tot+=n;any=true;}
+saveU(CCE_SEL,u);pushNotif(CCE_SEL,'CCE marks published by Administrator: total '+tot+' points','ok');toast(any?('Marks published to '+gdn(u,CCE_SEL)):'All marks cleared for '+gdn(u,CCE_SEL),any?'ok':'inf');render();}
+function viewCCE(adno){var u=loadUSync(adno);var r=cceRowsHTML(u);var pct=r.mx>0?Math.round(r.tot/r.mx*100):0;var g=getGrade(pct);
+openModal('<h3 class="text-lg font-bold mb-1"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>CCE Marks — '+gdn(u,adno)+'</h3><p class="text-xs mb-4" style="color:var(--t3)">'+(r.mx?'Total '+r.tot+'/'+r.mx+' · '+pct+'% · Grade '+g.g+(r.pd?' · '+r.pd+' pending':''):'No marks entered yet')+'</p>'+(r.nsubs===0?'<p class="text-sm" style="color:var(--t3)">No subjects configured.</p>':r.html)+'<button class="bs w-full mt-4" onclick="cmodal()">Close</button>');}
+function admPw(adno){var e=document.getElementById('apw-'+adno);var n=e?e.value:'';if(!n){toast('Enter a new password','err');return;}var u=loadUSync(adno);u.password=n;saveU(adno,u);CREDENTIALS[adno]=n;pushNotif(adno,'Your password was reset by the administrator','err');toast('Password updated for '+adno,'ok');if(e)e.value='';}
+/* ===== RESPONSIVE HELPERS (mobile & PC) ===== */
+document.addEventListener('click',function(e){var p=document.getElementById('emoji-pop');if(p&&!p.contains(e.target)&&!(e.target.closest&&e.target.closest('.cbtn')))p.remove();});
+if(window.visualViewport){window.visualViewport.addEventListener('resize',function(){if(CV==='chat'&&CHAT_PEER){var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;}});}
+var _lastTap=0;document.addEventListener('touchend',function(e){var now=Date.now();if(now-_lastTap<300&&e.target.closest('button'))e.preventDefault();_lastTap=now;},{passive:false});
+</script>
+</body>
+</html>
