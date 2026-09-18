@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>FATH MATES - Darul Hasanath Islamic College</title>
 <meta name="google-site-verification" content="jeN94OtOv7PC7wEYH5lDDwoAD2eAgXUA115pbO6Uhzg" />
 <meta name="theme-color" content="#16a34a">
@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{--bg0:#f2f7f4;--bg1:#e9f1ec;--bg2:#ffffff;--bg3:#fbfdfc;--bg4:#e3ede6;--ac:#16a34a;--acd:#15803d;--acg:rgba(22,163,74,.08);--acg2:rgba(22,163,74,.15);--gd:#ca8a04;--gdg:rgba(202,138,4,.08);--gdg2:rgba(202,138,4,.15);--t1:#0a1a0f;--t2:#3d6b4e;--t3:#7aab8e;--bd:#d9e7dd;--dn:#dc2626;--dng:rgba(220,38,38,.07);--inf:#2563eb;--infg:rgba(37,99,235,.07);--pn:#6366f1;--png:rgba(99,102,241,.08);--pk:#db2777;--pkg:rgba(219,39,119,.07);--wn:#d97706;--wng:rgba(217,119,6,.08);--safe-b:env(safe-area-inset-bottom,0px)}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body{font-family:'DM Sans',sans-serif;background:var(--bg0);color:var(--t1);min-height:100vh;min-height:100dvh;overflow-x:hidden}h1,h2,h3,h4{font-family:'Playfair Display',serif}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--bg0);color:var(--t1);min-height:100vh;min-height:100dvh;overflow-x:hidden}h1,h2,h3,h4{font-family:'Playfair Display',serif}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg1)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
 html,body{width:100%;height:100%}
 .inp{background:#fff;border:1px solid var(--bd);color:var(--t1);padding:12px 14px;border-radius:10px;width:100%;font-family:'DM Sans',sans-serif;font-size:16px;transition:all .25s;outline:none;-webkit-appearance:none}.inp:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg)}.inp::placeholder{color:var(--t3)}select.inp{cursor:pointer}select.inp option{background:#fff}textarea.inp{resize:vertical;min-height:80px}
@@ -55,27 +55,19 @@ html,body{width:100%;height:100%}
 .pts-break{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.pts-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600}
 .appr-item{background:var(--bg3);border:1px solid var(--bd);border-radius:14px;padding:18px;transition:all .2s}.appr-item:hover{border-color:var(--wn)}
 .notif-item{display:flex;gap:12px;padding:12px 14px;border-radius:12px;background:var(--bg3);transition:all .2s}
-.bday{background:linear-gradient(135deg,#fdf2f8,#fef3c7);border:1px solid rgba(219,39,119,.25);border-radius:14px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.tt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;overflow-x:auto}
-.tt-day{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:12px}
-.tt-slot{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;margin-top:6px;font-size:12.5px;display:flex;justify-content:space-between;gap:6px;align-items:center}
-.pollbar{background:var(--bg1);border-radius:999px;height:26px;overflow:hidden;cursor:pointer;border:1px solid var(--bd);position:relative;margin-top:6px}
-.pollfill{height:100%;background:linear-gradient(90deg,var(--acd),var(--ac));opacity:.28;transition:width .6s}
-.polllbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12.5px;font-weight:600}
-.hw-done{opacity:.6}.hw-done .htitle{text-decoration:line-through}
-.res-item{display:flex;align-items:center;gap:14px;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;transition:all .2s;flex-wrap:wrap}.res-item:hover{border-color:var(--acd)}
 .chat-wrap{display:flex;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;height:calc(100dvh - 190px);min-height:480px;box-shadow:0 1px 3px rgba(16,80,40,.04)}
-.chat-list{width:310px;border-right:1px solid var(--bd);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.chat-list{width:310px;border-right:1px solid var(--bd);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
 .chat-search{padding:10px 12px;border-bottom:1px solid var(--bg1)}
-.chat-peers{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.chat-peers{flex:1;overflow-y:auto}
 .chat-peer{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:background .2s;border-bottom:1px solid var(--bg1)}
-.chat-peer:hover{background:var(--acg)}.chat-peer.on{background:var(--acg2)}
+.chat-peer:hover{background:var(--acg)}
+.chat-peer.on{background:var(--acg2)}
 .chat-prev{font-size:12px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;max-width:170px}
 .chat-time{font-size:10px;color:var(--t3);flex-shrink:0}
 .chat-panel{flex:1;display:flex;flex-direction:column;min-width:0;background:#eef5f0}
 .wall{background-image:radial-gradient(rgba(22,163,74,.07) 1.4px,transparent 1.4px);background-size:22px 22px}
 .chat-head{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--bd);background:#fff}
-.chat-msgs{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
 .day-div{align-self:center;background:rgba(255,255,255,.9);border:1px solid var(--bd);color:var(--t3);font-size:11px;font-weight:600;border-radius:999px;padding:4px 14px;margin:10px 0}
 .bub{max-width:74%;padding:8px 12px 6px;border-radius:14px;font-size:14.5px;line-height:1.45;word-break:break-word;position:relative;box-shadow:0 1px 1px rgba(16,80,40,.06)}
 .bub.me{align-self:flex-end;background:#d9fdd3;color:#0a1a0f;border-bottom-right-radius:4px;cursor:pointer}
@@ -94,7 +86,7 @@ html,body{width:100%;height:100%}
 .mtools button:hover{transform:scale(1.25);background:var(--acg)}
 .mtools button.del{color:var(--dn)}
 .chat-inrow{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-top:1px solid var(--bd);position:relative}
-.chat-in{flex:1;background:var(--bg0);border:1.5px solid var(--bd);border-radius:999px;padding:11px 16px;font:400 14.5px 'DM Sans',sans-serif;color:var(--t1);outline:none;transition:border .2s;min-width:0}
+.chat-in{flex:1;background:var(--bg0);border:1.5px solid var(--bd);border-radius:999px;padding:11px 16px;font:400 14.5px 'DM Sans',sans-serif;color:var(--t1);outline:none;transition:border .2s}
 .chat-in:focus{border-color:var(--ac);background:#fff}
 .cbtn{width:42px;height:42px;border-radius:50%;border:none;background:var(--bg4);color:var(--t2);font-size:16px;cursor:pointer;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center}
 .cbtn:hover{background:var(--acg);color:var(--acd)}
@@ -102,7 +94,7 @@ html,body{width:100%;height:100%}
 .chat-send:hover{transform:scale(1.07)}
 .rec-dot{width:10px;height:10px;border-radius:50%;background:var(--dn);animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.2}}
-.recrow{display:flex;align-items:center;gap:10px;width:100%;background:var(--dng);border-radius:999px;padding:9px 16px;color:var(--dn);font-weight:600;font-size:13px;flex-wrap:wrap}
+.recrow{display:flex;align-items:center;gap:10px;width:100%;background:var(--dng);border-radius:999px;padding:9px 16px;color:var(--dn);font-weight:600;font-size:13px}
 .recrow .rt{flex:1;font-family:monospace}
 .emoji-pop{position:absolute;bottom:60px;left:10px;background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 30px rgba(16,80,40,.2);padding:10px;display:grid;grid-template-columns:repeat(8,1fr);gap:2px;z-index:20}
 .emoji-pop button{background:none;border:none;font-size:19px;cursor:pointer;border-radius:8px;padding:3px}
@@ -115,28 +107,7 @@ html,body{width:100%;height:100%}
 .typedots i:nth-child(2){animation-delay:.15s}.typedots i:nth-child(3){animation-delay:.3s}
 @keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
 .chat-back{display:none;margin-right:2px}
-@media(max-width:768px){
-.chat-wrap{height:calc(100dvh - 150px);border-radius:12px}
-.chat-head{position:sticky;top:0;z-index:5}
-.chat-inrow{padding-bottom:calc(10px + var(--safe-b))}
-.chat-list{width:100%;border-right:none}
-.chat-panel{display:none}
-.chat-wrap.open .chat-list{display:none}
-.chat-wrap.open .chat-panel{display:flex}
-.chat-back{display:inline-flex}
-.bub{max-width:86%}
-.emoji-pop{grid-template-columns:repeat(6,1fr);left:6px;right:6px}
-}
-@media(hover:none) and (pointer:coarse){
-.bp,.bs,.bd,.bgt,.bap,.brj,.bico,.cbtn,.chat-send{min-height:44px;min-width:44px}
-.chat-peer,.lb-row,.ni{padding-top:13px;padding-bottom:13px}
-.mtools button{padding:8px 9px}
-.tab{padding:11px 16px}
-}
-@media(min-width:1400px){#mc{max-width:1320px}.chat-list{width:340px}}
-@media(max-width:360px){.ld-h1{font-size:30px!important}.brand-h1{font-size:27px!important}.chat-list{width:100%}.stat-chip{padding:10px 8px}}
-@media(max-height:480px) and (orientation:landscape){.chat-wrap{height:calc(100dvh - 120px);min-height:300px}}
-/* ===== LOGIN SHARED ===== */
+@media(max-width:768px){.chat-list{width:100%;border-right:none}.chat-panel{display:none}.chat-wrap.open .chat-list{display:none}.chat-wrap.open .chat-panel{display:flex}.chat-back{display:inline-flex}.bub{max-width:86%}.emoji-pop{grid-template-columns:repeat(6,1fr);left:6px;right:6px}}
 .lv{display:flex;flex-direction:column;position:relative;min-height:100vh;min-height:100dvh}
 .home-link{display:inline-flex;align-items:center;gap:7px;margin:22px 28px 0;width:max-content;font:700 11px 'DM Sans',sans-serif;letter-spacing:1.8px;color:var(--t2);background:none;border:none;cursor:pointer;transition:color .2s;text-transform:uppercase}.home-link:hover{color:var(--acd)}
 .split{flex:1;display:flex;align-items:center;justify-content:space-between;gap:44px;padding:12px 5vw 44px;max-width:1280px;margin:0 auto;width:100%}
@@ -162,7 +133,7 @@ html,body{width:100%;height:100%}
 .inp-wrap{position:relative}
 .inp-wrap>.ic{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:13px;pointer-events:none}
 .eye-t{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:var(--t3);cursor:pointer;font-size:13px;transition:color .2s}.eye-t:hover{color:var(--acd)}
-.lc2-inp{width:100%;background:var(--bg0);border:1.5px solid var(--bd);border-radius:13px;padding:13px 42px 13px 42px;font:400 16px 'DM Sans',sans-serif;color:var(--t1);outline:none;transition:all .25s;-webkit-appearance:none}
+.lc2-inp{width:100%;background:var(--bg0);border:1.5px solid var(--bd);border-radius:13px;padding:13px 42px 13px 42px;font:400 14.5px 'DM Sans',sans-serif;color:var(--t1);outline:none;transition:all .25s;-webkit-appearance:none}
 .lc2-inp:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg);background:#fff}
 .rem-row{display:flex;align-items:center;gap:8px;margin:16px 0 20px;font-size:13.5px;color:var(--t2);cursor:pointer}
 .rem-row input{width:16px;height:16px;accent-color:var(--ac);cursor:pointer}
@@ -185,57 +156,6 @@ html,body{width:100%;height:100%}
 .adm-dots{position:absolute;top:66px;left:6px;width:104px;height:56px;background-image:radial-gradient(rgba(255,255,255,.42) 2.4px,transparent 2.4px);background-size:17px 17px}
 .adm-bar{position:absolute;width:26px;border-radius:13px;background:rgba(255,255,255,.26)}
 .adm-circ{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);pointer-events:none}
-/* ===== LOGIN: MOBILE & PC POLISH ===== */
-@media(max-width:960px){
-.split{flex-direction:column;justify-content:center;align-items:center;padding:8px 18px 36px;gap:24px}
-.brand-side{max-width:460px;width:100%}
-.card-side{justify-content:center;max-width:460px}
-.brand-h1{font-size:33px;margin-bottom:12px;letter-spacing:-.5px}
-.brand-p{margin-bottom:22px;font-size:14px}
-.logo-row{margin-bottom:20px}
-.login-card2{padding:28px 22px;border-radius:20px}
-.lc2-inp{padding:14px 42px 14px 42px}
-.lc2-btn{padding:16px}
-.rem-row{margin:14px 0 18px}
-.stat-row{gap:10px}
-.stat-chip{flex:1;min-width:0;padding:12px 10px;text-align:center}
-.adm-cluster,.adm-circ{display:none}
-.home-link{margin:16px 18px 0}
-.ld-main{flex-direction:column;align-items:flex-start;padding:16px 0 32px;gap:32px}
-.ld-h1{font-size:38px;letter-spacing:-.5px}
-.ld-p{font-size:14.5px;margin-bottom:24px}
-.ld-stats{gap:26px}
-.ld-stat-n{font-size:21px}
-}
-@media(min-width:961px){
-.lc2-inp:hover{border-color:var(--t3)}
-.login-card2{transition:transform .3s}
-.login-card2:hover{transform:translateY(-2px)}
-}
-@media(max-width:420px){
-.brand-h1{font-size:24px!important;letter-spacing:0!important}
-.brand-p{font-size:13px!important;margin-bottom:14px!important}
-.stat-chip{padding:10px 8px}
-.stat-num{font-size:16px}
-.stat-lbl{font-size:7.5px;letter-spacing:1px}
-.logo-badge{width:44px;height:44px;border-radius:12px;font-size:17px}
-.logo-name{font-size:17px}
-.login-card2{padding:22px 18px}
-.lc2-title{font-size:20px}
-.lc2-sub{margin:4px 0 18px}
-.or-row{margin:16px 0}
-.ghost-btn{padding:12px}
-.swap-row{margin-top:16px}
-.split{padding:6px 16px 30px;gap:20px}
-.adm-cluster{display:none}
-}
-@media(max-height:520px) and (orientation:landscape){
-.brand-side{display:none}
-.split{justify-content:center;padding:8px 20px 24px}
-.home-link{margin:10px 16px 0}
-}
-input:focus,select:focus,textarea:focus{font-size:16px}
-/* ===== LANDING ===== */
 #pg-land{display:none;position:relative;min-height:100vh;min-height:100dvh;background:var(--bg0);overflow:hidden;flex-direction:column}
 .ld-wrap{flex:1;display:flex;flex-direction:column;max-width:1280px;margin:0 auto;width:100%;padding:0 5vw}
 .ld-nav{display:flex;align-items:center;gap:12px;padding:22px 0}
@@ -266,24 +186,234 @@ input:focus,select:focus,textarea:focus{font-size:16px}
 .ld-arrow{margin-left:auto;color:var(--t3);font-size:13px;transition:all .25s}
 .ld-card:hover .ld-arrow{color:var(--acd);transform:translateX(3px)}
 .ld-foot{text-align:center;font-size:12.5px;color:var(--t3);padding:20px 0 26px;border-top:1px solid var(--bd);margin-top:8px}
-/* ===== SPACING ===== */
 .grid.gap-2{gap:14px!important}.grid.gap-3{gap:22px!important}.grid.gap-4{gap:26px!important}
 .mb-2{margin-bottom:10px!important}.mb-3{margin-bottom:14px!important}.mb-4{margin-bottom:22px!important}.mb-5{margin-bottom:30px!important}.mb-6{margin-bottom:34px!important}
 .space-y-1>*+*{margin-top:8px!important}.space-y-2>*+*{margin-top:14px!important}.space-y-2\.5>*+*{margin-top:16px!important}.space-y-3>*+*{margin-top:18px!important}
-/* ===== PRINT ===== */
-@media print{.sidebar,.mob-h,.mob-nav,#toasts,.modal-bg,.ld-wrap{display:none!important}#pg-app,.app-wrap,.main-area{display:block!important;overflow:visible!important;height:auto!important}#mc{padding:0!important;max-width:100%!important}.card{box-shadow:none;border:1px solid #ccc}body{background:#fff}}
 @media(min-width:769px){.sidebar{display:flex;flex-direction:column;position:sticky;top:0;height:100vh}.mob-h{display:none!important}.mob-nav{display:none!important}#mc{padding:28px 32px;max-width:1200px;margin:0 auto}}
+@media(max-width:960px){.ld-main{flex-direction:column;align-items:flex-start;padding:16px 0 32px;gap:32px}.ld-h1{font-size:38px;letter-spacing:-.5px}.ld-p{font-size:14.5px;margin-bottom:24px}.ld-stats{gap:26px}.ld-stat-n{font-size:21px}.brand-h1{font-size:33px;margin-bottom:12px}.brand-p{margin-bottom:22px;font-size:14px}.logo-row{margin-bottom:20px}.card-side{justify-content:center;max-width:460px}.login-card2{padding:28px 22px}.stat-row{gap:10px}.stat-chip{flex:1;min-width:0;padding:12px 10px;text-align:center}.adm-cluster,.adm-circ{display:none}.home-link{margin:16px 18px 0}}
 @media(max-width:768px){.sidebar{display:none!important}.app-wrap{flex-direction:column}.main-area{width:100%;padding-bottom:calc(72px + var(--safe-b))}.mob-h{display:flex!important;position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);padding:10px 14px;align-items:center;gap:10px}.mob-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);z-index:50;padding:6px 6px calc(6px + var(--safe-b));gap:2px;justify-content:space-around;box-shadow:0 -4px 16px rgba(16,80,40,.06)}.mob-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border:none;background:none;color:var(--t3);font-size:9px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:10px;transition:all .2s}.mob-nav button i{font-size:18px;margin-bottom:1px}.mob-nav button.on{color:var(--acd);background:var(--acg)}#mc{padding:16px 14px;max-width:100%;padding-bottom:16px}.card{padding:16px;border-radius:12px}.mc{padding:14px;border-radius:12px}.stat-grid{grid-template-columns:1fr 1fr!important}.bp,.bs,.bgt{min-height:44px}.tab{min-height:40px;font-size:12px;padding:8px 14px}.inp{font-size:16px;min-height:46px}.pts-big{font-size:26px}}
 #pg-app{width:100%;min-height:100vh;min-height:100dvh}.app-wrap{display:flex;width:100%;min-height:100vh;min-height:100dvh}.main-area{flex:1;min-height:100vh;min-height:100dvh;overflow-y:auto;background:var(--bg0);width:100%}
+
+/* ===== LOGIN POLISH / ACCESSIBILITY PATCH ===== */
+#pg-login{min-height:100dvh;background:
+ radial-gradient(900px 600px at 0% 0%,rgba(22,163,74,.10),transparent 60%),
+ radial-gradient(700px 500px at 100% 100%,rgba(202,138,4,.10),transparent 60%),
+ var(--bg0)}
+#pg-login .split{min-height:calc(100dvh - 70px);align-items:center}
+#pg-login .card-side{align-items:center}
+#pg-login .login-card2{border:1px solid rgba(217,231,221,.95);box-shadow:0 30px 90px rgba(16,80,40,.16),0 4px 16px rgba(16,80,40,.05);backdrop-filter:blur(12px)}
+#pg-login .lc2-btn{min-height:50px;box-shadow:0 12px 24px rgba(21,128,61,.20)}
+#pg-login .lc2-btn:hover{box-shadow:0 16px 30px rgba(21,128,61,.26)}
+#pg-login .lc2-inp{min-height:50px}
+#pg-login .lc2-inp:focus-visible,
+#pg-login button:focus-visible,
+#pg-login input:focus-visible{outline:3px solid rgba(22,163,74,.22);outline-offset:2px}
+#pg-login .brand-side{position:relative}
+#pg-login .brand-side:after{content:"";display:block;width:84px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--ac),var(--gd));margin-top:28px}
+#pg-login .login-card2:before{content:"";display:block;width:44px;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--ac),var(--gd));margin-bottom:22px}
+#pg-login .rem-row input{accent-color:var(--ac)}
+#pg-login .swap-link{font-weight:700}
+#pg-login .l-err{border-radius:12px;line-height:1.45}
+@media (max-width:900px){
+  #pg-login .split{gap:28px;padding:20px 24px 40px}
+  #pg-login .brand-h1{font-size:42px}
+}
+@media (max-width:700px){
+  #pg-login .home-link{margin:16px 18px 0}
+  #pg-login .split{min-height:auto;display:block;padding:18px 16px 34px}
+  #pg-login .brand-side{max-width:none;margin:8px auto 22px;text-align:center}
+  #pg-login .logo-row{justify-content:center;margin-bottom:18px}
+  #pg-login .brand-h1{font-size:34px;line-height:1.12;margin-bottom:12px}
+  #pg-login .brand-p{font-size:14px;max-width:560px;margin:0 auto 18px}
+  #pg-login .brand-side:after{margin:18px auto 0}
+  #pg-login .stat-row{justify-content:center;gap:8px}
+  #pg-login .stat-chip{min-width:92px}
+  #pg-login .card-side{max-width:none;justify-content:center}
+  #pg-login .login-card2{max-width:560px;border-radius:20px;padding:28px 20px}
+  #pg-login .lc2-title{font-size:22px}
+  #pg-login .lv-admin .brand-side{margin-bottom:18px}
+  #pg-login .lv-admin .adm-cluster{display:none}
+}
+@media (max-width:420px){
+  #pg-login .login-card2{padding:24px 16px}
+  #pg-login .lc2-title{font-size:20px}
+  #pg-login .brand-h1{font-size:30px}
+  #pg-login .stat-chip{min-width:84px;padding:8px}
+}
+
+
+/* ===== BEAUTIFUL LOGIN PAGE POLISH ===== */
+#pg-login{
+  background:
+    radial-gradient(circle at 8% 12%,rgba(34,197,94,.18),transparent 30%),
+    radial-gradient(circle at 92% 88%,rgba(16,185,129,.14),transparent 32%),
+    linear-gradient(135deg,#f4fbf6 0%,#edf8f1 48%,#f9fcfa 100%);
+  min-height:100dvh;
+}
+#pg-login .login-card2{
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(22,163,74,.14);
+  border-radius:28px;
+  box-shadow:0 28px 80px rgba(16,80,40,.16);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+#pg-login .lc2-inp{
+  min-height:52px;
+  border-radius:15px;
+  border:1px solid var(--bd);
+  background:#fbfefc;
+  transition:.2s ease;
+}
+#pg-login .lc2-inp:focus{
+  border-color:var(--ac);
+  box-shadow:0 0 0 4px rgba(22,163,74,.09);
+  background:#fff;
+  outline:none;
+}
+#pg-login .lc2-btn{
+  min-height:52px;
+  border-radius:15px;
+  box-shadow:0 10px 24px rgba(22,163,74,.22);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+#pg-login .lc2-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 14px 30px rgba(22,163,74,.28);
+}
+#pg-login .logo-badge{
+  box-shadow:0 14px 34px rgba(22,163,74,.28);
+}
+#pg-login .brand-h1{
+  letter-spacing:-1.4px;
+}
+@media(max-width:800px){
+  #pg-login .split{
+    padding:20px 18px 36px;
+    gap:22px;
+  }
+  #pg-login .brand-side{
+    display:none;
+  }
+  #pg-login .card-side{
+    width:100%;
+    max-width:520px;
+    margin:auto;
+  }
+  #pg-login .login-card2{
+    border-radius:22px;
+    padding:24px 20px;
+  }
+}
+@media(max-width:480px){
+  #pg-login .home-link{margin:16px 18px 0}
+  #pg-login .split{padding:12px 12px 24px}
+  #pg-login .login-card2{padding:22px 16px}
+}
+
 </style>
+
+<style>
+/* =========================================================
+   FATH MATES SOCIAL CHAT UPGRADE
+   WhatsApp/Instagram-inspired interaction model
+   ========================================================= */
+.social-chat-shell{height:calc(100dvh - 170px);min-height:560px;display:grid;grid-template-columns:340px minmax(0,1fr);background:#fff;border:1px solid var(--bd);border-radius:22px;overflow:hidden;box-shadow:0 16px 50px rgba(16,80,40,.10)}
+.social-chat-list{display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--bd);background:rgba(255,255,255,.96)}
+.social-list-top{padding:16px 16px 12px;border-bottom:1px solid var(--bd)}
+.social-list-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.social-list-title h2{font-size:20px;font-weight:800;margin:0}
+.social-tabs{display:flex;gap:6px;margin-bottom:10px}
+.social-tab{flex:1;border:0;background:var(--bg1);color:var(--t2);border-radius:10px;padding:8px 7px;font-size:11px;font-weight:700;cursor:pointer}
+.social-tab.on{background:var(--acg);color:var(--acd)}
+.social-search{display:flex;align-items:center;gap:8px;background:var(--bg1);border:1px solid transparent;border-radius:12px;padding:0 11px}
+.social-search:focus-within{border-color:var(--ac);background:#fff}
+.social-search input{width:100%;border:0;outline:0;background:transparent;padding:10px 0;font-size:13px;color:var(--t1)}
+.social-chat-items{flex:1;overflow:auto}
+.social-chat-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bg1);cursor:pointer;transition:.18s}
+.social-chat-item:hover{background:var(--bg1)}
+.social-chat-item.on{background:var(--acg)}
+.social-chat-item.unread .social-chat-name{font-weight:800}
+.social-chat-name{font-size:13px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.social-chat-preview{font-size:11px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.social-chat-meta{display:flex;align-items:center;gap:5px;color:var(--t3);font-size:10px}
+.social-chat-actions{display:flex;gap:5px}
+.social-icon-btn{width:34px;height:34px;border:0;border-radius:50%;background:var(--bg1);color:var(--t2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.social-icon-btn:hover{background:var(--acg);color:var(--acd)}
+.social-chat-main{min-width:0;display:flex;flex-direction:column;background:
+ radial-gradient(circle at 20% 10%,rgba(22,163,74,.04),transparent 35%),
+ radial-gradient(circle at 80% 90%,rgba(202,138,4,.05),transparent 35%),#fafdfb}
+.social-chat-header{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bd);background:rgba(255,255,255,.92);backdrop-filter:blur(10px)}
+.social-chat-header .social-head-info{flex:1;min-width:0}
+.social-chat-header .social-head-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.social-chat-header .social-head-status{font-size:10px;color:var(--t3);margin-top:2px}
+.social-chat-messages{flex:1;overflow:auto;padding:18px 18px 12px;display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth}
+.social-day{align-self:center;font-size:10px;font-weight:700;color:var(--t3);background:rgba(255,255,255,.88);border:1px solid var(--bd);padding:5px 10px;border-radius:999px;margin:8px 0}
+.social-msg-row{display:flex;max-width:88%;position:relative}
+.social-msg-row.me{align-self:flex-end}
+.social-msg-row.them{align-self:flex-start}
+.social-msg-bubble{padding:8px 10px 6px;border-radius:16px;background:#fff;border:1px solid var(--bd);box-shadow:0 1px 2px rgba(16,80,40,.04);cursor:pointer;min-width:42px}
+.social-msg-row.me .social-msg-bubble{background:var(--acg);border-color:rgba(22,163,74,.18);border-bottom-right-radius:5px}
+.social-msg-row.them .social-msg-bubble{border-bottom-left-radius:5px}
+.social-msg-text{font-size:13.5px;line-height:1.48;word-break:break-word}
+.social-msg-time{display:inline-flex;align-items:center;gap:3px;float:right;margin:6px 0 0 10px;font-size:9px;color:var(--t3)}
+.social-msg-image{display:block;max-width:min(300px,68vw);max-height:330px;object-fit:cover;border-radius:12px}
+.social-msg-audio{max-width:230px;height:36px}
+.social-msg-tools{display:flex;align-items:center;gap:4px;margin-top:3px;padding:3px 5px;border-radius:999px;background:#fff;border:1px solid var(--bd);box-shadow:0 4px 15px rgba(0,0,0,.08)}
+.social-msg-tools button{border:0;background:transparent;border-radius:999px;padding:5px 7px;cursor:pointer}
+.social-msg-tools button:hover{background:var(--bg1)}
+.social-reactions{display:flex;gap:3px;flex-wrap:wrap;clear:both;padding-top:4px}
+.social-reaction{font-size:11px;background:#fff;border:1px solid var(--bd);border-radius:999px;padding:2px 6px}
+.social-reply{border-left:3px solid var(--ac);background:rgba(255,255,255,.62);border-radius:7px;padding:5px 8px;margin-bottom:5px;font-size:10px;color:var(--t2)}
+.social-reply b{display:block;color:var(--acd);margin-bottom:1px}
+.social-deleted{font-style:italic;color:var(--t3);font-size:12px}
+.social-composer-wrap{border-top:1px solid var(--bd);background:#fff;padding:8px 10px}
+.social-replybar{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:7px 10px;border-radius:10px;background:var(--bg1);font-size:11px}
+.social-replybar .rbtext{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.social-composer{display:flex;align-items:flex-end;gap:7px;position:relative}
+.social-composer textarea{flex:1;resize:none;min-height:42px;max-height:120px;border:1px solid var(--bd);border-radius:18px;background:var(--bg1);padding:11px 13px;font:14px 'DM Sans',sans-serif;outline:0}
+.social-composer textarea:focus{border-color:var(--ac);background:#fff}
+.social-attach-menu{position:absolute;left:4px;bottom:54px;background:#fff;border:1px solid var(--bd);border-radius:15px;box-shadow:0 12px 40px rgba(0,0,0,.12);padding:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:5px;z-index:30}
+.social-attach-menu button{border:0;background:var(--bg1);border-radius:10px;padding:10px;cursor:pointer;font-size:11px;font-weight:700;color:var(--t2)}
+.social-attach-menu button:hover{background:var(--acg);color:var(--acd)}
+.social-drop{outline:3px dashed rgba(22,163,74,.35);outline-offset:-7px}
+.social-empty{margin:auto;text-align:center;color:var(--t3);padding:30px}
+.social-empty .social-empty-icon{width:70px;height:70px;border-radius:22px;background:var(--acg);color:var(--acd);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+.social-mobile-back{display:none}
+@media(max-width:900px){
+ .social-chat-shell{grid-template-columns:300px minmax(0,1fr)}
+}
+@media(max-width:768px){
+ .social-chat-shell{display:block;height:calc(100dvh - 145px);min-height:0;border-radius:16px}
+ .social-chat-list{height:100%;border-right:0}
+ .social-chat-main{height:100%;display:none}
+ .social-chat-shell.open .social-chat-list{display:none}
+ .social-chat-shell.open .social-chat-main{display:flex}
+ .social-mobile-back{display:inline-flex}
+ .social-msg-row{max-width:92%}
+ .social-msg-image{max-width:72vw}
+ .social-chat-messages{padding:12px 10px 8px}
+ .social-list-top{padding:12px}
+}
+@media(max-width:420px){
+ .social-chat-shell{height:calc(100dvh - 130px)}
+ .social-msg-text{font-size:13px}
+ .social-composer{gap:5px}
+ .social-icon-btn{width:32px;height:32px}
+}
+
 </head>
 <body>
+<!-- EARLY GUARD -->
+</style>
+
 <script>
 window.__pgBanner=function(msg){var b=document.getElementById('pg-err-banner');if(!b){b=document.createElement('div');b.id='pg-err-banner';b.style.cssText='position:fixed;bottom:8px;left:8px;right:8px;background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;border-radius:10px;padding:10px 14px;font:12px monospace;z-index:99999;max-height:150px;overflow:auto;white-space:pre-wrap';(document.body||document.documentElement).appendChild(b);}b.style.display='block';b.textContent+='[Portal] '+msg+'\n';};
 window.onerror=function(m,s,l){try{window.__pgBanner('Error: '+m+' (line '+l+')');}catch(e){}};
 window.__pgOK=false;
 setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never started — the saved file is likely TRUNCATED or corrupted. Re-copy the ENTIRE code (the file must end with </html>) and save again as index.html.');},1500);
 </script>
+<!-- LANDING -->
 <div id="pg-land">
 <div class="ld-wrap">
 <div class="ld-nav"><div class="ld-logo-badge"><i class="fas fa-graduation-cap"></i></div><div class="ld-logo-name">FATH MATES</div></div>
@@ -291,7 +421,7 @@ setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never
 <div class="ld-left">
 <div class="ld-pill"><i class="fas fa-wand-magic-sparkles" style="color:var(--ac)"></i> Next Generation Academic Management</div>
 <h1 class="ld-h1">Empowering<br><span class="grad">Excellence</span></h1>
-<p class="ld-p">Attendance, timetable, homework, polls, resources, marks, achievements and real-time chat — one platform for the whole college.</p>
+<p class="ld-p">Streamline administration, track student performance, and celebrate achievements with our integrated e-Governance platform.</p>
 <div class="ld-cta-row"><button class="ld-cta" onclick="switchPortal('member')">Get Started <i class="fas fa-arrow-right"></i></button><button class="ld-rank-link" onclick="showPublicLB()">View Public Rankings</button></div>
 <div class="ld-stats"><div><div class="ld-stat-n">100%</div><div class="ld-stat-l">Digital Workflow</div></div><div><div class="ld-stat-n">24/7</div><div class="ld-stat-l">Access Anywhere</div></div><div><div class="ld-stat-n">Real-time</div><div class="ld-stat-l">Updates</div></div></div>
 </div>
@@ -304,6 +434,7 @@ setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never
 <div class="ld-foot">© <span id="ld-year">2026</span> Darul Hasanath Islamic College.</div>
 </div>
 </div>
+<!-- LOGIN -->
 <div id="pg-login" style="display:none">
 <div id="lv-member" class="lv">
 <div class="blob"></div>
@@ -312,19 +443,19 @@ setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never
 <div class="brand-side">
 <div class="logo-row"><div class="logo-badge"><i class="fas fa-graduation-cap"></i></div><div><div class="logo-name">FATH MATES</div><div class="logo-sub">Students Portal</div></div></div>
 <h1 class="brand-h1">Your Success Journey<br><span class="hl">Starts Here.</span></h1>
-<p class="brand-p">Track your achievements, attendance, homework and marks — and chat with fellow scholars.</p>
+<p class="brand-p">Track your achievements, view your marks, and compete on the leaderboard with fellow scholars.</p>
 <div class="stat-row"><div class="stat-chip"><div class="stat-num" id="st-m">—</div><div class="stat-lbl">Active Students</div></div><div class="stat-chip"><div class="stat-num" id="st-a">—</div><div class="stat-lbl">Achievements</div></div><div class="stat-chip"><div class="stat-num" id="st-p">∞</div><div class="stat-lbl">Merit Points</div></div></div>
 </div>
 <div class="card-side">
 <div class="login-card2">
 <div class="lc2-title">Hello! Welcome back 👋</div>
 <div class="lc2-sub">Sign in to continue your journey</div>
-<form onsubmit="event.preventDefault();doLogin('member');">
+<form onsubmit="event.preventDefault();doLogin('member');" autocomplete="on">
 <label class="lc2-label">Username</label>
-<div class="inp-wrap"><i class="fas fa-user ic"></i><input type="text" id="l-user" class="lc2-inp" placeholder="Enter your username" autocomplete="off"></div>
+<div class="inp-wrap"><i class="fas fa-user ic"></i><input type="text" id="l-user" class="lc2-inp" placeholder="Enter your admission number" autocomplete="username" autocapitalize="none" spellcheck="false" inputmode="text"></div>
 <label class="lc2-label" style="margin-top:16px">Password</label>
-<div class="inp-wrap"><i class="fas fa-lock ic"></i><input type="password" id="l-pass" class="lc2-inp" placeholder="Enter your password"><i class="fas fa-eye eye-t" id="pw-ico" onclick="togglePw('l-pass','pw-ico')"></i></div>
-<label class="rem-row"><input type="checkbox" id="l-rem"> Remember me</label>
+<div class="inp-wrap"><i class="fas fa-lock ic"></i><input type="password" id="l-pass" class="lc2-inp" placeholder="Enter your password" autocomplete="current-password"><i class="fas fa-eye eye-t" id="pw-ico" onclick="togglePw('l-pass','pw-ico')"></i></div>
+<label class="rem-row"><input type="checkbox" id="l-rem"> Remember this username</label>
 <button type="submit" class="lc2-btn" id="l-btn">Sign In <i class="fas fa-arrow-right"></i></button>
 </form>
 <div id="l-err" class="l-err" style="display:none"></div>
@@ -343,19 +474,19 @@ setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never
 <div class="brand-side">
 <div class="adm-cluster"><div class="adm-semi"></div><div class="adm-dots"></div><div class="adm-bar" style="left:6px;top:66px;height:118px"></div><div class="adm-bar" style="left:44px;top:96px;height:88px"></div></div>
 <div class="logo-row"><div class="logo-badge" style="background:rgba(255,255,255,.2);box-shadow:none"><i class="fas fa-graduation-cap"></i></div><div><div class="logo-name">FATH MATES</div><div class="logo-sub">Staff Portal</div></div></div>
-<p class="brand-p">Manage attendance, homework, polls, marks, events and your team efficiently</p>
+<p class="brand-p">Manage your duties, track reports, and collaborate with your team efficiently</p>
 </div>
 <div class="card-side">
 <div class="login-card2">
 <div class="lc2-title" style="text-align:center">Hello! Welcome back</div>
 <div class="lc2-sub" style="text-align:center">Sign in to continue</div>
-<form onsubmit="event.preventDefault();doLogin('admin');">
+<form onsubmit="event.preventDefault();doLogin('admin');" autocomplete="on">
 <label class="adm-lbl">Email or Username</label>
-<div class="inp-wrap"><i class="fas fa-envelope ic"></i><input type="text" id="a-user" class="lc2-inp" placeholder="Enter email or username" autocomplete="off"></div>
+<div class="inp-wrap"><i class="fas fa-envelope ic"></i><input type="text" id="a-user" class="lc2-inp" placeholder="Enter administrator username" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
 <label class="adm-lbl" style="margin-top:16px">Password</label>
-<div class="inp-wrap"><i class="fas fa-lock ic"></i><input type="password" id="a-pass" class="lc2-inp" placeholder="Enter your password"><i class="fas fa-eye eye-t" id="apw-ico" onclick="togglePw('a-pass','apw-ico')"></i></div>
+<div class="inp-wrap"><i class="fas fa-lock ic"></i><input type="password" id="a-pass" class="lc2-inp" placeholder="Enter your password" autocomplete="current-password"><i class="fas fa-eye eye-t" id="apw-ico" onclick="togglePw('a-pass','apw-ico')"></i></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 20px">
-<label class="rem-row" style="margin:0"><input type="checkbox" id="a-rem"> Remember me</label>
+<label class="rem-row" style="margin:0"><input type="checkbox" id="a-rem"> Remember this username</label>
 <button type="button" class="swap-link" onclick="showResetInfo()">Reset Password?</button>
 </div>
 <button type="submit" class="lc2-btn" id="a-btn">Login</button>
@@ -368,12 +499,13 @@ setTimeout(function(){if(!window.__pgOK)window.__pgBanner('The main script never
 </div>
 </div>
 </div>
+<!-- APP -->
 <div id="pg-app" style="display:none">
 <div class="app-wrap">
 <aside id="sb" class="sidebar">
 <div class="p-4 border-b" style="border-color:var(--bd)"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--acd),var(--ac))"><i class="fas fa-graduation-cap text-white text-xs"></i></div><div class="flex-1"><div class="font-bold text-sm">FATH MATES</div><div class="flex items-center gap-1.5 text-xs" style="color:var(--t3)"><span class="sdot son"></span><span id="mode-lbl">Connecting…</span></div></div><button class="bico" style="position:relative" onclick="showNotifs()"><i class="fas fa-bell"></i><span id="nb1" class="bpn" style="position:absolute;top:-5px;right:-5px;display:none">0</span></button></div></div>
 <div class="p-3 border-b" style="border-color:var(--bd)"><div class="flex items-center gap-2.5"><div id="sb-av" class="av avs"></div><div class="min-w-0"><div id="sb-nm" class="font-semibold text-sm truncate"></div><div id="sb-rl" class="badge mt-0.5"></div></div></div></div>
-<nav class="flex-1 p-2 overflow-y-auto" id="sb-nav" style="-webkit-overflow-scrolling:touch"></nav>
+<nav class="flex-1 p-2 overflow-y-auto" id="sb-nav"></nav>
 <div class="p-2 border-t" style="border-color:var(--bd)"><div class="ni" onclick="doLogout()" style="color:var(--dn)"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>
 </aside>
 <div class="main-area"><div class="mob-h"><button class="bico" onclick="nav('dashboard')"><i class="fas fa-bars"></i></button><span class="font-semibold text-sm flex-1">FATH MATES</span><button class="bico" style="position:relative" onclick="showNotifs()"><i class="fas fa-bell"></i><span id="nb2" class="bpn" style="position:absolute;top:-5px;right:-5px;display:none">0</span></button></div><div id="mc"></div></div>
@@ -400,12 +532,11 @@ try{if(typeof firebase!=='undefined'){firebase.initializeApp(FB_CONFIG);DB=fireb
 /* ===== CONFIG ===== */
 var DEFAULT_ADNOS=['791','806','807','0808','089','810','811','812','813','814','815','816','817','818','820','821','822','823','824','825','826','827','828','829','830','831','832','833','834','835','836','849'];
 var ACO=['#22c55e','#3b82f6','#8b5cf6','#ec4899','#f59e0b','#14b8a6','#f97316','#06b6d4','#6366f1','#84cc16'];
-var NAV=[{id:'dashboard',icon:'fa-th-large',label:'Dashboard'},{id:'profile',icon:'fa-user',label:'My Profile'},{id:'cce',icon:'fa-clipboard-check',label:'My Marks'},{id:'attendance',icon:'fa-user-check',label:'Attendance'},{id:'timetable',icon:'fa-table-cells',label:'Timetable'},{id:'homework',icon:'fa-list-check',label:'Homework'},{id:'chat',icon:'fa-comments',label:'Chat'},{id:'polls',icon:'fa-square-poll-vertical',label:'Polls'},{id:'resources',icon:'fa-folder-open',label:'Resources'},{id:'members',icon:'fa-users',label:'Members'},{id:'announcements',icon:'fa-bullhorn',label:'Announcements'},{id:'leaderboard',icon:'fa-ranking-star',label:'Leaderboard'},{id:'events',icon:'fa-calendar-alt',label:'Events'},{id:'settings',icon:'fa-cog',label:'Settings'}];
+var NAV=[{id:'dashboard',icon:'fa-th-large',label:'Dashboard'},{id:'profile',icon:'fa-user',label:'My Profile'},{id:'cce',icon:'fa-clipboard-check',label:'My Marks'},{id:'chat',icon:'fa-comments',label:'Chat'},{id:'members',icon:'fa-users',label:'Members'},{id:'announcements',icon:'fa-bullhorn',label:'Announcements'},{id:'leaderboard',icon:'fa-ranking-star',label:'Leaderboard'},{id:'events',icon:'fa-calendar-alt',label:'Events'},{id:'settings',icon:'fa-cog',label:'Settings'}];
 var ADMIN_NAV=[{id:'admin-mem',icon:'fa-user-shield',label:'Manage Members'},{id:'admin-add',icon:'fa-user-plus',label:'Add / Remove'},{id:'admin-appr',icon:'fa-check-double',label:'Approvals',badge:true},{id:'admin-subj',icon:'fa-book-open',label:'CCE Subjects'},{id:'admin-cce',icon:'fa-pen-to-square',label:'Enter CCE Marks'},{id:'admin-ann',icon:'fa-bullhorn',label:'Post Announcement'},{id:'admin-evt',icon:'fa-calendar-plus',label:'Manage Events'}];
 var CAT_PTS={Academic:15,Sports:12,Arts:10,Community:10,Religious:10,Other:8};
 var CAT_ICO={Academic:'fa-book',Sports:'fa-running',Arts:'fa-palette',Community:'fa-hands-helping',Religious:'fa-mosque',Other:'fa-star'};
 var CAT_CLR={Academic:'var(--ac)',Sports:'var(--gd)',Arts:'var(--pk)',Community:'var(--inf)',Religious:'var(--pn)',Other:'var(--t2)'};
-var TTDAYS=['Mon','Tue','Wed','Thu','Fri','Sat'];
 var CU=null,CV='dashboard',VA=null,PT='details',CCE_SEL=null,cache={},CREDENTIALS={},ALL_ADNOS=[].concat(DEFAULT_ADNOS);
 var CHAT_PEER=null,MSG_UNSUBS=[],REPLY=null,SELMSG=null,REC=null,TYP_LAST=0,PEER_TYPING={},READMAP={},CHATQ='',_chatTick=null,LAST_TS={};
 var EMOJIS=['😀','😊','😍','😂','🥰','😅','🤣','😭','😢','🥺','😤','😡','👍','👎','🙏','👏','🔥','❤️','💚','💔','✨','🎉','💯','🤝','💪','🤲','🤗','🌙','🕌','📖','⚽','🏆','📚','☕','🤔','😉','😴','🥳','🍕'];
@@ -413,7 +544,7 @@ try{var _sa=lsGet('pu_adnos');if(_sa){var _al=JSON.parse(_sa);if(_al&&_al.length
 if(!ALL_ADNOS.length){ALL_ADNOS=[].concat(DEFAULT_ADNOS);lsDel('pu_adnos');}
 CREDENTIALS['ADMINISTRATOR']='Anshif@29';
 for(var _i=0;_i<ALL_ADNOS.length;_i++){CREDENTIALS[ALL_ADNOS[_i]]=ALL_ADNOS[_i]+'@fath';}
-function seedAnnArr(){return[{title:'Welcome to FATH MATES',content:'Check Attendance, Timetable, Homework, Polls & Resources — plus chat, marks and achievements!',important:true,date:new Date().toLocaleDateString('en-GB'),author:'Administrator'}];}
+function seedAnnArr(){return[{title:'Welcome to FATH MATES',content:'Complete your profiles, upload a profile photo, add achievements to earn points, and chat with your mates in real time!',important:true,date:new Date().toLocaleDateString('en-GB'),author:'Administrator'}];}
 function seedEvtArr(){var n=new Date();return[{id:'evt_seed1',title:'Annual Day',date:n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-15',time:'09:00',venue:'Auditorium',description:'Annual celebration',color:'#ca8a04'}];}
 function seedSubArr(){return[{id:'sbj1',name:'Quran',max:50},{id:'sbj2',name:'Arabic',max:50},{id:'sbj3',name:'Islamic Studies',max:50},{id:'sbj4',name:'Malayalam',max:50},{id:'sbj5',name:'English',max:50},{id:'sbj6',name:'Mathematics',max:50}];}
 function defU(id){return{password:id==='ADMINISTRATOR'?'Anshif@29':id+'@fath',role:id==='ADMINISTRATOR'?'admin':'member',details:{fullName:id==='ADMINISTRATOR'?'Administrator':'',dob:'',class:'',guardian:'',motherName:'',phone:'',address:'',email:'',bloodGroup:''},skills:[],achievements:[],cce:{}};}
@@ -455,13 +586,14 @@ showErrBanner('Cloud init failed ('+((e&&e.code)||e.message||e)+') — check Fir
 setModeLabels();
 try{updateLoginStats();}catch(e){}
 if(CLOUD){bootReady.then(function(){try{updateLoginStats();}catch(e){}}).catch(function(){});}
-try{var _saved=lsGet('portal_cur')||ssGet('portal_cur');if(_saved){
-if(CLOUD){bootReady.then(function(){
-if(!CLOUD){var _s2=loadUSync(_saved);if(_s2&&_s2.password){CREDENTIALS[_saved]=_s2.password;CU=_saved;showApp();}return;}
-return DB.collection('pu_users').doc(_saved).get().then(function(d){if(d.exists&&d.data().password){cache[_saved]=d.data();CREDENTIALS[_saved]=d.data().password;CU=_saved;attachRealtime();showApp();}});
-}).catch(function(){});}
-else{var _su=loadUSync(_saved);if(_su&&_su.password){CREDENTIALS[_saved]=_su.password;CU=_saved;showApp();}}
-}}catch(e){try{lsDel('portal_cur');ssDel('portal_cur');}catch(e2){}CU=null;}
+try{
+var _savedUser=lsGet('portal_last_user');
+if(_savedUser){
+var _hint=document.getElementById('l-user');
+if(_hint && !_hint.value)_hint.value=_savedUser;
+}
+lsDel('portal_cur');ssDel('portal_cur');
+}catch(e){try{lsDel('portal_cur');ssDel('portal_cur');}catch(e2){}}
 try{document.getElementById('ld-year').textContent=new Date().getFullYear();}catch(e){}
 function setModeLabels(){var t=CLOUD?'Cloud Synced':'Local Mode';var a=document.getElementById('mode-lbl');if(a)a.textContent=t;}
 /* ===== CORE DATA ===== */
@@ -480,19 +612,6 @@ function loadEvtsSync(){var l=[];try{l=JSON.parse(lsGet('pu_evts')||'[]');}catch
 function saveEvts(list){lsSet('pu_evts',JSON.stringify(list));if(CLOUD)cloudSetMeta('evts',list);}
 function loadSubs(){try{var v=JSON.parse(lsGet('pu_subjects')||'[]');return v||[];}catch(e){return[];}}
 function saveSubs(list){lsSet('pu_subjects',JSON.stringify(list));if(CLOUD)cloudSetMeta('subjects',list);}
-/* ===== NEW MODULE STORES ===== */
-function mGet(k,def){try{var v2=JSON.parse(lsGet('pu_'+k)||'null');return(v2===null||v2===undefined)?def:v2;}catch(e){return def;}}
-function mSet(k,val){lsSet('pu_'+k,JSON.stringify(val));if(CLOUD)cloudSetMeta(k,val);}
-function loadAtt(){return mGet('att',{});}
-function saveAtt(o){mSet('att',o);}
-function loadTT(){return mGet('tt',{});}
-function saveTT(o){mSet('tt',o);}
-function loadHW(){return mGet('hw',[]);}
-function saveHW(o){mSet('hw',o);}
-function loadPolls(){return mGet('polls',[]);}
-function savePolls(o){mSet('polls',o);}
-function loadRes(){return mGet('res',[]);}
-function saveRes(o){mSet('res',o);}
 /* ===== NOTIFICATIONS ===== */
 function loadNotif(id){try{var v=JSON.parse(lsGet('pu_nt_'+id)||'[]');return v||[];}catch(e){return[];}}
 function saveNotif(id,l){lsSet('pu_nt_'+id,JSON.stringify(l));if(CLOUD)DB.collection('pu_nt').doc(String(id)).set({list:l}).catch(function(){});}
@@ -513,8 +632,8 @@ function safeRerender(){var a=document.activeElement;if(a&&(a.tagName==='INPUT'|
 function attachRealtime(){if(!CLOUD)return;detachRealtime();
 RT_UNSUB.push(DB.collection('pu_users').onSnapshot(function(s){s.forEach(function(d){cache[d.id]=d.data();lsSet('pu_'+d.id,JSON.stringify(d.data()));});updateSB();safeRerender();},function(){}));
 RT_UNSUB.push(DB.collection('pu_nt').onSnapshot(function(s){s.forEach(function(d){lsSet('pu_nt_'+d.id,JSON.stringify(d.data().list||[]));});updateNotifDot();},function(){}));
-var mk=function(k,lsKey){RT_UNSUB.push(DB.collection('pu_meta').doc(k).onSnapshot(function(d){if(d.exists&&d.data().v!==undefined){lsSet(lsKey,JSON.stringify(d.data().v));safeRerender();}},function(){}));};
-mk('adnos','pu_adnos');mk('ann','pu_ann');mk('evts','pu_evts');mk('subjects','pu_subjects');mk('att','pu_att');mk('tt','pu_tt');mk('hw','pu_hw');mk('polls','pu_polls');mk('res','pu_res');
+var mk=function(k,lsKey){RT_UNSUB.push(DB.collection('pu_meta').doc(k).onSnapshot(function(d){if(d.exists&&d.data().v){lsSet(lsKey,JSON.stringify(d.data().v));safeRerender();}},function(){}));};
+mk('adnos','pu_adnos');mk('ann','pu_ann');mk('evts','pu_evts');mk('subjects','pu_subjects');
 RT_UNSUB.push(DB.collection('pu_meta').doc('adnos').onSnapshot(function(d){if(d.exists&&d.data().v){ALL_ADNOS=d.data().v;for(var i=0;i<ALL_ADNOS.length;i++)if(CREDENTIALS[ALL_ADNOS[i]]===undefined)CREDENTIALS[ALL_ADNOS[i]]=ALL_ADNOS[i]+'@fath';updateSB();}},function(){}));
 }
 /* ===== UTILITIES ===== */
@@ -541,7 +660,6 @@ var cce=all[ads[i]].cce||{};for(var k in cce){if(cce[k]&&cce[k].pending&&typeof 
 return c;}
 function getGrade(p){if(p>=90)return{g:'A+',c:'var(--ac)'};if(p>=80)return{g:'A',c:'var(--ac)'};if(p>=70)return{g:'B+',c:'var(--pn)'};if(p>=60)return{g:'B',c:'var(--pn)'};if(p>=50)return{g:'C+',c:'var(--gd)'};if(p>=40)return{g:'C',c:'var(--gd)'};if(p>=30)return{g:'D',c:'var(--wn)'};return{g:'E',c:'var(--dn)'};}
 function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
-function isBday(u){if(!u||!u.details||!u.details.dob)return false;var t=new Date(),d=new Date(u.details.dob+'T00:00:00');return d.getDate()===t.getDate()&&d.getMonth()===t.getMonth();}
 function cceRowsHTML(u){var subs=loadSubs(),cce=u.cce||{},tot=0,mx=0,cnt=0,pd=0,h='';
 for(var i=0;i<subs.length;i++){var s=subs[i],mk=cce[s.id],has=mkOK(mk);
 var pend=mk&&mk.pending&&typeof mk.pending.marks==='number'?mk.pending:null;
@@ -605,9 +723,14 @@ function doConfirmYes(){cmodal();var cb=_ccb;_ccb=null;if(cb)cb();}
 function showLE(msg,mode){var el=document.getElementById(mode==='admin'?'a-err':'l-err');if(!el)return;if(!msg){el.style.display='none';el.textContent='';return;}el.textContent=msg;el.style.display='block';setTimeout(function(){el.style.display='none';},6000);}
 function resetLoginBtn(mode){var btn=document.getElementById(mode==='admin'?'a-btn':'l-btn');if(btn){btn.disabled=false;btn.innerHTML=mode==='admin'?'Login':'Sign In <i class="fas fa-arrow-right"></i>';}}
 function busyLoginBtn(mode){var btn=document.getElementById(mode==='admin'?'a-btn':'l-btn');if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Verifying...';}}
-function acceptLogin(un,pw,remember,mode){var u=loadUSync(un);if(!u.password)u.password=pw;saveU(un,u);CREDENTIALS[un]=pw;CU=un;
-if(remember){lsSet('portal_cur',un);ssDel('portal_cur');}else{ssSet('portal_cur',un);lsDel('portal_cur');}
-resetLoginBtn(mode);attachRealtime();showApp();}
+function acceptLogin(un,pw,remember,mode){
+var u=loadUSync(un);
+if(!u)u=defU(un);
+CU=un;
+if(remember){lsSet('portal_last_user',un);}else{lsDel('portal_last_user');}
+lsDel('portal_cur');ssDel('portal_cur');
+resetLoginBtn(mode);attachRealtime();showApp();
+}
 function doLogin(mode){
 var ui=document.getElementById(mode==='admin'?'a-user':'l-user'),pi=document.getElementById(mode==='admin'?'a-pass':'l-pass'),rm=document.getElementById(mode==='admin'?'a-rem':'l-rem');
 var un=ui?ui.value.trim():'',pw=pi?pi.value.trim():'',rem=rm&&rm.checked;
@@ -659,7 +782,6 @@ function showApp(){document.getElementById('pg-land').style.display='none';docum
 try{var hb=function(){try{if(!CU)return;var u=loadUSync(CU);u.onl=Date.now();saveU(CU,u);}catch(e){}};hb();setInterval(hb,30000);}catch(e){}
 updateSB();nav('dashboard');var un=unreadCount(CU);if(un>0)toast('You have '+un+' new notification'+(un>1?'s':''),'inf');}
 showLand();
-/* ==== PART 2 continues inside the same <script> ==== */
 /* ===== NAVIGATION ===== */
 function chatTotalUnread(){var peers=Object.keys(loadAllSync()).filter(function(k){return k!==CU;});var c=0;for(var i=0;i<peers.length;i++)c+=chatUnread(msgPair(CU,peers[i]));return c;}
 function refreshChatBadges(){buildNav();buildMobNav();try{var tn=chatTotalUnread();document.title='FATH MATES'+(tn>0?' ('+tn+')':' - Darul Hasanath Islamic College');}catch(e){}}
@@ -670,7 +792,7 @@ if(isA){h+='<div class="mt-3 mb-1 px-3 text-xs font-semibold uppercase tracking-
 for(var j=0;j<ADMIN_NAV.length;j++){var a=ADMIN_NAV[j];var bdg2='';if(a.badge&&pc>0)bdg2='<span class="bpn" style="margin-left:auto">'+pc+'</span>';h+='<div class="ni '+(CV===a.id?'on':'')+'" onclick="nav(\''+a.id+'\')"><i class="fas '+a.icon+'"></i><span>'+a.label+'</span>'+bdg2+'</div>';}}
 document.getElementById('sb-nav').innerHTML=h;}
 function buildMobNav(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var pc=isA?countPending():0;var cu=chatTotalUnread();
-var items=isA?[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'chat',icon:'fa-comments',l:'Chat',b:cu},{id:'homework',icon:'fa-list-check',l:'Work'},{id:'admin-appr',icon:'fa-check-double',l:'Approve',b:pc},{id:'more',icon:'fa-ellipsis-h',l:'More'}]:[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'chat',icon:'fa-comments',l:'Chat',b:cu},{id:'homework',icon:'fa-list-check',l:'Work'},{id:'leaderboard',icon:'fa-ranking-star',l:'Rank'},{id:'more',icon:'fa-ellipsis-h',l:'More'}];
+var items=isA?[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'chat',icon:'fa-comments',l:'Chat',b:cu},{id:'admin-appr',icon:'fa-check-double',l:'Approve',b:pc},{id:'admin-cce',icon:'fa-pen-to-square',l:'Marks'},{id:'more',icon:'fa-ellipsis-h',l:'More'}]:[{id:'dashboard',icon:'fa-th-large',l:'Home'},{id:'profile',icon:'fa-user',l:'Profile'},{id:'chat',icon:'fa-comments',l:'Chat',b:cu},{id:'leaderboard',icon:'fa-ranking-star',l:'Rank'},{id:'more',icon:'fa-ellipsis-h',l:'More'}];
 var h='';for(var i=0;i<items.length;i++){var it=items[i];var bdg=it.b>0?'<span class="bpn" style="margin-left:3px">'+it.b+'</span>':'';var act=it.id==='more'?'showMoreMenu()':'nav(\''+it.id+'\')';h+='<button class="'+(CV===it.id?'on':'')+'" onclick="'+act+'"><i class="fas '+it.icon+'"></i><span style="display:flex;align-items:center">'+it.l+bdg+'</span></button>';}
 document.getElementById('mob-nav').innerHTML=h;}
 function showMoreMenu(){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var links=NAV.filter(function(n){return!(isA&&n.id==='cce');});if(isA)links=links.concat(ADMIN_NAV);
@@ -679,40 +801,34 @@ for(var i=0;i<links.length;i++){var n=links[i];h+='<div class="ni '+(CV===n.id?'
 h+='<div class="ni" onclick="cmodal();doLogout()" style="color:var(--dn)"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div></div>';openModal(h);}
 function nav(vx,extra){if(CV==='chat'&&vx!=='chat'){chatDetachAll();CHAT_PEER=null;REPLY=null;SELMSG=null;}
 CV=vx;if(vx==='profile'){VA=CU;PT='details';}if(vx==='member-detail'){VA=extra;PT='details';}buildNav();buildMobNav();render();}
-function render(){var c=document.getElementById('mc');if(!c)return;switch(CV){case'dashboard':rDash(c);break;case'profile':rProf(c,CU,true);break;case'cce':rCCE(c);break;case'attendance':rAtt(c);break;case'timetable':rTT(c);break;case'homework':rHW(c);break;case'polls':rPolls(c);break;case'resources':rRes(c);break;case'chat':rChat(c);break;case'members':rMems(c,false);break;case'member-detail':var uu=cache[CU]||loadUSync(CU);rProf(c,VA,CU===VA||uu.role==='admin');break;case'settings':rSett(c);break;case'announcements':rAnn(c,false);break;case'leaderboard':rLB(c);break;case'events':rEvts(c,false);break;case'admin-mem':rMems(c,true);break;case'admin-add':rAdminAdd(c);break;case'admin-appr':rApprovals(c);break;case'admin-subj':rAdminSubj(c);break;case'admin-cce':rAdminCCE(c);break;case'admin-ann':rAnn(c,true);break;case'admin-evt':rEvts(c,true);break;default:rDash(c);}}
+function render(){var c=document.getElementById('mc');if(!c)return;switch(CV){case'dashboard':rDash(c);break;case'profile':rProf(c,CU,true);break;case'cce':rCCE(c);break;case'chat':rChat(c);break;case'members':rMems(c,false);break;case'member-detail':var uu=cache[CU]||loadUSync(CU);rProf(c,VA,CU===VA||uu.role==='admin');break;case'settings':rSett(c);break;case'announcements':rAnn(c,false);break;case'leaderboard':rLB(c);break;case'events':rEvts(c,false);break;case'admin-mem':rMems(c,true);break;case'admin-add':rAdminAdd(c);break;case'admin-appr':rApprovals(c);break;case'admin-subj':rAdminSubj(c);break;case'admin-cce':rAdminCCE(c);break;case'admin-ann':rAnn(c,true);break;case'admin-evt':rEvts(c,true);break;default:rDash(c);}}
 /* ===== DASHBOARD ===== */
 function rDash(c){var u=cache[CU]||loadUSync(CU);var isA=u.role==='admin';var nm=gdn(u,CU);var hr=new Date().getHours();var greet=hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening';
 loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';});
 loadAnn().then(function(anns){loadEvts().then(function(evts){
-var nSubs=loadSubs().length;var hwOpen=loadHW().filter(function(h){return!(h.done||[]).includes(CU);}).length;
+var nSubs=loadSubs().length;
 if(isA){
 var tSk=0,tAc=0,tPts=0,pc=countPending();
 for(var i=0;i<ads.length;i++){tSk+=(all[ads[i]].skills||[]).length;var aA=(all[ads[i]].achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length;tAc+=aA;tPts+=calcPoints(all[ads[i]]);}
-c.innerHTML='<div class="fi">'+bdayBanner(all)+'<div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Institution overview · '+(CLOUD?'cloud database live':'local device')+'</p></div>'+
+c.innerHTML='<div class="fi"><div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Institution overview · '+(CLOUD?'cloud database live':'local device')+'</p></div>'+
 '<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5 stat-grid">'+sc('Members',ads.length,'fa-users','var(--ac)','var(--acg)')+sc('Total Points',tPts,'fa-star','var(--gd)','var(--gdg)')+sc('Approved Ach.',tAc,'fa-check-circle','var(--ac)','var(--acg)')+sc('CCE Subjects',nSubs,'fa-book-open','var(--pn)','var(--png)')+'</div>'+
-(pc>0?'<div class="card mb-5" style="border-color:rgba(217,119,6,.35);cursor:pointer" onclick="nav(\'admin-appr\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--wng)"><i class="fas fa-clock" style="color:var(--wn)"></i></div><div class="flex-1"><div class="font-semibold text-sm" style="color:var(--wn)">'+pc+' submission'+(pc>1?'s':'')+' pending approval</div><div class="text-xs" style="color:var(--t3)">Achievements & CCE marks — click to review</div></div><i class="fas fa-chevron-right" style="color:var(--t3)"></i></div></div>':'')+
-'<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5 stat-grid"><div class="card card-glow" style="cursor:pointer" onclick="nav(\'attendance\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-user-check mr-1"></i> Attendance</div><div class="text-sm font-bold">Mark today →</div></div><div class="card card-glow" style="cursor:pointer" onclick="nav(\'homework\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-list-check mr-1"></i> Homework</div><div class="text-sm font-bold">'+loadHW().length+' posted</div></div><div class="card card-glow" style="cursor:pointer" onclick="nav(\'polls\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-square-poll-vertical mr-1"></i> Polls</div><div class="text-sm font-bold">'+loadPolls().length+' active</div></div><div class="card card-glow" style="cursor:pointer" onclick="nav(\'resources\')"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)"><i class="fas fa-folder-open mr-1"></i> Resources</div><div class="text-sm font-bold">'+loadRes().length+' items</div></div></div>'+
+(pc>0?'<div class="card mb-5" style="border-color:rgba(217,119,6,.35);cursor:pointer" onclick="nav(\'admin-appr\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--wng)"><i class="fas fa-clock" style="color:var(--wn)"></i></div><div class="flex-1"><div class="font-semibold text-sm" style="color:var(--wn)">'+pc+' submission'+(pc>1?'s':'')+' pending approval</div><div class="text-xs" style="color:var(--t3)">Achievements & CCE marks from members — click to review</div></div><i class="fas fa-chevron-right" style="color:var(--t3)"></i></div></div>':'')+
 '<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5"><div class="card card-glow"><h3 class="text-sm font-bold mb-3"><i class="fas fa-bullhorn mr-2" style="color:var(--ac)"></i>Announcements</h3>'+(anns.length===0?'<p class="text-sm" style="color:var(--t3)">No announcements</p>':anns.slice(0,3).map(function(a){return'<div class="ann-card '+(a.important?'imp':'')+' mb-2"><span class="font-semibold text-sm">'+a.title+'</span>'+(a.important?' <span class="badge ba">Important</span>':'')+'<p class="text-xs mt-1" style="color:var(--t2)">'+(a.content||'').slice(0,80)+'</p></div>';}).join(''))+'</div><div class="card card-glow"><h3 class="text-sm font-bold mb-3"><i class="fas fa-calendar mr-2" style="color:var(--gd)"></i>Events</h3>'+(evts.length===0?'<p class="text-sm" style="color:var(--t3)">No events</p>':evts.slice(0,4).map(function(ev){return'<div class="flex items-center gap-3 mb-2 p-2.5 rounded-lg" style="background:var(--bg1)"><div class="evt-dot" style="background:'+(ev.color||'var(--ac)')+'"></div><div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+ev.title+'</div><div class="text-xs" style="color:var(--t3)">'+(ev.date||'')+(ev.time?' · '+ev.time:'')+'</div></div></div>';}).join(''))+'</div></div></div>';
 }else{
 var ap=calcPoints(u);
 var subs=loadSubs(),cce=u.cce||{},ct=0,cm=0,pd=0;
 for(var k=0;k<subs.length;k++){var mk=cce[subs[k].id];if(mkOK(mk)){ct+=mk.marks;cm+=subs[k].max;}if(mk&&mk.pending&&typeof mk.pending.marks==='number')pd++;}
 var cpct=cm>0?Math.round(ct/cm*100):null;
-var att=loadAtt();var dts=Object.keys(att);var aTot=dts.length,aPr=0;for(var d2=0;d2<dts.length;d2++)if((att[dts[d2]]||[]).indexOf(CU)>-1)aPr++;
-var aPct=aTot?Math.round(aPr/aTot*100):null;
 var cceCard;
 if(cpct===null){cceCard='<div class="card mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks</div><div class="text-xs" style="color:var(--t3)">No approved marks yet — submit yours from My Marks</div></div></div></div>';}
-else{var og=getGrade(cpct);cceCard='<div class="card card-glow mb-5" style="cursor:pointer" onclick="nav(\'cce\')"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks: '+ct+'/'+cm+'</div><div class="text-xs" style="color:var(--t3)">'+(pd>0?'<span style="color:var(--wn)">'+pd+' pending</span> · ':'')+'Tap to view & submit</div></div><div class="text-right"><div class="text-xl font-bold" style="color:'+og.c+'">'+og.g+'</div><div class="text-xs" style="color:var(--t3)">'+cpct+'%</div></div></div><div class="pb" style="height:8px"><div class="pf" style="width:'+cpct+'%"></div></div></div>';}
-var attCard=aPct===null?'<div class="card mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--acg)"><i class="fas fa-user-check" style="color:var(--ac)"></i></div><div class="flex-1"><div class="font-semibold text-sm">Attendance</div><div class="text-xs" style="color:var(--t3)">No records yet</div></div></div></div>':'<div class="card card-glow mb-5" style="cursor:pointer" onclick="nav(\'attendance\')"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--acg)"><i class="fas fa-user-check" style="color:var(--ac)"></i></div><div class="flex-1"><div class="font-semibold text-sm">Attendance: '+aPct+'%</div><div class="text-xs" style="color:var(--t3)">'+aPr+' of '+aTot+' days present · tap for details</div></div></div><div class="pb"><div class="pf" style="width:'+aPct+'%"></div></div></div>';
-c.innerHTML='<div class="fi">'+bdayBanner(all)+'<div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Your academic journey</p></div>'+
+else{var og=getGrade(cpct);cceCard='<div class="card card-glow mb-5" style="cursor:pointer" onclick="nav(\'cce\')"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--png)"><i class="fas fa-clipboard-check" style="color:var(--pn)"></i></div><div class="flex-1"><div class="font-semibold text-sm">CCE Marks: '+ct+'/'+cm+'</div><div class="text-xs" style="color:var(--t3)">'+(pd>0?'<span style="color:var(--wn)">'+pd+' submission'+(pd>1?'s':'')+' pending approval</span> · ':'')+'Tap to view & submit marks</div></div><div class="text-right"><div class="text-xl font-bold" style="color:'+og.c+'">'+og.g+'</div><div class="text-xs" style="color:var(--t3)">'+cpct+'%</div></div></div><div class="pb" style="height:8px"><div class="pf" style="width:'+cpct+'%"></div></div></div>';}
+c.innerHTML='<div class="fi"><div class="mb-6"><h1 class="text-2xl font-bold">'+greet+', '+nm+'</h1><p class="text-sm" style="color:var(--t3)">Your academic journey</p></div>'+
 '<div class="card card-glow mb-5" style="border-color:rgba(202,138,4,.25)"><div class="flex items-center gap-5"><div><div class="pts-big">'+ap+'</div><div class="text-xs font-semibold uppercase tracking-wider" style="color:var(--gd)">Total Points</div></div><div class="flex-1"><div class="pts-break" style="margin-top:0"><span class="pts-chip" style="background:var(--acg);color:var(--acd)"><i class="fas fa-trophy"></i> Achievements: '+ap+'</span></div><div class="pts-break">'+catChipsHTML(u)+'</div></div></div></div>'+
 '<div class="grid grid-cols-2 gap-3 mb-5 stat-grid">'+sc('Profile',comp(u)+'%','fa-user','var(--ac)','var(--acg)')+sc('Skills',(u.skills||[]).length,'fa-lightbulb','var(--pn)','var(--png)')+sc('Approved',(u.achievements||[]).filter(function(a){return a.status==='approved'||!a.status;}).length,'fa-check-circle','var(--gd)','var(--gdg)')+sc('Pending',(u.achievements||[]).filter(function(a){return a.status==='pending';}).length+pd,'fa-clock','var(--wn)','var(--wng)')+'</div>'+
-cceCard+attCard+
-(hwOpen>0?'<div class="card mb-5" style="border-color:rgba(217,119,6,.35);cursor:pointer" onclick="nav(\'homework\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--wng)"><i class="fas fa-list-check" style="color:var(--wn)"></i></div><div class="flex-1"><div class="font-semibold text-sm" style="color:var(--wn)">'+hwOpen+' homework pending</div><div class="text-xs" style="color:var(--t3)">Tap to view & mark as done</div></div><i class="fas fa-chevron-right" style="color:var(--t3)"></i></div></div>':'')+
-'<div class="flex flex-wrap gap-3"><button class="bp" onclick="nav(\'profile\')"><i class="fas fa-edit mr-2"></i>Edit Profile</button><button class="bs" onclick="nav(\'chat\')"><i class="fas fa-comments mr-2"></i>Chat</button><button class="bs" onclick="nav(\'timetable\')"><i class="fas fa-table-cells mr-2"></i>Timetable</button><button class="bs" onclick="nav(\'leaderboard\')"><i class="fas fa-ranking-star mr-2"></i>Leaderboard</button></div></div>';
+cceCard+
+'<div class="card card-glow mb-5"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:'+(comp(u)>=80?'var(--acg)':'var(--gdg)')+'"><i class="fas '+(comp(u)>=80?'fa-check-circle':'fa-exclamation-circle')+'" style="color:'+(comp(u)>=80?'var(--ac)':'var(--gd)')+'"></i></div><div class="flex-1"><div class="font-semibold text-sm">Profile: '+comp(u)+'%</div><div class="text-xs" style="color:var(--t3)">'+(comp(u)>=80?'Great!':'Add more details to improve.')+'</div></div></div><div class="pb" style="height:8px"><div class="pf" style="width:'+comp(u)+'%"></div></div></div>'+
+'<div class="flex flex-wrap gap-3"><button class="bp" onclick="nav(\'profile\')"><i class="fas fa-edit mr-2"></i>Edit Profile</button><button class="bs" onclick="nav(\'chat\')"><i class="fas fa-comments mr-2"></i>Chat</button><button class="bs" onclick="nav(\'leaderboard\')"><i class="fas fa-ranking-star mr-2"></i>Leaderboard</button></div></div>';
 }});});});}
-function bdayBanner(all){var names=[];for(var id in all){if(id!=='ADMINISTRATOR'&&isBday(all[id]))names.push(gdn(all[id],id));}
-if(!names.length)return'';return'<div class="bday"><span style="font-size:24px">🎂</span><div><div class="font-bold text-sm" style="color:var(--pk)">Happy Birthday!</div><div class="text-xs" style="color:var(--t2)">Today we celebrate: <b>'+esc(names.join(', '))+'</b> 🎉</div></div></div>';}
 /* ===== PROFILE ===== */
 function rProf(c,adno,canEdit){loadU(adno).then(function(u){if(!u){c.innerHTML='<p>User not found</p>';return;}var cp2=comp(u);var dn=gdn(u,adno);var isOwn=adno===CU;var isAdminV=(cache[CU]||loadUSync(CU)).role==='admin';var ap=calcPoints(u);
 var tabH='';if(PT==='details')tabH=rDT(adno,u,canEdit);else if(PT==='skills')tabH=rST(adno,u,canEdit);else tabH=rAT(adno,u,canEdit);
@@ -728,7 +844,7 @@ var h='<div class="card fi">'+photoRow+'<h3 class="text-base font-bold mb-4"><i 
 for(var i=0;i<f.length;i++){var fl=f[i];if(fl.t==='textarea')h+='<div class="md:col-span-2"><label class="fl"><i class="fas '+fl.i+' mr-1"></i>'+fl.l+'</label><textarea class="inp" id="f-'+fl.k+'" '+ro+'>'+(d[fl.k]||'')+'</textarea></div>';else h+='<div><label class="fl"><i class="fas '+fl.i+' mr-1"></i>'+fl.l+'</label><input type="'+fl.t+'" class="inp" id="f-'+fl.k+'" value="'+(d[fl.k]||'')+'" '+ro+'></div>';}
 h+='</div>';if(ce)h+='<div class="mt-5"><button class="bp" onclick="saveDet(\''+adno+'\')"><i class="fas fa-save mr-2"></i>Save</button></div>';h+='</div>';return h;}
 function rST(adno,u,ce){var sk=u.skills||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-lightbulb mr-2" style="color:var(--pn)"></i>Skills</h3><p class="text-xs mb-4" style="color:var(--t3)"><i class="fas fa-info-circle mr-1"></i>Skills do not give points — only approved achievements earn points by category.</p>';if(ce)h+='<div class="flex flex-col sm:flex-row gap-3 mb-4"><input type="text" id="nsk" class="inp flex-1" placeholder="Skill name"><select id="nsl" class="inp" style="max-width:160px"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Expert</option></select><button class="bp" onclick="addSk(\''+adno+'\')"><i class="fas fa-plus mr-1"></i>Add</button></div>';if(sk.length===0)h+='<div class="text-center py-8" style="color:var(--t3)">No skills yet</div>';else{h+='<div class="flex flex-wrap gap-2.5">';for(var i=0;i<sk.length;i++)h+='<div class="stg"><span>'+sk[i].name+'</span><span class="text-xs opacity-50">'+sk[i].level+'</span>'+(ce?'<span class="rx" onclick="rmSk(\''+adno+'\','+i+')"><i class="fas fa-times"></i></span>':'')+'</div>';h+='</div>';}h+='</div>';return h;}
-function rAT(adno,u,ce){var ach=u.achievements||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-trophy mr-2" style="color:var(--pk)"></i>Achievements</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Submitted achievements go to the Administrator for approval. Points after approval: Academic +15 · Sports +12 · Arts +10 · Community +10 · Religious +10 · Other +8.</p>';
+function rAT(adno,u,ce){var ach=u.achievements||[];var h='<div class="card fi"><h3 class="text-base font-bold mb-2"><i class="fas fa-trophy mr-2" style="color:var(--pk)"></i>Achievements</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Submitted achievements go to the Administrator for approval. Points are earned only after approval: Academic +15 · Sports +12 · Arts +10 · Community +10 · Religious +10 · Other +8.</p>';
 if(ce)h+='<div class="p-4 rounded-xl mb-4" style="background:var(--bg1);border:1px solid var(--bd)"><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3"><div><label class="fl">Title</label><input type="text" id="nat" class="inp" placeholder="Title"></div><div><label class="fl">Date</label><input type="date" id="nad" class="inp"></div></div><div class="mb-3"><label class="fl">Category</label><select id="nac" class="inp"><option>Academic</option><option>Sports</option><option>Arts</option><option>Community</option><option>Religious</option><option>Other</option></select></div><div class="mb-3"><label class="fl">Description</label><textarea id="nadc" class="inp" placeholder="Details..."></textarea></div><button class="bp w-full" onclick="addAch(\''+adno+'\')"><i class="fas fa-paper-plane mr-1"></i>Submit for Approval</button></div>';
 if(ach.length===0)h+='<div class="text-center py-8" style="color:var(--t3)"><i class="fas fa-trophy text-3xl mb-2"></i><br>No achievements yet</div>';
 else{h+='<div class="space-y-2.5">';
@@ -745,104 +861,6 @@ function rmAch(adno,i){askConfirm('Delete this achievement?',function(){var u=lo
 function saveDet(adno){var u=loadUSync(adno);var f=['fullName','dob','class','guardian','motherName','phone','email','bloodGroup','address'];for(var i=0;i<f.length;i++){var e=document.getElementById('f-'+f[i]);if(e)u.details[f[i]]=e.value.trim();}saveU(adno,u);toast('Details saved successfully','ok');updateSB();render();}
 function addSk(adno){var n=v('nsk');if(!n){toast('Enter skill name','err');return;}var u=loadUSync(adno);u.skills=u.skills||[];for(var i=0;i<u.skills.length;i++)if(u.skills[i].name.toLowerCase()===n.toLowerCase()){toast('Skill already added','err');return;}u.skills.push({name:n,level:v('nsl')||'Beginner'});saveU(adno,u);toast('Skill added','ok');render();}
 function rmSk(adno,i){var u=loadUSync(adno);u.skills.splice(i,1);saveU(adno,u);toast('Skill removed','inf');render();}
-/* ===== ATTENDANCE ===== */
-function rAtt(c){var u=loadUSync(CU);var isA=u.role==='admin';var att=loadAtt();var dates=Object.keys(att).sort().reverse();
-var tot=dates.length,pr=0;for(var i=0;i<tot;i++)if((att[dates[i]]||[]).indexOf(CU)>-1)pr++;
-var pct=tot?Math.round(pr/tot*100):null;
-var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Attendance</h1><p class="text-sm" style="color:var(--t3)">Daily presence records</p></div>';
-if(tot){h+='<div class="card card-glow mb-5"><div class="flex items-center gap-4"><div class="pts-big">'+pct+'%</div><div class="flex-1"><div class="font-semibold text-sm">Your attendance</div><div class="text-xs" style="color:var(--t3)">'+pr+' of '+tot+' recorded days present</div><div class="pb mt-2"><div class="pf" style="width:'+pct+'%"></div></div></div></div></div>';}else{h+='<div class="card mb-5 text-center py-8" style="color:var(--t3)"><i class="fas fa-user-check text-3xl mb-2"></i><br>No attendance recorded yet</div>';}
-if(dates.length){h+='<div class="card mb-5"><h3 class="text-sm font-bold mb-3"><i class="fas fa-calendar-day mr-2" style="color:var(--ac)"></i>Recent days</h3>';
-var n=Math.min(dates.length,14);
-for(var j=0;j<n;j++){var dd=dates[j];var p2=(att[dd]||[]).indexOf(CU)>-1;
-h+='<div class="flex items-center justify-between p-2.5 rounded-lg mb-2" style="background:var(--bg1)"><span class="text-sm font-semibold">'+dd+'</span>'+(p2?'<span class="badge bm"><i class="fas fa-check"></i> Present</span>':'<span class="badge" style="background:var(--dng);color:var(--dn)"><i class="fas fa-times"></i> Absent</span>')+'</div>';}
-h+='</div>';}
-if(isA){var today=new Date().toISOString().slice(0,10);var cur=att[today]||[];
-h+='<div class="card"><h3 class="text-sm font-bold mb-1"><i class="fas fa-user-pen mr-2" style="color:var(--gd)"></i>Mark Attendance (Admin)</h3><p class="text-xs mb-4" style="color:var(--t3)">Tick present members and save. Everyone sees updates live.</p>'+
-'<div class="mb-4"><label class="fl">Date</label><input type="date" id="att-date" class="inp" style="max-width:220px" value="'+today+'" onchange="render()"></div><div id="att-list">';
-var all=loadAllSync();var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';}).sort();
-for(var m=0;m<ads.length;m++){var id2=ads[m],mu=all[id2];
-h+='<label class="flex items-center gap-3 p-2.5 rounded-lg mb-2" style="background:var(--bg1);cursor:pointer"><input type="checkbox" class="att-chk" value="'+id2+'" style="width:18px;height:18px;accent-color:var(--ac)"'+(cur.indexOf(id2)>-1?' checked':'')+'>'+avH(mu,id2,'avs')+'<span class="text-sm font-semibold flex-1">'+gdn(mu,id2)+'</span><span class="text-xs" style="color:var(--t3)">'+id2+'</span></label>';}
-h+='</div><button class="bp mt-4" onclick="attSave()"><i class="fas fa-save mr-2"></i>Save Attendance</button></div>';}
-h+='</div>';c.innerHTML=h;}
-function attSave(){var d=document.getElementById('att-date')?document.getElementById('att-date').value:'';if(!d){toast('Pick a date','err');return;}
-var boxes=document.querySelectorAll('.att-chk');var sel=[];for(var i=0;i<boxes.length;i++)if(boxes[i].checked)sel.push(boxes[i].value);
-var att=loadAtt();att[d]=sel;saveAtt(att);toast('Attendance saved for '+d+' ('+sel.length+' present)','ok');render();}
-/* ===== TIMETABLE ===== */
-function rTT(c){var tt=loadTT();var isA=loadUSync(CU).role==='admin';
-var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Timetable</h1><p class="text-sm" style="color:var(--t3)">Weekly class schedule</p></div>';
-var any=false;var grid='<div class="tt-grid">';
-for(var d=0;d<TTDAYS.length;d++){var day=TTDAYS[d];var slots=tt[day]||[];
-if(slots.length)any=true;
-grid+='<div class="tt-day"><div class="font-bold text-sm mb-1" style="color:var(--acd)"><i class="fas fa-calendar-day mr-1"></i>'+day+'</div>';
-if(!slots.length)grid+='<div class="text-xs" style="color:var(--t3)">No classes</div>';
-for(var s=0;s<slots.length;s++){grid+='<div class="tt-slot"><span><b>'+esc(slots[s].s)+'</b>'+(slots[s].t?' <span style="color:var(--t3)">'+esc(slots[s].t)+'</span>':'')+'</span>'+(isA?'<button class="bd" style="padding:2px 7px" onclick="ttDel(\''+day+'\','+s+')"><i class="fas fa-times"></i></button>':'')+'</div>';}
-grid+='</div>';}
-grid+='</div>';
-h+=(any?'<div class="card">'+grid+'</div>':'<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-table-cells text-3xl mb-2"></i><br>Timetable not published yet</div>');
-if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Class Slot</h3><div class="grid grid-cols-1 sm:grid-cols-4 gap-3"><div><label class="fl">Day</label><select id="tt-day" class="inp">';
-for(var d2=0;d2<TTDAYS.length;d2++)h+='<option>'+TTDAYS[d2]+'</option>';
-h+='</select></div><div><label class="fl">Subject</label><input id="tt-s" class="inp" placeholder="e.g. Quran"></div><div><label class="fl">Time</label><input id="tt-t" class="inp" placeholder="e.g. 8:00 AM"></div><div style="display:flex;align-items:flex-end"><button class="bp w-full" onclick="ttAdd()"><i class="fas fa-plus mr-1"></i> Add</button></div></div></div>';}
-h+='</div>';c.innerHTML=h;}
-function ttAdd(){var d=v('tt-day'),s=v('tt-s'),t=v('tt-t');if(!d||!s){toast('Day and subject required','err');return;}
-var tt=loadTT();tt[d]=tt[d]||[];tt[d].push({s:s,t:t});saveTT(tt);toast('Slot added','ok');render();}
-function ttDel(d,i){var tt=loadTT();tt[d].splice(i,1);if(!tt[d].length)delete tt[d];saveTT(tt);render();}
-/* ===== HOMEWORK ===== */
-function rHW(c){var u=loadUSync(CU);var isA=u.role==='admin';var hw=loadHW().slice().sort(function(a,b){return(b.due||'').localeCompare(a.due||'');});
-var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Homework</h1><p class="text-sm" style="color:var(--t3)">Assignments &amp; your progress</p></div>';
-if(!hw.length)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-list-check text-3xl mb-2"></i><br>No homework posted yet</div>';
-else{h+='<div class="space-y-3">';
-for(var i=0;i<hw.length;i++){var w=hw[i];var done=(w.done||[]).indexOf(CU)>-1;var dc=(w.done||[]).length;
-h+='<div class="card '+(done?'hw-done':'')+'"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:'+(done?'var(--acg)':'var(--wng)')+'"><i class="fas '+(done?'fa-check':'fa-pen')+'" style="color:'+(done?'var(--ac)':'var(--wn)')+'"></i></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="htitle font-bold text-sm">'+esc(w.title)+'</span>'+(w.due?'<span class="badge bin"><i class="fas fa-calendar"></i> Due '+w.due+'</span>':'')+(done?'<span class="badge bm"><i class="fas fa-check"></i> Done</span>':'')+'</div>'+(w.desc?'<p class="text-xs mt-1" style="color:var(--t2)">'+esc(w.desc)+'</p>':'')+'<div class="text-xs mt-1.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(w.by||'Administrator')+' · <i class="fas fa-users mr-1"></i>'+dc+' completed</div></div>'+(isA?'<button class="bd" onclick="hwDel(\''+w.id+'\')"><i class="fas fa-trash"></i></button>':'<button class="'+(done?'bs':'bap')+'" onclick="hwDone(\''+w.id+'\')">'+(done?'<i class="fas fa-rotate-left mr-1"></i> Undo':'<i class="fas fa-check mr-1"></i> Mark done')+'</button>')+'</div></div>';}
-h+='</div>';}
-if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Post Homework</h3><div class="mb-3"><label class="fl">Title</label><input id="hw-t" class="inp" placeholder="e.g. Memorize Surah Al-Mulk"></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3"><div class="sm:col-span-2"><label class="fl">Description</label><input id="hw-d" class="inp" placeholder="Details (optional)"></div><div><label class="fl">Due date</label><input type="date" id="hw-due" class="inp"></div></div><button class="bp" onclick="hwAdd()"><i class="fas fa-paper-plane mr-2"></i>Post to all members</button></div>';}
-h+='</div>';c.innerHTML=h;}
-function hwDone(id){var hw=loadHW();for(var i=0;i<hw.length;i++)if(hw[i].id===id){hw[i].done=hw[i].done||[];var ix=hw[i].done.indexOf(CU);if(ix>-1)hw[i].done.splice(ix,1);else hw[i].done.push(CU);break;}saveHW(hw);render();}
-function hwAdd(){var t=v('hw-t');if(!t){toast('Enter a title','err');return;}var hw=loadHW();hw.unshift({id:'hw'+Date.now(),title:t,desc:v('hw-d'),due:v('hw-due'),by:gdn(loadUSync(CU),CU),date:new Date().toLocaleDateString('en-GB'),done:[]});saveHW(hw);
-for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New homework: '+t,'inf');
-toast('Homework posted','ok');render();}
-function hwDel(id){askConfirm('Delete this homework?',function(){var hw=loadHW().filter(function(w){return w.id!==id;});saveHW(hw);toast('Deleted','inf');render();});}
-/* ===== POLLS ===== */
-function rPolls(c){var u=loadUSync(CU);var isA=u.role==='admin';var ps=loadPolls();
-var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Polls</h1><p class="text-sm" style="color:var(--t3)">Vote and see live results</p></div>';
-if(!ps.length)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-square-poll-vertical text-3xl mb-2"></i><br>No polls yet</div>';
-else{h+='<div class="space-y-3">';
-for(var i=0;i<ps.length;i++){var p=ps[i];var votes=p.votes||{};var tot=Object.keys(votes).length;var my=votes[CU];
-h+='<div class="card"><div class="flex items-start justify-between gap-3 flex-wrap"><div class="flex-1"><div class="font-bold text-sm">'+esc(p.q)+'</div><div class="text-xs mt-1" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(p.by||'Administrator')+' · '+tot+' vote'+(tot===1?'':'s')+(p.closed?' · <span style="color:var(--dn)">closed</span>':'')+'</div></div>'+(isA?'<div style="display:flex;gap:6px"><button class="bs" style="padding:5px 10px" onclick="pollClose(\''+p.id+'\')">'+(p.closed?'Reopen':'Close')+'</button><button class="bd" onclick="pollDel(\''+p.id+'\')"><i class="fas fa-trash"></i></button></div>':'')+'</div><div class="mt-3">';
-for(var o=0;o<(p.options||[]).length;o++){var cnt=0;for(var uid in votes)if(votes[uid]===o)cnt++;
-var pct=tot?Math.round(cnt/tot*100):0;var mine=my===o;
-if(my===undefined&&!p.closed){h+='<button class="pollbar" style="width:100%" onclick="pollVote(\''+p.id+'\','+o+')"><span class="polllbl"><span>'+esc(p.options[o])+'</span><span style="color:var(--t3)">tap to vote</span></span></button>';}
-else{h+='<div class="pollbar" onclick="'+(p.closed?'':'pollVote(\''+p.id+'\','+o+')')+'"><div class="pollfill" style="width:'+pct+'%"></div><span class="polllbl"><span>'+(mine?'<b style="color:var(--acd)">'+esc(p.options[o])+' ✓</b>':esc(p.options[o]))+'</span><span>'+cnt+' · '+pct+'%</span></span></div>';}}
-h+='</div></div>';}
-h+='</div>';}
-if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Create Poll</h3><div class="mb-3"><label class="fl">Question</label><input id="pl-q" class="inp" placeholder="e.g. Best day for the study tour?"></div><div class="mb-3"><label class="fl">Options (comma separated, 2–6)</label><input id="pl-o" class="inp" placeholder="Friday, Saturday, Sunday"></div><button class="bp" onclick="pollAdd()"><i class="fas fa-paper-plane mr-2"></i>Publish Poll</button></div>';}
-h+='</div>';c.innerHTML=h;}
-function pollVote(id,idx){var ps=loadPolls();for(var i=0;i<ps.length;i++)if(ps[i].id===id){if(ps[i].closed){toast('Poll is closed','err');return;}ps[i].votes=ps[i].votes||{};
-if(ps[i].votes[CU]!==undefined){askConfirm('Change your vote?',(function(pid,oi){return function(){var ps2=loadPolls();for(var j=0;j<ps2.length;j++)if(ps2[j].id===pid){ps2[j].votes[CU]=oi;}savePolls(ps2);toast('Vote updated','ok');render();};})(id,idx));return;}
-ps[i].votes[CU]=idx;break;}}savePolls(ps);toast('Vote recorded!','ok');render();}
-function pollAdd(){var q=v('pl-q'),opts=v('pl-o').split(',').map(function(s){return s.trim();}).filter(Boolean);
-if(!q||opts.length<2){toast('Question and at least 2 options required','err');return;}
-if(opts.length>6){toast('Max 6 options','err');return;}
-var ps=loadPolls();ps.unshift({id:'pl'+Date.now(),q:q,options:opts,by:gdn(loadUSync(CU),CU),votes:{},closed:false});savePolls(ps);
-for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New poll: '+q,'inf');
-toast('Poll published','ok');render();}
-function pollClose(id){var ps=loadPolls();for(var i=0;i<ps.length;i++)if(ps[i].id===id){ps[i].closed=!ps[i].closed;break;}savePolls(ps);render();}
-function pollDel(id){askConfirm('Delete this poll?',function(){var ps=loadPolls().filter(function(p){return p.id!==id;});savePolls(ps);toast('Poll deleted','inf');render();});}
-/* ===== RESOURCES ===== */
-function rRes(c){var u=loadUSync(CU);var isA=u.role==='admin';var rs=loadRes();
-var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Resources</h1><p class="text-sm" style="color:var(--t3)">Notes, links & study materials</p></div>';
-if(!rs.length)h+='<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-folder-open text-3xl mb-2"></i><br>No resources yet</div>';
-else{h+='<div class="space-y-2">';
-for(var i=0;i<rs.length;i++){var r=rs[i];
-h+='<div class="res-item"><div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--png)"><i class="fas fa-link" style="color:var(--pn)"></i></div><div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+esc(r.title)+'</div><div class="text-xs truncate" style="color:var(--t3)">'+esc(r.url)+'</div><div class="text-xs mt-0.5" style="color:var(--t3)"><i class="fas fa-user mr-1"></i>'+(r.by||'Administrator')+' · '+(r.date||'')+'</div></div><a class="bap" href="'+esc(r.url)+'" target="_blank" rel="noopener" style="text-decoration:none"><i class="fas fa-up-right-from-square mr-1"></i> Open</a>'+(isA?'<button class="bd" onclick="resDel(\''+r.id+'\')"><i class="fas fa-trash"></i></button>':'')+'</div>';}
-h+='</div>';}
-if(isA){h+='<div class="card mt-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Resource</h3><div class="mb-3"><label class="fl">Title</label><input id="rs-t" class="inp" placeholder="e.g. Hifz revision planner"></div><div class="mb-3"><label class="fl">URL</label><input id="rs-u" class="inp" placeholder="https://…"></div><button class="bp" onclick="resAdd()"><i class="fas fa-paper-plane mr-2"></i>Add for everyone</button></div>';}
-h+='</div>';c.innerHTML=h;}
-function resAdd(){var t=v('rs-t'),url=v('rs-u');if(!t||!url){toast('Title and URL required','err');return;}
-if(!/^https?:\/\//i.test(url)){url='https://'+url;}
-var rs=loadRes();rs.unshift({id:'rs'+Date.now(),title:t,url:url,by:gdn(loadUSync(CU),CU),date:new Date().toLocaleDateString('en-GB')});saveRes(rs);
-for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New resource: '+t,'inf');
-toast('Resource added','ok');render();}
-function resDel(id){askConfirm('Delete this resource?',function(){var rs=loadRes().filter(function(r){return r.id!==id;});saveRes(rs);toast('Resource deleted','inf');render();});}
 /* ===== WHATSAPP-STYLE CHAT ===== */
 function msgPair(a,b){return[String(a),String(b)].sort().join('__');}
 function msgLocal(pair){try{var v2=JSON.parse(lsGet('pu_msg_'+pair)||'[]');return v2||[];}catch(e){return[];}}
@@ -996,7 +1014,7 @@ REC.timer=setInterval(function(){var b=document.getElementById('rec-t');if(b)b.t
 if(Date.now()-REC.t0>90000)chatMic();},400);
 }).catch(function(){toast('Mic permission denied','err');});}
 function avView(id){var u=loadUSync(id);if(!u)return;
-openModal('<div style="text-align:center">'+avH(u,id,'avl')+'<h3 class="text-lg font-bold mt-3">'+gdn(u,id)+'</h3><p class="text-xs" style="color:var(--t3)">'+(u.role==='admin'?'Administrator':'Admission No: '+id)+' · '+(isOnline(u)?'<span style="color:var(--ac)">online</span>':'last seen '+(u.onl?relTime(u.onl):'unknown'))+'</p><div class="text-sm mt-2" style="color:var(--t2)">'+calcPoints(u)+' merit points · '+comp(u)+'% profile</div><div style="display:flex;gap:10px;justify-content:center;margin-top:16px" class="flex-wrap">'+(id!==CU?'<button class="bp" onclick="cmodal();CHAT_PEER=\''+id+'\';nav(\'chat\')"><i class="fas fa-comments mr-1"></i> Message</button>':'')+'<button class="bs" onclick="cmodal();nav(\'member-detail\',\''+id+'\')"><i class="fas fa-user mr-1"></i> Profile</button></div></div>');}
+openModal('<div style="text-align:center">'+avH(u,id,'avl')+'<h3 class="text-lg font-bold mt-3">'+gdn(u,id)+'</h3><p class="text-xs" style="color:var(--t3)">'+(u.role==='admin'?'Administrator':'Admission No: '+id)+' · '+(isOnline(u)?'<span style="color:var(--ac)">online</span>':'last seen '+(u.onl?relTime(u.onl):'unknown'))+'</p><div class="text-sm mt-2" style="color:var(--t2)">'+calcPoints(u)+' merit points · '+comp(u)+'% profile complete</div><div style="display:flex;gap:10px;justify-content:center;margin-top:16px" class="flex-wrap">'+(id!==CU?'<button class="bp" onclick="cmodal();CHAT_PEER=\''+id+'\';nav(\'chat\')"><i class="fas fa-comments mr-1"></i> Message</button>':'')+'<button class="bs" onclick="cmodal();nav(\'member-detail\',\''+id+'\')"><i class="fas fa-user mr-1"></i> Profile</button></div></div>');}
 function renderChatPanel(keep){var box=document.getElementById('chat-panel-box');if(!box)return;
 var inp=keep?document.getElementById('chat-in'):null;var val=inp?inp.value:null;
 box.innerHTML=chatPanelHTML();
@@ -1020,7 +1038,7 @@ return'<div class="chat-panel"><div class="chat-head"><button class="bico chat-b
 '<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate">'+gdn(u,CHAT_PEER)+'</div><div class="text-xs" style="min-height:15px">'+peerStatus(CHAT_PEER)+'</div></div>'+(u.role==='admin'?'<span class="badge ba">Admin</span>':'')+'</div>'+
 '<div class="chat-msgs wall" id="chat-msgs">'+msgsHTML(pair)+'</div>'+repHTML+recHTML+'</div>';}
 function rChat(c){var lbx='<div id="chat-list-box" style="display:contents">'+chatListHTML()+'</div>';
-c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Chat</h1><p class="text-sm" style="color:var(--t3)">WhatsApp-style messaging · '+(CLOUD?'live cloud sync':'local device only')+'</p></div>'+
+c.innerHTML='<div class="fi"><div class="mb-5" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h1 class="text-2xl font-bold">Chat</h1><p class="text-sm" style="color:var(--t3)">WhatsApp-style messaging · '+(CLOUD?'live cloud sync':'local device only')+'</p></div></div>'+
 '<div class="chat-wrap'+(CHAT_PEER?' open':'')+'" id="chat-wrap">'+lbx+'<div id="chat-panel-box">'+chatPanelHTML()+'</div></div></div>';
 chatWatchAll();
 var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;
@@ -1032,7 +1050,7 @@ var form='';
 if(subs.length){form='<div class="card mb-5"><h3 class="text-base font-bold mb-2"><i class="fas fa-pen-to-square mr-2" style="color:var(--ac)"></i>Submit / Update My Marks</h3><p class="text-xs mb-4" style="color:var(--wn)"><i class="fas fa-info-circle mr-1"></i>Your submissions go to the Administrator for approval. Leave a field empty to withdraw a pending submission.</p>';
 for(var i=0;i<subs.length;i++){var s=subs[i];var mk=u.cce[s.id];var val=mkOK(mk)?mk.marks:(mk&&mk.pending&&typeof mk.pending.marks==='number'?mk.pending.marks:'');
 form+='<div class="flex items-center gap-3 p-3 rounded-lg mb-2" style="background:var(--bg1)"><div class="flex-1 min-w-0"><div class="font-semibold text-sm">'+s.name+'</div><div class="text-xs" style="color:var(--t3)">Max: '+s.max+(mk&&mk.pending?' · <span style="color:var(--wn)">pending: '+mk.pending.marks+'</span>':'')+'</div></div><input type="number" id="my-mk-'+s.id+'" class="inp" style="max-width:110px;text-align:center" min="0" max="'+s.max+'" value="'+val+'" placeholder="—"></div>';}
-form+='<div class="flex justify-end mt-3 gap-2 flex-wrap"><button class="bs" onclick="window.print()"><i class="fas fa-print mr-2"></i>Print Marksheet</button><button class="bp" onclick="saveMyCCE()"><i class="fas fa-paper-plane mr-2"></i>Submit for Approval</button></div></div>';}
+form+='<div class="flex justify-end mt-3"><button class="bp" onclick="saveMyCCE()"><i class="fas fa-paper-plane mr-2"></i>Submit for Approval</button></div></div>';}
 c.innerHTML='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">My CCE Marks</h1><p class="text-sm" style="color:var(--t3)">Continuous & Comprehensive Evaluation'+(r.pd>0?' · <span style="color:var(--wn)">'+r.pd+' pending approval</span>':'')+'</p></div>'+
 (r.nsubs===0?'<div class="card text-center py-10" style="color:var(--t3)"><i class="fas fa-book-open text-3xl mb-2"></i><br>No subjects configured yet</div>':
 '<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5 stat-grid"><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Total Score</div><div class="pts-big">'+r.tot+'</div><div class="text-xs" style="color:var(--t3)">out of '+r.mx+' (approved only)</div></div><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Percentage</div><div class="pts-big">'+pct+'%</div><div class="text-xs" style="color:var(--t3)">'+(r.cnt<r.nsubs?r.cnt+'/'+r.nsubs+' subjects entered':'All subjects entered')+'</div></div><div class="card card-glow text-center"><div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--t3)">Overall Grade</div><div class="text-3xl font-black" style="font-family:\'Playfair Display\',serif;color:'+g.c+'">'+g.g+'</div><div class="text-xs" style="color:var(--t3)">Based on percentage</div></div></div>'+
@@ -1121,7 +1139,7 @@ function addEvt(){var t=v('ev-t'),d=v('ev-d');if(!t||!d){toast('Title and date a
 for(var i=0;i<ALL_ADNOS.length;i++)pushNotif(ALL_ADNOS[i],'New event: '+t+' on '+d,'inf');
 toast('Event added','ok');render();}
 function delEvt(id){askConfirm('Delete this event?',function(){var l=loadEvtsSync();var ix=-1;for(var i=0;i<l.length;i++)if(l[i].id===id){ix=i;break;}if(ix>-1)l.splice(ix,1);saveEvts(l);toast('Event deleted','inf');render();});}
-/* ===== ADMIN: MEMBERS ===== */
+/* ===== ADMIN: ADD / REMOVE MEMBERS ===== */
 function saveAdnos(){lsSet('pu_adnos',JSON.stringify(ALL_ADNOS));if(CLOUD)cloudSetMeta('adnos',ALL_ADNOS);}
 function rAdminAdd(c){var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">Add / Remove Members</h1><p class="text-sm" style="color:var(--t3)">Admission numbers · default password is ADNO@fath</p></div>'+
 '<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-user-plus mr-2" style="color:var(--ac)"></i>Add Member</h3><div class="flex flex-col sm:flex-row gap-3"><input id="na-adno" class="inp flex-1" placeholder="New admission number e.g. 850"><button class="bp" onclick="addAdno()"><i class="fas fa-plus mr-2"></i>Add</button></div><p class="text-xs mt-3" style="color:var(--t3)"><i class="fas fa-info-circle mr-1"></i>The member can log in with their admission number and password <b>ADNO@fath</b>.</p></div>'+
@@ -1164,7 +1182,7 @@ e.marks=e.pending.marks;e.status='approved';e.by='Member';e.date=e.pending.date;
 saveU(id,u);pushNotif(id,'Your CCE marks for '+si.name+' were approved: '+e.marks+(si.max?'/'+si.max:''),'ok');toast('CCE marks approved','ok');updateSB();render();}
 function rejCCE(id,sbj){var u=loadUSync(id);var e=u.cce&&u.cce[sbj];if(!e||!e.pending)return;var si=sbjInfo(sbj);
 delete e.pending;saveU(id,u);pushNotif(id,'Your CCE marks for '+si.name+' were rejected by the administrator','err');toast('CCE marks rejected','inf');updateSB();render();}
-/* ===== ADMIN: SUBJECTS ===== */
+/* ===== ADMIN: CCE SUBJECTS ===== */
 function rAdminSubj(c){var subs=loadSubs();
 var h='<div class="fi"><div class="mb-5"><h1 class="text-2xl font-bold">CCE Subjects</h1><p class="text-sm" style="color:var(--t3)">'+subs.length+' subjects configured</p></div>'+
 '<div class="card mb-5"><h3 class="text-sm font-bold mb-4"><i class="fas fa-plus mr-2" style="color:var(--ac)"></i>Add Subject</h3><div class="flex flex-col sm:flex-row gap-3"><input id="sj-n" class="inp flex-1" placeholder="Subject name e.g. Physics"><input id="sj-m" type="number" class="inp" style="max-width:150px" placeholder="Max marks" value="50" min="1"><button class="bp" onclick="addSubj()"><i class="fas fa-plus mr-2"></i>Add</button></div></div>';
@@ -1173,7 +1191,7 @@ else{h+='<div class="space-y-2">';for(var i=0;i<subs.length;i++){var s=subs[i];h
 h+='</div>';c.innerHTML=h;}
 function addSubj(){var n=v('sj-n'),m=parseInt(v('sj-m'),10);if(!n){toast('Enter subject name','err');return;}if(!m||m<=0){toast('Enter valid max marks','err');return;}var l=loadSubs();for(var i=0;i<l.length;i++)if(l[i].name.toLowerCase()===n.toLowerCase()){toast('Subject already exists','err');return;}l.push({id:'sbj'+Date.now(),name:n,max:m});saveSubs(l);toast('Subject added','ok');render();}
 function rmSubj(id){askConfirm('Remove this subject? Entered marks for it will be lost.',function(){var l=loadSubs().filter(function(s){return s.id!==id;});saveSubs(l);toast('Subject removed','inf');render();});}
-/* ===== ADMIN: ENTER CCE ===== */
+/* ===== ADMIN: ENTER CCE MARKS ===== */
 function rAdminCCE(c){var subs=loadSubs();
 loadAll().then(function(all){var ads=Object.keys(all).filter(function(k){return k!=='ADMINISTRATOR';}).sort();
 var opts='<option value="">— Select member —</option>';
@@ -1192,13 +1210,257 @@ h+='</div>';c.innerHTML=h;});}
 function saveCCE(){if(!CCE_SEL){toast('Select a member','err');return;}var subs=loadSubs();var u=loadUSync(CCE_SEL);u.cce=u.cce||{};var tot=0,any=false;
 for(var i=0;i<subs.length;i++){var e=document.getElementById('mk-'+subs[i].id);if(!e)continue;var val=e.value.trim();if(val===''){delete u.cce[subs[i].id];continue;}var n=parseFloat(val);if(isNaN(n)||n<0||n>subs[i].max){toast(subs[i].name+': enter a value between 0 and '+subs[i].max,'err');return;}u.cce[subs[i].id]={marks:n,date:new Date().toLocaleDateString('en-GB'),by:'Administrator',status:'approved'};tot+=n;any=true;}
 saveU(CCE_SEL,u);pushNotif(CCE_SEL,'CCE marks published by Administrator: total '+tot+' points','ok');toast(any?('Marks published to '+gdn(u,CCE_SEL)):'All marks cleared for '+gdn(u,CCE_SEL),any?'ok':'inf');render();}
+/* ===== ADMIN: VIEW MEMBER CCE ===== */
 function viewCCE(adno){var u=loadUSync(adno);var r=cceRowsHTML(u);var pct=r.mx>0?Math.round(r.tot/r.mx*100):0;var g=getGrade(pct);
 openModal('<h3 class="text-lg font-bold mb-1"><i class="fas fa-clipboard-check mr-2" style="color:var(--pn)"></i>CCE Marks — '+gdn(u,adno)+'</h3><p class="text-xs mb-4" style="color:var(--t3)">'+(r.mx?'Total '+r.tot+'/'+r.mx+' · '+pct+'% · Grade '+g.g+(r.pd?' · '+r.pd+' pending':''):'No marks entered yet')+'</p>'+(r.nsubs===0?'<p class="text-sm" style="color:var(--t3)">No subjects configured.</p>':r.html)+'<button class="bs w-full mt-4" onclick="cmodal()">Close</button>');}
+/* ===== ADMIN: RESET MEMBER PASSWORD ===== */
 function admPw(adno){var e=document.getElementById('apw-'+adno);var n=e?e.value:'';if(!n){toast('Enter a new password','err');return;}var u=loadUSync(adno);u.password=n;saveU(adno,u);CREDENTIALS[adno]=n;pushNotif(adno,'Your password was reset by the administrator','err');toast('Password updated for '+adno,'ok');if(e)e.value='';}
-/* ===== RESPONSIVE HELPERS (mobile & PC) ===== */
-document.addEventListener('click',function(e){var p=document.getElementById('emoji-pop');if(p&&!p.contains(e.target)&&!(e.target.closest&&e.target.closest('.cbtn')))p.remove();});
-if(window.visualViewport){window.visualViewport.addEventListener('resize',function(){if(CV==='chat'&&CHAT_PEER){var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;}});}
-var _lastTap=0;document.addEventListener('touchend',function(e){var now=Date.now();if(now-_lastTap<300&&e.target.closest('button'))e.preventDefault();_lastTap=now;},{passive:false});
+
+
+/* =========================================================
+   FATH MATES SOCIAL CHAT UPGRADE JS
+   Reuses existing msgPair/msgLocal/mutChat/esc/gdn/etc.
+   ========================================================= */
+var CHAT_FILTER='all',CHAT_ATTACH_OPEN=false;
+
+function socialChatTime(ts){
+  if(!ts)return'';
+  var d=new Date(ts),n=new Date();
+  if(d.toDateString()===n.toDateString())return d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit'});
+}
+function socialLast(pair){
+  var l=msgLocal(pair);
+  for(var i=l.length-1;i>=0;i--)if(!l[i].del)return l[i];
+  return null;
+}
+function socialPreview(m){
+  if(!m)return'No messages yet';
+  var p=m.f===CU?'You: ':'';
+  if(m.ty==='i')return p+'📷 Photo';
+  if(m.ty==='a')return p+'🎤 Voice note';
+  if(m.ty==='x')return p+'Message deleted';
+  return p+String(m.t||'').replace(/\s+/g,' ').slice(0,42);
+}
+function socialChatListHTML(){
+  var all=loadAllSync(),peers=chatPeers(),q=(CHATQ||'').toLowerCase();
+  peers.sort(function(a,b){
+    var la=socialLast(msgPair(CU,a)),lb=socialLast(msgPair(CU,b));
+    var ta=la?la.ts:0,tb=lb?lb.ts:0;
+    return tb-ta||gdn(all[a],a).localeCompare(gdn(all[b],b));
+  });
+  var h='<div class="social-list-top">'+
+    '<div class="social-list-title"><h2>Messages</h2><div class="social-chat-actions">'+
+    '<button class="social-icon-btn" title="Refresh" onclick="render()"><i class="fas fa-rotate"></i></button>'+
+    '</div></div>'+
+    '<div class="social-tabs">'+
+    '<button class="social-tab '+(CHAT_FILTER==='all'?'on':'')+'" onclick="CHAT_FILTER=\'all\';renderChatListOnly()">All</button>'+
+    '<button class="social-tab '+(CHAT_FILTER==='unread'?'on':'')+'" onclick="CHAT_FILTER=\'unread\';renderChatListOnly()">Unread</button>'+
+    '<button class="social-tab '+(CHAT_FILTER==='online'?'on':'')+'" onclick="CHAT_FILTER=\'online\';renderChatListOnly()">Online</button>'+
+    '</div>'+
+    '<div class="social-search"><i class="fas fa-magnifying-glass" style="color:var(--t3)"></i><input id="chat-q" value="'+esc(CHATQ||'')+'" placeholder="Search people or messages…" oninput="CHATQ=this.value;renderChatListOnly()"></div>'+
+    '</div><div class="social-chat-items">';
+  var shown=0;
+  for(var i=0;i<peers.length;i++){
+    var id=peers[i],u=all[id],nm=gdn(u,id),pair=msgPair(CU,id),last=socialLast(pair),un=chatUnread(pair);
+    var hay=(nm+' '+id+' '+socialPreview(last)).toLowerCase();
+    if(q&&hay.indexOf(q)<0)continue;
+    if(CHAT_FILTER==='unread'&&un<1)continue;
+    if(CHAT_FILTER==='online'&&!isOnline(u))continue;
+    shown++;
+    h+='<div class="social-chat-item '+(CHAT_PEER===id?'on ':'')+(un?'unread':'')+'" onclick="chatOpen(\''+id+'\')">'+
+      avW(u,id,'avm')+
+      '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:5px">'+
+      '<span class="social-chat-name" style="flex:1">'+esc(nm)+'</span>'+
+      '<span class="social-chat-meta">'+socialChatTime(last&&last.ts)+'</span>'+
+      (un?'<span class="bpn">'+un+'</span>':'')+
+      '</div><div class="social-chat-preview">'+esc(socialPreview(last))+'</div></div></div>';
+  }
+  if(!shown)h+='<div class="social-empty"><div class="social-empty-icon"><i class="fas fa-comments"></i></div><div class="font-semibold">No conversations</div><div class="text-xs mt-1">Search another member to start a chat.</div></div>';
+  return h+'</div>';
+}
+function renderChatListOnly(){
+  var el=document.getElementById('social-chat-list');
+  if(el)el.innerHTML=socialChatListHTML();
+}
+function socialMsgTools(id){
+  return '<div class="social-msg-tools" onclick="event.stopPropagation()">'+
+    '<button title="Reply" onclick="msgReply(\''+id+'\')"><i class="fas fa-reply"></i></button>'+
+    '<button title="Like" onclick="msgReact(\''+id+'\',\'❤️\')">❤️</button>'+
+    '<button title="Thumbs up" onclick="msgReact(\''+id+'\',\'👍\')">👍</button>'+
+    '<button title="Laugh" onclick="msgReact(\''+id+'\',\'😂\')">😂</button>'+
+    '<button title="Copy" onclick="msgCopy(\''+id+'\')"><i class="far fa-copy"></i></button>'+
+    '<button title="More" onclick="SELMSG=null;renderChatPanel(true)"><i class="fas fa-ellipsis"></i></button>'+
+    '</div>';
+}
+function socialMsgHTML(m,pair){
+  var me=m.f===CU, cls=me?'me':'them';
+  var inner='';
+  if(m.del){
+    inner='<span class="social-deleted"><i class="fas fa-ban mr-1"></i>This message was deleted</span>';
+  }else{
+    if(m.rep)inner+='<div class="social-reply"><b>'+(m.rep.f===CU?'You':esc(gdn(loadUSync(m.rep.f),m.rep.f)))+'</b>'+
+      (m.rep.ty==='i'?'📷 Photo':m.rep.ty==='a'?'🎤 Voice':esc(String(m.rep.t||'').slice(0,100)))+'</div>';
+    if(m.ty==='i'){
+      inner+='<img class="social-msg-image" src="'+m.t+'" alt="Shared photo" onclick="event.stopPropagation();lbImg(this.src)">';
+    }else if(m.ty==='a'){
+      inner+='<audio class="social-msg-audio" controls preload="metadata" src="'+m.t+'"></audio>';
+    }else{
+      inner+='<div class="social-msg-text">'+linkify(esc(m.t||'')).replace(/\n/g,'<br>')+'</div>';
+    }
+  }
+  inner+='<span class="social-msg-time">'+esc(m.d||socialChatTime(m.ts))+(me?tickHTML(m,pair):'')+'</span>';
+  if(m.rj){
+    var ag={};
+    for(var uid in m.rj)ag[m.rj[uid]]=(ag[m.rj[uid]]||0)+1;
+    var rk=Object.keys(ag);
+    if(rk.length){inner+='<div class="social-reactions">';for(var ri=0;ri<rk.length;ri++)inner+='<span class="social-reaction">'+rk[ri]+' '+(ag[rk[ri]]>1?ag[rk[ri]]:'')+'</span>';inner+='</div>';}
+  }
+  return '<div class="social-msg-row '+cls+'"><div>'+
+    '<div class="social-msg-bubble" onclick="SELMSG=(SELMSG===\''+m.id+'\')?null:\''+m.id+'\';renderChatPanel(true)">'+inner+'</div>'+
+    (SELMSG===m.id&&!m.del?socialMsgTools(m.id):'')+
+    '</div></div>';
+}
+function socialMessagesHTML(pair){
+  var l=msgLocal(pair).slice().sort(function(a,b){return(a.ts||0)-(b.ts||0);});
+  if(!l.length)return'<div class="social-empty"><div class="social-empty-icon"><i class="fas fa-lock"></i></div><div class="font-semibold">Private conversation</div><div class="text-xs mt-1">Messages, photos and voice notes stay in this chat.</div></div>';
+  var h='',prev='';
+  for(var i=0;i<l.length;i++){
+    var d=dayLabel(l[i].ts||Date.now());
+    if(d!==prev){h+='<div class="social-day">'+d+'</div>';prev=d;}
+    h+=socialMsgHTML(l[i],pair);
+  }
+  return h;
+}
+function socialAttachMenu(){
+  if(!CHAT_ATTACH_OPEN)return'';
+  return '<div class="social-attach-menu" onclick="event.stopPropagation()">'+
+    '<button onclick="chatPickImg();CHAT_ATTACH_OPEN=false;renderChatPanel(true)"><i class="fas fa-image mr-1"></i> Photo</button>'+
+    '<button onclick="document.getElementById(\'chat-img\')&&document.getElementById(\'chat-img\').click();CHAT_ATTACH_OPEN=false"><i class="fas fa-camera mr-1"></i> Camera</button>'+
+    '<button onclick="chatMic();CHAT_ATTACH_OPEN=false"><i class="fas fa-microphone mr-1"></i> Voice</button>'+
+    '<button onclick="CHAT_ATTACH_OPEN=false;renderChatPanel(true)"><i class="fas fa-times mr-1"></i> Close</button>'+
+    '</div>';
+}
+function socialComposerHTML(){
+  if(REC)return'<div class="social-composer-wrap"><div class="recrow"><span class="rec-dot"></span><span class="rt" id="rec-t">0:00</span><span class="flex-1">Recording…</span><button class="chat-send" style="background:var(--dn)" onclick="chatMic()"><i class="fas fa-stop"></i></button></div></div>';
+  var rep=REPLY?'<div class="social-replybar"><div class="rbtext"><b style="color:var(--acd)">'+(REPLY.f===CU?'You':esc(gdn(loadUSync(REPLY.f),REPLY.f)))+'</b> · '+(REPLY.ty==='i'?'Photo':REPLY.ty==='a'?'Voice':esc(String(REPLY.t||'').slice(0,80)))+'</div><button class="social-icon-btn" onclick="REPLY=null;renderChatPanel(true)"><i class="fas fa-xmark"></i></button></div>':'';
+  return '<div class="social-composer-wrap">'+rep+
+    '<div class="social-composer">'+socialAttachMenu()+
+    '<button class="social-icon-btn" title="Emoji" onclick="emojiToggle()"><i class="far fa-face-smile"></i></button>'+
+    '<button class="social-icon-btn" title="Attachments" onclick="CHAT_ATTACH_OPEN=!CHAT_ATTACH_OPEN;renderChatPanel(true)"><i class="fas fa-paperclip"></i></button>'+
+    '<textarea id="chat-in" rows="1" maxlength="4000" placeholder="Message…">'+
+    '</textarea>'+
+    '<input type="file" id="chat-img" accept="image/*" style="display:none" onchange="chatImgChange(event)">'+
+    '<button class="social-icon-btn" title="Voice note" onclick="chatMic()"><i class="fas fa-microphone"></i></button>'+
+    '<button class="chat-send" onclick="socialSendText()" title="Send"><i class="fas fa-paper-plane"></i></button>'+
+    '</div></div>';
+}
+function socialBindComposer(){
+  var inp=document.getElementById('chat-in');if(!inp)return;
+  inp.value=window._socialDraft||'';
+  inp.addEventListener('input',function(){
+    window._socialDraft=inp.value;
+    inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,120)+'px';
+    chatPing();
+  });
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();socialSendText();}
+  });
+  if(window.innerWidth>768)inp.focus();
+}
+function socialSendText(){
+  var inp=document.getElementById('chat-in');if(!inp)return;
+  var t=inp.value.trim();if(!t)return;
+  window._socialDraft='';
+  inp.value='';
+  inp.style.height='auto';
+  msgSend({ty:'t',t:t});
+}
+function socialChatPanelHTML(){
+  var u=CHAT_PEER?loadUSync(CHAT_PEER):null;
+  if(!CHAT_PEER||!u)return'<div class="social-chat-main" style="align-items:center;justify-content:center"><div class="social-empty"><div class="social-empty-icon"><i class="fas fa-comments"></i></div><div class="font-semibold">Choose a conversation</div><div class="text-xs mt-1">Message classmates, share photos and send voice notes.</div></div></div>';
+  var pair=msgPair(CU,CHAT_PEER);
+  return '<div class="social-chat-main">'+
+    '<div class="social-chat-header">'+
+    '<button class="social-icon-btn social-mobile-back" onclick="chatBack()"><i class="fas fa-arrow-left"></i></button>'+
+    '<span onclick="avView(\''+CHAT_PEER+'\')" style="cursor:pointer">'+avW(u,CHAT_PEER,'avm')+'</span>'+
+    '<div class="social-head-info"><div class="social-head-name">'+esc(gdn(u,CHAT_PEER))+'</div><div class="social-head-status">'+peerStatus(CHAT_PEER)+'</div></div>'+
+    (u.role==='admin'?'<span class="badge ba">Admin</span>':'')+
+    '<button class="social-icon-btn" onclick="avView(\''+CHAT_PEER+'\')" title="Profile"><i class="fas fa-user"></i></button>'+
+    '</div>'+
+    '<div class="social-chat-messages" id="chat-msgs">'+socialMessagesHTML(pair)+'</div>'+
+    socialComposerHTML()+
+    '</div>';
+}
+function socialRenderChat(){
+  var c=document.getElementById('mc');if(!c)return;
+  var oldDraft=window._socialDraft;
+  c.innerHTML='<div class="fi"><div class="mb-4"><h1 class="text-2xl font-bold">Messages</h1><p class="text-sm" style="color:var(--t3)">Private messaging · live sync · photos · voice notes · reactions</p></div>'+
+    '<div class="social-chat-shell '+(CHAT_PEER?'open':'')+'" id="social-chat-shell">'+
+    '<div class="social-chat-list" id="social-chat-list">'+socialChatListHTML()+'</div>'+
+    socialChatPanelHTML()+'</div></div>';
+  window._socialDraft=oldDraft||'';
+  socialBindComposer();
+  var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;
+  chatWatchAll();
+}
+function renderChatPanel(keep){
+  var old=document.getElementById('chat-in');
+  if(keep&&old)window._socialDraft=old.value;
+  var box=document.getElementById('social-chat-shell');
+  if(!box){socialRenderChat();return;}
+  var shell=document.getElementById('social-chat-shell');
+  var main=shell.querySelector('.social-chat-main');
+  if(main)main.outerHTML=socialChatPanelHTML();
+  socialBindComposer();
+  var ms=document.getElementById('chat-msgs');if(ms)ms.scrollTop=ms.scrollHeight;
+}
+function renderChatListOnly(){var el=document.getElementById('social-chat-list');if(el)el.innerHTML=socialChatListHTML();}
+function rChat(c){
+  socialRenderChat();
+  if(_chatTick)clearInterval(_chatTick);
+  _chatTick=setInterval(function(){
+    if(CV==='chat'){
+      var st=document.querySelector('.social-head-status');if(st&&CHAT_PEER)st.innerHTML=peerStatus(CHAT_PEER);
+      renderChatListOnly();
+    }
+  },15000);
+}
+
+/* Better mobile cleanup when leaving chat. */
+var _oldNavForSocial=nav;
+nav=function(vx,extra){
+  if(vx!=='chat'){
+    CHAT_ATTACH_OPEN=false;
+    if(_chatTick){clearInterval(_chatTick);_chatTick=null;}
+    chatDetachAll();
+  }
+  return _oldNavForSocial(vx,extra);
+};
+
+/* Drag/drop image support on the conversation surface. */
+document.addEventListener('dragover',function(e){
+  var shell=document.getElementById('social-chat-shell');
+  if(shell&&e.dataTransfer&&e.dataTransfer.types&&Array.prototype.indexOf.call(e.dataTransfer.types,'Files')>=0){
+    e.preventDefault();shell.classList.add('social-drop');
+  }
+});
+document.addEventListener('dragleave',function(e){
+  var shell=document.getElementById('social-chat-shell');if(shell&&e.target===shell)shell.classList.remove('social-drop');
+});
+document.addEventListener('drop',function(e){
+  var shell=document.getElementById('social-chat-shell');
+  if(!shell||!CHAT_PEER)return;
+  if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){
+    e.preventDefault();shell.classList.remove('social-drop');
+    var f=e.dataTransfer.files[0];
+    if(f.type&&f.type.indexOf('image/')===0){
+      var input=document.getElementById('chat-img');
+      if(input){try{var dt=new DataTransfer();dt.items.add(f);input.files=dt.files;chatImgChange({target:input});}catch(err){toast('Use the attachment button for this browser','inf');}}
+    }
+  }
+});
+
 </script>
 </body>
 </html>
