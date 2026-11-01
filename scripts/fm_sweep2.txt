@@ -1,0 +1,78 @@
+{
+  "errs": [],
+  "report": [
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "dashboard"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,attach-post,submit-post,open-profile-id,del-post,like,comments",
+      "st": "OK",
+      "view": "feed"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,add-status",
+      "st": "OK",
+      "view": "status"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "chats"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,add-award,aw-filter",
+      "st": "OK",
+      "view": "awards"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "board"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,open-profile,disable-user,reset-pass",
+      "st": "OK",
+      "view": "members"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,toggle-cp,signout",
+      "st": "OK",
+      "view": "settings"
+    },
+    {
+      "act": "acts",
+      "msg": "nav,theme,bell,menu,edit-own,change-photo,add-skill",
+      "st": "OK",
+      "view": "profile"
+    },
+    {
+      "act": "signout",
+      "msg": "screen=landing",
+      "st": "OK",
+      "view": "signout"
+    },
+    {
+      "act": "auth-tab",
+      "msg": "0 tabs cycled, authTab=member",
+      "st": "OK",
+      "view": "auth"
+    },
+    {
+      "act": "toggle-pass",
+      "msg": "no eye button",
+      "st": "FAIL",
+      "view": "auth"
+    }
+  ],
+  "who": "signed-out"
+}

@@ -1,0 +1,148 @@
+/* ─────────── database (localStorage) ─────────── */
+const DBK='fm_data_v1';
+let DB=null;
+function loadDB(){try{DB=JSON.parse(LS.get(DBK))}catch(e){DB=null}if(!DB||!DB.users||!DB.users.length)DB=null}
+function saveDB(){try{LS.set(DBK,JSON.stringify(DB))}catch(e){toast('Device storage is full — remove some posts or media','error')}if(window.FMS)FMS.schedule()}
+const ADNOS=['791','806','807','0808','089','810','811','812','813','814','815','816','817','818','820','821','822','823','824','825','826','827','828','829','830','831','832','833','834','835','836','849'];
+async function ensureSeed(){
+  if(DB)return;
+  DB={v:1,users:[],posts:[],stories:[],messages:[],achievements:[],announcements:[],notifications:[],skills:[],subjects:[],marks:[],files:[],sessions:{}};
+  DB.users.push({id:uid(),username:'ADMINISTRATOR',password:await hashPassword('Anshif@29'),role:'admin',disabled:false,fullName:'Administrator',dob:'',klass:'',guardian:'',phone:'',address:'',bio:'College administration',photoId:'',avatarColor:'#7c3aed',onlineAt:'',vipSince:'',createdAt:nowISO()});
+  const admin=DB.users[0];
+  for(const a of ADNOS){
+    DB.users.push({id:uid(),username:a,password:await hashPassword(a+'@fath'),role:'member',disabled:false,fullName:'',dob:'',klass:'',guardian:'',phone:'',address:'',bio:'',photoId:'',avatarColor:avatarColorFor(a),onlineAt:'',vipSince:'',createdAt:nowISO()});
+  }
+  DB.announcements.push({id:uid(),title:'Welcome to FATH MATES',content:'Complete your profile to get started. Add your skills and achievements to climb the leaderboard!',important:true,author:admin.id,at:nowISO()});
+  for(const s of['Quran','Arabic','Islamic Studies','Malayalam','English','Mathematics'])DB.subjects.push({id:uid(),name:s,max:50});
+  saveDB();
+}
+/* finders */
+const userById=id=>DB.users.find(u=>u.id===id);
+const userByUn=un=>DB.users.find(u=>u.username===un);
+const me=()=>{if(!DB||!DB.sessions)return null;const id=DB.sessions[state.token];return id?userById(id):null};
+function pointsOf(userId){return DB.achievements.filter(a=>a.userId===userId&&a.status==='approved').reduce((s,a)=>s+a.points,0)}
+function rankOf(userId){const ids=[...DB.users].map(u=>u.id).sort((a,b)=>pointsOf(b)-pointsOf(a)||a.localeCompare(b));return ids.indexOf(userId)+1}
+function notify(userId,text,type='info'){DB.notifications.unshift({id:uid(),userId,text,type,read:false,at:nowISO()});const MAX=60;const mine=DB.notifications.filter(n=>n.userId===userId);if(mine.length>MAX){const drop=new Set(mine.slice(MAX).map(n=>n.id));DB.notifications=DB.notifications.filter(n=>!drop.has(n.id))}}
+function canMod(u){return u&&(u.role==='admin'||u.role==='vip')}
+function isAdmin(u){return u&&u.role==='admin'}
+
+/* ─────────── media store (IndexedDB, localStorage fallback) ─────────── */
+const Media=(()=>{
+  let idb=null,fb=false;const urls={};
+  async function init(){
+    try{
+      idb=await new Promise((res,rej)=>{const r=indexedDB.open('fm_media',1);
+        r.onupgradeneeded=()=>{try{r.result.createObjectStore('m')}catch(e){}};
+        r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error('blocked'))});
+    }catch(e){idb=null;fb=true}
+  }
+  function idbTx(mode){return idb.transaction('m',mode).objectStore('m')}
+  function put(id,data){
+    if(idb){try{idbTx('readwrite').put(data,id)}catch(e){fbPut(id,data)}}
+    else fbPut(id,data);
+  }
+  function fbPut(id,data){
+    const f=DB.files.find(f=>f.id===id);
+    if(f&&typeof data==='string'&&data.length<1500000){f.data=data;saveDB()}
+  }
+  function get(id){
+    return new Promise(res=>{
+      if(!id)return res(null);
+      if(urls[id])return res(urls[id]);
+      const reg=DB.files.find(f=>f.id===id);
+      if(!reg)return res(null);
+      if(idb){
+        try{const rq=idbTx('readonly').get(id);
+          rq.onsuccess=()=>{const v=rq.result;
+            if(v){urls[id]=v instanceof Blob?URL.createObjectURL(v):v;res(urls[id])}
+            else if(reg.data){urls[id]=reg.data;res(reg.data)}else res(null)};
+          rq.onerror=()=>res(reg.data||null);
+        }catch(e){res(reg.data||null)}
+      }else res(reg.data||null);
+    });
+  }
+  function del(id){
+    if(idb){try{idbTx('readwrite').delete(id)}catch(e){}}
+    if(urls[id]){try{URL.revokeObjectURL(urls[id])}catch(e){}delete urls[id]}
+  }
+  return{init,get,put,del};
+})();
+async function imgDataURL(file,max=1000,q=.82){
+  const url=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url});
+    const sc=Math.min(1,max/Math.max(img.width,img.height));
+    const cv=document.createElement('canvas');cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    return cv.toDataURL('image/jpeg',q);
+  }finally{URL.revokeObjectURL(url)}
+}
+function fileDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(new Error('Could not read file'));r.readAsDataURL(file)})}
+/* returns registry entry {id,name,mime,kind,size} */
+async function storeMedia(file){
+  const isImg=file.type.startsWith('image/'),isVid=file.type.startsWith('video/');
+  const cap=isImg?8e6:isVid?6e7:3e7;
+  if(file.size>cap)throw new Error(`${isVid?'Video':isImg?'Image':'File'} too large — max ${fmtSize(cap)}`);
+  const id=uid();
+  const entry={id,name:file.name||('media-'+id),mime:file.type||'application/octet-stream',kind:isImg?'image':isVid?'video':'file',size:file.size,uploader:me().id,at:nowISO(),data:''};
+  if(isImg){
+    const du=await imgDataURL(file);
+    entry.size=Math.round(du.length*.75);entry.mime='image/jpeg';entry.data=du;
+    Media.put(id,du);
+  }else if(isVid&&file.size<=12e5){
+    const du=await fileDataURL(file);
+    entry.size=Math.round(du.length*.75);entry.data=du;
+    Media.put(id,du);
+  }else{
+    Media.put(id,file);
+    if(isVid)toast('Videos over ~1 MB stay on this device only — smaller ones sync to every mate','info');
+  }
+  DB.files.unshift(entry);
+  saveDB();
+  return entry;
+}
+async function delMedia(id){if(!id)return;Media.del(id);DB.files=DB.files.filter(f=>f.id!==id)}
+
+/* ─────────── toast + modal ─────────── */
+function toast(msg,type='info'){
+  const t=document.createElement('div');t.className='toast '+type;
+  const ic=type==='success'?'check':type==='error'?'x':type==='warning'?'warn':'info';
+  t.innerHTML=`<span class="ti">${icon(ic,15)}</span><span>${esc(msg)}</span>`;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{t.style.transition='opacity .3s,transform .3s';t.style.opacity='0';t.style.transform='translateX(30px)';setTimeout(()=>t.remove(),320)},3400);
+}
+function openModal(html){
+  const r=$('#modal-root');
+  r.innerHTML=`<div class="overlay" data-overlay><div class="sheet">${html}</div></div>`;
+  r.querySelector('[data-overlay]').addEventListener('mousedown',e=>{if(e.target===e.currentTarget)closeModal()});
+}
+function closeModal(){$('#modal-root').innerHTML=''}
+function confirmBox(msg,okLabel='Delete'){
+  return new Promise(res=>{
+    openModal(`<div class="sh"><h3>Are you sure?</h3><button class="btn-ghost btn-icon" data-x>${icon('x')}</button></div>
+      <p style="margin-bottom:18px;font-size:14px">${esc(msg)}</p>
+      <div style="display:flex;gap:9px;justify-content:flex-end">
+        <button class="btn" data-no>Cancel</button><button class="btn btn-danger" data-yes>${esc(okLabel)}</button></div>`);
+    $('#modal-root [data-x]').onclick=$('#modal-root [data-no]').onclick=()=>{closeModal();res(false)};
+    $('#modal-root [data-yes]').onclick=()=>{closeModal();res(true)};
+  });
+}
+function promptText(title,def='',placeholder=''){
+  return new Promise(res=>{
+    openModal(`<div class="sh"><h3>${esc(title)}</h3></div>
+      <input class="input" id="pm-in" value="${esc(def)}" placeholder="${esc(placeholder)}">
+      <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:16px">
+        <button class="btn" data-no>Cancel</button><button class="btn btn-primary" data-yes>Save</button></div>`);
+    const inp=$('#pm-in');inp.focus();inp.select();
+    const done=v=>{closeModal();res(v)};
+    $('#modal-root [data-no]').onclick=()=>done(null);
+    $('#modal-root [data-yes]').onclick=()=>done(inp.value.trim());
+    inp.onkeydown=e=>{if(e.key==='Enter')done(inp.value.trim());if(e.key==='Escape')done(null)};
+  });
+}
+async function confirmDestructive(msg,okLabel){return confirmBox(msg,okLabel)}
+
+/* ─────────── app state ─────────── */
+const state={token:LS.get('fm_token')||'',view:'dashboard',profileOf:'',editMode:false,
+  chatWith:'',awardFilter:'all',search:'',menuOpen:false,bellOpen:false,searchOpen:false,storyIdx:0,storyList:[],acSubject:''};
+function setToken(t){state.token=t;t?LS.set('fm_token',t):LS.del('fm_token')}

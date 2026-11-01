@@ -1,0 +1,593 @@
+     1→'use client'
+     2→
+     3→import React, { useCallback, useEffect, useState } from 'react'
+     4→import { motion, AnimatePresence } from 'framer-motion'
+     5→import { api, useStore, displayName, fmtDate, fmtSize, gradeOf, type SafeUser, type Subject, type CceMark, type FileRec } from './store'
+     6→import { Avatar, Confirm, Empty, kindIcon, SectionHead, StaggerItem, StaggerList, RoleBadge, StatTile, UserRow } from './ui-bits'
+     7→
+     8→/* ═══════════ MEMBER CONTROL (admin + VIP) ═══════════ */
+     9→export function MembersAdmin() {
+    10→  const { me, users, refreshUsers, toast, isAdmin } = useStore()
+    11→  const [query, setQuery] = useState('')
+    12→  const [sel, setSel] = useState<SafeUser | null>(null)
+    13→  const [confirmAction, setConfirmAction] = useState<{ label: string; fn: () => Promise<void> } | null>(null)
+    14→  const [resetPass, setResetPass] = useState<SafeUser | null>(null)
+    15→  const [newPass, setNewPass] = useState('')
+    16→  const [adnoOpen, setAdnoOpen] = useState(false)
+    17→  const [newAdno, setNewAdno] = useState('')
+    18→  const [stats, setStats] = useState<{ userCount: number; postCount: number; fileCount: number; achCount: number; disabledCount: number; pendingAch: number; msgCount: number; storyCount: number } | null>(null)
+    19→
+    20→  const loadStats = useCallback(async () => {
+    21→    try {
+    22→      const d = await api<{ stats: typeof stats }>('/api/stats')
+    23→      setStats(d.stats)
+    24→    } catch {}
+    25→  }, [])
+    26→  useEffect(() => { loadStats() }, [loadStats])
+    27→
+    28→  if (!me || (me.role !== 'admin' && me.role !== 'vip')) return null
+    29→
+    30→  const act = async (label: string, fn: () => Promise<unknown>) => {
+    31→    try {
+    32→      await fn()
+    33→      toast(`${label} ✓`, 'success')
+    34→      await refreshUsers()
+    35→      setSel((s) => (s ? (users.find((u) => u.id === s.id) as SafeUser) || null : null))
+    36→    } catch (e) {
+    37→      toast(e instanceof Error ? e.message : 'Action failed', 'error')
+    38→    }
+    39→  }
+    40→
+    41→  const makeVip = (u: SafeUser) => setConfirmAction({
+    42→    label: `Make ${displayName(u)} a VIP?`,
+    43→    fn: () => act('Promoted to VIP 💎', () => api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'make-vip', userId: u.id }) })),
+    44→  })
+    45→
+    46→  const removeVip = (u: SafeUser) => setConfirmAction({
+    47→    label: `Remove VIP from ${displayName(u)}?`,
+    48→    fn: () => act('VIP removed', () => api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'remove-vip', userId: u.id }) })),
+    49→  })
+    50→
+    51→  const disable = (u: SafeUser) => setConfirmAction({
+    52→    label: `Disable ${displayName(u)}'s account? They will be signed out immediately.`,
+    53→    fn: () => act('Account disabled ⛔', () => api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'disable', userId: u.id }) })),
+    54→  })
+    55→
+    56→  const enable = (u: SafeUser) => setConfirmAction({
+    57→    label: `Re-enable ${displayName(u)}'s account?`,
+    58→    fn: () => act('Account enabled ✅', () => api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'enable', userId: u.id }) })),
+    59→  })
+    60→
+    61→  const del = (u: SafeUser) => setConfirmAction({
+    62→    label: `PERMANENTLY delete ${displayName(u)}? All their posts and data will be removed!`,
+    63→    fn: () => act('Member deleted', () => api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'delete', userId: u.id }) })),
+    64→  })
+    65→
+    66→  const doResetPass = async () => {
+    67→    if (!resetPass) return
+    68→    if (newPass.length < 6) { toast('Password must be at least 6 characters', 'warning'); return }
+    69→    try {
+    70→      await api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'reset-password', userId: resetPass.id, newPassword: newPass }) })
+    71→      toast(`Password reset for ${displayName(resetPass)} ✓`, 'success')
+    72→      setResetPass(null); setNewPass('')
+    73→    } catch (e) {
+    74→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+    75→    }
+    76→  }
+    77→
+    78→  const addAdno = async () => {
+    79→    if (!newAdno.trim()) { toast('Enter an admission number', 'warning'); return }
+    80→    try {
+    81→      await api('/api/users', { method: 'PATCH', body: JSON.stringify({ action: 'add-admission', adno: newAdno.trim() }) })
+    82→      toast(`Member #${newAdno.trim()} added (default pass: ${newAdno.trim()}@fath)`, 'success')
+    83→      setAdnoOpen(false); setNewAdno('')
+    84→      await refreshUsers()
+    85→    } catch (e) {
+    86→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+    87→    }
+    88→  }
+    89→
+    90→  const list = users.filter((u) => {
+    91→    if (u.role === 'admin' && me.role !== 'admin') return false
+    92→    if (u.id === me.id) return false
+    93→    const q = query.trim().toLowerCase()
+    94→    if (!q) return true
+    95→    return displayName(u).toLowerCase().includes(q) || u.username.includes(q)
+    96→  })
+    97→
+    98→  return (
+    99→    <div>
+   100→      <SectionHead
+   101→        eyebrow={me.role === 'admin' ? '👑 Administrator Console' : '💎 VIP Console'}
+   102→        title="Member Control"
+   103→        desc="Manage members — promote to VIP, disable accounts, reset passwords and more."
+   104→        action={isAdmin ? <button className="btn btn-primary" onClick={() => setAdnoOpen(true)}>＋ Add Admission</button> : undefined}
+   105→      />
+   106→
+   107→      {/* stats */}
+   108→      {stats && (
+   109→        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+   110→          <StatTile label="Members" value={stats.userCount} icon="👥" delay={0} />
+   111→          <StatTile label="Posts" value={stats.postCount} icon="📰" delay={0.05} accent="pink" />
+   112→          <StatTile label="Media Files" value={stats.fileCount} icon="🎬" delay={0.1} accent="teal" />
+   113→          <StatTile label="Disabled" value={stats.disabledCount} icon="⛔" delay={0.15} accent="red" />
+   114→        </div>
+   115→      )}
+   116→
+   117→      <div className="mb-5">
+   118→        <input className="input max-w-sm" placeholder="🔍 Search members…" value={query} onChange={(e) => setQuery(e.target.value)} />
+   119→      </div>
+   120→
+   121→      <StaggerList className="space-y-2.5">
+   122→        {list.map((u) => (
+   123→          <StaggerItem key={u.id}>
+   124→            <div className="rounded-2xl border border-border/60 bg-card">
+   125→              <div className="flex items-center gap-3 p-3.5">
+   126→                <Avatar user={u} showStatus />
+   127→                <div className="min-w-0 flex-1">
+   128→                  <p className="flex flex-wrap items-center gap-2 text-sm font-bold">
+   129→                    {displayName(u)}
+   130→                    <RoleBadge role={u.role} />
+   131→                    {u.disabled && <span className="badge-disabled">Disabled</span>}
+   132→                  </p>
+   133→                  <p className="text-xs text-muted-foreground">
+   134→                    #{u.username}{u.klass ? ` · ${u.klass}` : ''}{u.fullName ? '' : ' · not activated'}
+   135→                  </p>
+   136→                </div>
+   137→                <motion.button whileTap={{ scale: 0.9 }} className="btn btn-sm btn-secondary" onClick={() => setSel(sel?.id === u.id ? null : u)}>
+   138→                  {sel?.id === u.id ? 'Hide ▲' : 'Manage ▼'}
+   139→                </motion.button>
+   140→              </div>
+   141→              <AnimatePresence>
+   142→                {sel?.id === u.id && (
+   143→                  <motion.div
+   144→                    initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+   145→                    transition={{ duration: 0.25 }}
+   146→                    className="overflow-hidden border-t border-border/60"
+   147→                  >
+   148→                    <div className="flex flex-wrap gap-2 p-4">
+   149→                      {u.role !== 'vip' && u.role !== 'admin' && (
+   150→                        <button className="btn btn-sm btn-vip" onClick={() => makeVip(u)}>💎 Make VIP</button>
+   151→                      )}
+   152→                      {u.role === 'vip' && isAdmin && (
+   153→                        <button className="btn btn-sm btn-secondary" onClick={() => removeVip(u)}>📉 Remove VIP</button>
+   154→                      )}
+   155→                      {u.disabled ? (
+   156→                        <button className="btn btn-sm bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:text-emerald-400" onClick={() => enable(u)}>✅ Enable Account</button>
+   157→                      ) : (
+   158→                        <button className="btn btn-sm bg-amber-500/15 text-amber-600 hover:bg-amber-500 hover:text-white dark:text-amber-400" onClick={() => disable(u)}>⛔ Disable Account</button>
+   159→                      )}
+   160→                      <button className="btn btn-sm btn-secondary" onClick={() => { setResetPass(u); setNewPass('') }}>🔑 Reset Password</button>
+   161→                      {isAdmin && u.role !== 'admin' && (
+   162→                        <button className="btn btn-sm btn-danger" onClick={() => del(u)}>🗑️ Delete Member</button>
+   163→                      )}
+   164→                    </div>
+   165→                    {(u.fullName || u.dob || u.klass || u.phone || u.guardian || u.address) && (
+   166→                      <div className="border-t border-border/60 px-4 py-3 text-xs text-muted-foreground">
+   167→                        <p className="mb-1.5 font-bold uppercase tracking-widest">Profile details</p>
+   168→                        <div className="grid grid-cols-2 gap-x-6 gap-y-1 md:grid-cols-3">
+   169→                          {u.fullName && <span>👤 {u.fullName}</span>}
+   170→                          {u.dob && <span>🎂 {u.dob}</span>}
+   171→                          {u.klass && <span>🎓 {u.klass}</span>}
+   172→                          {u.phone && <span>📞 {u.phone}</span>}
+   173→                          {u.guardian && <span>👪 {u.guardian}</span>}
+   174→                          {u.address && <span>🏠 {u.address}</span>}
+   175→                        </div>
+   176→                      </div>
+   177→                    )}
+   178→                  </motion.div>
+   179→                )}
+   180→              </AnimatePresence>
+   181→            </div>
+   182→          </StaggerItem>
+   183→        ))}
+   184→      </StaggerList>
+   185→      {list.length === 0 && <Empty icon="🔍" title="No members found" />}
+   186→
+   187→      {/* confirm dialog */}
+   188→      <Confirm
+   189→        open={!!confirmAction} onClose={() => setConfirmAction(null)}
+   190→        onConfirm={() => confirmAction && confirmAction.fn()}
+   191→        message={confirmAction?.label || ''}
+   192→        title="Please confirm"
+   193→      />
+   194→
+   195→      {/* reset password */}
+   196→      <AnimatePresence>
+   197→        {resetPass && (
+   198→          <motion.div
+   199→            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+   200→            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={() => setResetPass(null)}
+   201→          >
+   202→            <motion.div
+   203→              initial={{ scale: 0.92, y: 24 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94 }}
+   204→              className="w-full max-w-sm rounded-3xl border border-border bg-background p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}
+   205→            >
+   206→              <h3 className="font-display text-xl font-bold">🔑 Reset password</h3>
+   207→              <p className="mt-1 text-sm text-muted-foreground">Set a new password for <b>{displayName(resetPass)}</b> (# {resetPass.username}).</p>
+   208→              <input className="input mt-4" type="text" placeholder="New password (min 6 chars)" value={newPass} onChange={(e) => setNewPass(e.target.value)} />
+   209→              <div className="mt-5 flex gap-3">
+   210→                <button className="btn btn-secondary flex-1" onClick={() => setResetPass(null)}>Cancel</button>
+   211→                <button className="btn btn-primary flex-1" onClick={doResetPass}>Reset</button>
+   212→              </div>
+   213→            </motion.div>
+   214→          </motion.div>
+   215→        )}
+   216→      </AnimatePresence>
+   217→
+   218→      {/* add admission */}
+   219→      <AnimatePresence>
+   220→        {adnoOpen && (
+   221→          <motion.div
+   222→            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+   223→            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={() => setAdnoOpen(false)}
+   224→          >
+   225→            <motion.div
+   226→              initial={{ scale: 0.92, y: 24 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94 }}
+   227→              className="w-full max-w-sm rounded-3xl border border-border bg-background p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}
+   228→            >
+   229→              <h3 className="font-display text-xl font-bold">＋ Add member</h3>
+   230→              <p className="mt-1 text-sm text-muted-foreground">Add an admission number. Default password will be <b>adno@fath</b>.</p>
+   231→              <input className="input mt-4" placeholder="e.g. 850" value={newAdno} onChange={(e) => setNewAdno(e.target.value)} />
+   232→              <div className="mt-5 flex gap-3">
+   233→                <button className="btn btn-secondary flex-1" onClick={() => setAdnoOpen(false)}>Cancel</button>
+   234→                <button className="btn btn-primary flex-1" onClick={addAdno}>Add</button>
+   235→              </div>
+   236→            </motion.div>
+   237→          </motion.div>
+   238→        )}
+   239→      </AnimatePresence>
+   240→    </div>
+   241→  )
+   242→}
+   243→
+   244→/* ═══════════ MEDIA LIBRARY — admin/VIP can watch every video & file ═══════════ */
+   245→export function MediaLibrary() {
+   246→  const { toast } = useStore()
+   247→  const [files, setFiles] = useState<FileRec[] | null>(null)
+   248→  const [kind, setKind] = useState<'all' | 'video' | 'image' | 'audio' | 'file'>('all')
+   249→  const [preview, setPreview] = useState<FileRec | null>(null)
+   250→  const [delFile, setDelFile] = useState<FileRec | null>(null)
+   251→
+   252→  const load = useCallback(async () => {
+   253→    try {
+   254→      const d = await api<{ files: FileRec[] }>(`/api/media${kind !== 'all' ? `?kind=${kind}` : ''}`)
+   255→      setFiles(d.files)
+   256→    } catch (e) {
+   257→      toast(e instanceof Error ? e.message : 'Failed to load', 'error')
+   258→      setFiles([])
+   259→    }
+   260→  }, [kind, toast])
+   261→
+   262→  useEffect(() => { load() }, [load])
+   263→
+   264→  const remove = async (f: FileRec) => {
+   265→    await api('/api/media', { method: 'DELETE', body: JSON.stringify({ id: f.id }) }).catch(() => {})
+   266→    setFiles((fs) => (fs || []).filter((x) => x.id !== f.id))
+   267→    toast('File deleted from server 🗑️', 'success')
+   268→  }
+   269→
+   270→  const tabs = [['all', '🌐 All'], ['video', '🎬 Videos'], ['image', '🖼️ Images'], ['audio', '🎵 Audio'], ['file', '📄 Files']] as const
+   271→
+   272→  return (
+   273→    <div>
+   274→      <SectionHead
+   275→        eyebrow="Moderator Tools" title="Media Library"
+   276→        desc="Every photo, video, audio and file shared on the website — watch, download or remove."
+   277→      />
+   278→      <div className="mb-5 flex flex-wrap gap-2">
+   279→        {tabs.map(([id, label]) => (
+   280→          <button key={id} className={`chip ${kind === id ? 'chip-on' : ''}`} onClick={() => setKind(id)}>{label}</button>
+   281→        ))}
+   282→      </div>
+   283→
+   284→      {!files ? (
+   285→        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{[0, 1, 2, 3].map((i) => <div key={i} className="skeleton-card" style={{ height: 180 }} />)}</div>
+   286→      ) : files.length === 0 ? (
+   287→        <Empty icon="🎬" title="No media found" text="When members share videos, photos or files, they appear here." />
+   288→      ) : (
+   289→        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+   290→          {files.map((f, i) => (
+   291→            <motion.div
+   292→              key={f.id}
+   293→              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: Math.min(i * 0.04, 0.4) }}
+   294→              whileHover={{ y: -4, scale: 1.02 }}
+   295→              className="group overflow-hidden rounded-2xl border border-border bg-card"
+   296→            >
+   297→              <div className="relative h-36 cursor-pointer bg-muted/50" onClick={() => setPreview(f)}>
+   298→                {f.kind === 'image' && <img src={`/api/files/${f.id}`} alt={f.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />}
+   299→                {f.kind === 'video' && (
+   300→                  <>
+   301→                    <video src={`/api/files/${f.id}`} className="h-full w-full object-cover" muted preload="metadata" />
+   302→                    <span className="absolute inset-0 flex items-center justify-center">
+   303→                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-xl text-white backdrop-blur transition-transform group-hover:scale-110">▶</span>
+   304→                    </span>
+   305→                  </>
+   306→                )}
+   307→                {!['image', 'video'].includes(f.kind) && (
+   308→                  <span className="flex h-full w-full items-center justify-center text-4xl">{kindIcon(f.kind)}</span>
+   309→                )}
+   310→                <span className="absolute left-2 top-2 rounded-md bg-black/55 px-1.5 py-0.5 text-[9px] font-bold uppercase text-white">{f.kind}</span>
+   311→              </div>
+   312→              <div className="p-3">
+   313→                <p className="truncate text-xs font-bold">{f.name}</p>
+   314→                <p className="mt-0.5 text-[10.5px] text-muted-foreground">
+   315→                  {f.uploader ? `by ${displayName(f.uploader)}` : 'unknown'} · {fmtSize(f.size)}
+   316→                </p>
+   317→                <div className="mt-2 flex gap-1.5">
+   318→                  <a href={`/api/files/${f.id}`} download={f.name} className="btn btn-xs btn-secondary flex-1 justify-center" onClick={(e) => e.stopPropagation()}>⬇ Save</a>
+   319→                  <button className="btn btn-xs btn-danger" onClick={() => setDelFile(f)}>🗑</button>
+   320→                </div>
+   321→              </div>
+   322→            </motion.div>
+   323→          ))}
+   324→        </div>
+   325→      )}
+   326→
+   327→      {/* video/image preview modal */}
+   328→      <AnimatePresence>
+   329→        {preview && (
+   330→          <motion.div
+   331→            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+   332→            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/90 p-6 backdrop-blur" onClick={() => setPreview(null)}
+   333→          >
+   334→            <motion.div
+   335→              initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.92 }}
+   336→              transition={{ type: 'spring', stiffness: 240, damping: 24 }}
+   337→              className="max-h-[85vh] w-full max-w-3xl overflow-hidden rounded-2xl"
+   338→              onClick={(e) => e.stopPropagation()}
+   339→            >
+   340→              {preview.kind === 'video' && <video src={`/api/files/${preview.id}`} controls autoPlay className="max-h-[78vh] w-full" />}
+   341→              {preview.kind === 'image' && <img src={`/api/files/${preview.id}`} alt="" className="max-h-[78vh] w-full object-contain" />}
+   342→              {preview.kind === 'audio' && <audio src={`/api/files/${preview.id}`} controls autoPlay className="w-full" />}
+   343→              {!['video', 'image', 'audio'].includes(preview.kind) && (
+   344→                <div className="flex flex-col items-center gap-4 bg-background p-10 text-center">
+   345→                  <span className="text-5xl">{kindIcon(preview.kind)}</span>
+   346→                  <p className="font-bold">{preview.name}</p>
+   347→                  <a href={`/api/files/${preview.id}`} download={preview.name} className="btn btn-primary">⬇ Download File</a>
+   348→                </div>
+   349→              )}
+   350→            </motion.div>
+   351→            <button className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-xl text-white backdrop-blur hover:bg-white/25" onClick={() => setPreview(null)}>✕</button>
+   352→          </motion.div>
+   353→        )}
+   354→      </AnimatePresence>
+   355→
+   356→      <Confirm open={!!delFile} onClose={() => setDelFile(null)} onConfirm={() => delFile && remove(delFile)} message={`Delete "${delFile?.name}" from the server permanently?`} />
+   357→    </div>
+   358→  )
+   359→}
+   360→
+   361→/* ═══════════ ACADEMIC / CCE ═══════════ */
+   362→export function Academic() {
+   363→  const { me, toast, isMod, users } = useStore()
+   364→  const [subjects, setSubjects] = useState<Subject[]>([])
+   365→  const [marks, setMarks] = useState<CceMark[]>([])
+   366→  const [selUser, setSelUser] = useState<string>('')
+   367→  const [editing, setEditing] = useState<Record<string, string>>({})
+   368→  const [newSubj, setNewSubj] = useState({ name: '', max: '50' })
+   369→  const [myPending, setMyPending] = useState<Record<string, string>>({})
+   370→
+   371→  const load = useCallback(async () => {
+   372→    try {
+   373→      const d = await api<{ subjects: Subject[]; marks: CceMark[] }>('/api/subjects')
+   374→      setSubjects(d.subjects)
+   375→      setMarks(d.marks)
+   376→    } catch {}
+   377→  }, [])
+   378→  useEffect(() => { load() }, [load])
+   379→
+   380→  useEffect(() => {
+   381→    if (isMod && users.length > 0 && !selUser) {
+   382→      const firstMember = users.find((u) => u.role !== 'admin')
+   383→      if (firstMember) setSelUser(firstMember.id)
+   384→    }
+   385→  }, [isMod, users, selUser])
+   386→
+   387→  if (!me) return null
+   388→
+   389→  const markOf = (userId: string, subjectId: string) => marks.find((m) => m.userId === userId && m.subjectId === subjectId)
+   390→
+   391→  const saveMarks = async (userId: string, subjectId: string) => {
+   392→    const val = editing[subjectId]
+   393→    if (val === undefined) return
+   394→    try {
+   395→      await api('/api/subjects', { method: 'POST', body: JSON.stringify({ action: 'save-marks', userId, subjectId, marks: val === '' ? null : val }) })
+   396→      toast('Marks saved ✓', 'success')
+   397→      setEditing({})
+   398→      await load()
+   399→    } catch (e) {
+   400→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+   401→    }
+   402→  }
+   403→
+   404→  const submitMine = async (subjectId: string) => {
+   405→    const val = myPending[subjectId]
+   406→    if (val === undefined || val === '') { toast('Enter your marks first', 'warning'); return }
+   407→    try {
+   408→      await api('/api/subjects', { method: 'POST', body: JSON.stringify({ action: 'submit-marks', subjectId, marks: val }) })
+   409→      toast('Marks submitted for approval 📨', 'success')
+   410→      setMyPending({})
+   411→      await load()
+   412→    } catch (e) {
+   413→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+   414→    }
+   415→  }
+   416→
+   417→  const addSubject = async () => {
+   418→    if (!newSubj.name.trim()) { toast('Enter subject name', 'warning'); return }
+   419→    try {
+   420→      await api('/api/subjects', { method: 'POST', body: JSON.stringify({ action: 'add-subject', name: newSubj.name.trim(), max: Number(newSubj.max) || 50 }) })
+   421→      toast('Subject added ✓', 'success')
+   422→      setNewSubj({ name: '', max: '50' })
+   423→      await load()
+   424→    } catch (e) {
+   425→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+   426→    }
+   427→  }
+   428→
+   429→  const removeSubject = async (s: Subject) => {
+   430→    try {
+   431→      await api('/api/subjects', { method: 'POST', body: JSON.stringify({ action: 'remove-subject', subjectId: s.id }) })
+   432→      toast('Subject removed', 'success')
+   433→      await load()
+   434→    } catch (e) {
+   435→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+   436→    }
+   437→  }
+   438→
+   439→  const approvePending = async (markId: string) => {
+   440→    try {
+   441→      await api('/api/subjects', { method: 'POST', body: JSON.stringify({ action: 'approve-marks', markId }) })
+   442→      toast('Marks approved ✓', 'success')
+   443→      await load()
+   444→    } catch (e) {
+   445→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+   446→    }
+   447→  }
+   448→
+   449→  const rejectPending = async (markId: string) => {
+   450→    try {
+   451→      await api('/api/subjects', { method: 'POST', body: JSON.stringify({ action: 'reject-marks', markId }) })
+   452→      toast('Submission rejected', 'info')
+   453→      await load()
+   454→    } catch (e) {
+   455→      toast(e instanceof Error ? e.message : 'Failed', 'error')
+   456→    }
+   457→  }
+   458→
+   459→  // ---- my own view (member) ----
+   460→  if (!isMod) {
+   461→    const mine = subjects.map((s) => ({ s, m: markOf(me.id, s.id) }))
+   462→    const valid = mine.filter((x) => typeof x.m?.marks === 'number')
+   463→    const total = valid.reduce((acc, x) => acc + (x.m?.marks || 0), 0)
+   464→    const maxTotal = valid.reduce((acc, x) => acc + x.s.max, 0)
+   465→    const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0
+   466→    const grade = gradeOf(pct)
+   467→    return (
+   468→      <div className="mx-auto max-w-3xl">
+   469→        <SectionHead eyebrow="Academic" title="My CCE Record" desc="Your continuous evaluation marks. Submit missing marks for moderator approval." />
+   470→        {maxTotal > 0 && (
+   471→          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card mb-6 flex items-center gap-6">
+   472→            <div className={`flex h-20 w-20 items-center justify-center rounded-full border-4 ${pct >= 50 ? 'border-emerald-500' : 'border-amber-500'} grade-ring`}>
+   473→              <span className={`font-display text-2xl font-bold ${grade.cls}`}>{grade.g}</span>
+   474→            </div>
+   475→            <div className="flex-1">
+   476→              <p className="font-display text-2xl font-bold">{total} <span className="text-lg text-muted-foreground">/ {maxTotal}</span></p>
+   477→              <p className="text-sm text-muted-foreground">{pct}% overall across {valid.length} subjects</p>
+   478→            </div>
+   479→          </motion.div>
+   480→        )}
+   481→        <StaggerList className="space-y-3">
+   482→          {mine.map(({ s, m }) => (
+   483→            <StaggerItem key={s.id}>
+   484→              <div className="card flex flex-wrap items-center gap-4">
+   485→                <div className="min-w-0 flex-1">
+   486→                  <p className="text-[15px] font-bold">📚 {s.name}</p>
+   487→                  <p className="text-xs text-muted-foreground">Max {s.max} marks</p>
+   488→                  {m?.pending !== null && m?.pending !== undefined && (
+   489→                    <p className="mt-1 text-xs font-semibold text-amber-500">⏳ Submitted {m.pending} — awaiting approval</p>
+   490→                  )}
+   491→                </div>
+   492→                {typeof m?.marks === 'number' ? (
+   493→                  <div className="text-right">
+   494→                    <p className="font-display text-2xl font-bold">{m.marks}<span className="text-sm text-muted-foreground">/{s.max}</span></p>
+   495→                    <p className={`text-xs font-bold ${gradeOf((m.marks / s.max) * 100).cls}`}>{gradeOf((m.marks / s.max) * 100).g}</p>
+   496→                  </div>
+   497→                ) : (
+   498→                  <div className="flex items-center gap-2">
+   499→                    <input
+   500→                      className="input w-24 py-2 text-sm" type="number" min={0} max={s.max} placeholder="Marks"
+   501→                      value={myPending[s.id] ?? ''}
+   502→                      onChange={(e) => setMyPending((p) => ({ ...p, [s.id]: e.target.value }))}
+   503→                    />
+   504→                    <button className="btn btn-sm btn-primary" onClick={() => submitMine(s.id)}>Submit</button>
+   505→                  </div>
+   506→                )}
+   507→              </div>
+   508→            </StaggerItem>
+   509→          ))}
+   510→        </StaggerList>
+   511→      </div>
+   512→    )
+   513→  }
+   514→
+   515→  // ---- moderator view ----
+   516→  const members = users.filter((u) => u.role !== 'admin' && !u.disabled)
+   517→  const target = selUser || members[0]?.id || ''
+   518→  const pendingMarks = marks.filter((m) => m.pending !== null && m.pending !== undefined)
+   519→
+   520→  return (
+   521→    <div>
+   522→      <SectionHead eyebrow="Academic Admin" title="CCE Marks Manager" desc="Enter marks for any member, add subjects and approve member submissions." />
+   523→
+   524→      {pendingMarks.length > 0 && (
+   525→        <div className="card mb-7 border-l-4 border-l-amber-500">
+   526→          <h3 className="mb-3 font-display text-base font-bold">⏳ Member submissions awaiting approval</h3>
+   527→          <div className="space-y-2">
+   528→            {pendingMarks.map((m) => {
+   529→              const u = users.find((x) => x.id === m.userId)
+   530→              const s = subjects.find((x) => x.id === m.subjectId)
+   531→              return (
+   532→                <div key={m.id} className="flex flex-wrap items-center gap-3 rounded-xl bg-muted/50 p-3 text-sm">
+   533→                  <span className="font-bold">{u ? displayName(u) : 'Unknown'}</span>
+   534→                  <span className="text-muted-foreground">· {s?.name || 'Subject'} · submitted <b>{m.pending}</b>/{s?.max}</span>
+   535→                  <div className="ml-auto flex gap-2">
+   536→                    <button className="btn btn-sm bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:text-emerald-400" onClick={() => approvePending(m.id)}>✓ Approve</button>
+   537→                    <button className="btn btn-sm bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white" onClick={() => rejectPending(m.id)}>✕ Reject</button>
+   538→                  </div>
+   539→                </div>
+   540→              )
+   541→            })}
+   542→          </div>
+   543→        </div>
+   544→      )}
+   545→
+   546→      <div className="mb-5 flex flex-wrap items-center gap-3">
+   547→        <select className="select max-w-xs" value={target} onChange={(e) => setSelUser(e.target.value)}>
+   548→          {members.map((u) => <option key={u.id} value={u.id}>{displayName(u)} (#{u.username})</option>)}
+   549→        </select>
+   550→        {me.role === 'admin' && (
+   551→          <div className="flex gap-2">
+   552→            <input className="input w-36" placeholder="New subject" value={newSubj.name} onChange={(e) => setNewSubj({ ...newSubj, name: e.target.value })} />
+   553→            <input className="input w-20" type="number" placeholder="Max" value={newSubj.max} onChange={(e) => setNewSubj({ ...newSubj, max: e.target.value })} />
+   554→            <button className="btn btn-secondary" onClick={addSubject}>＋ Add</button>
+   555→          </div>
+   556→        )}
+   557→      </div>
+   558→
+   559→      <StaggerList className="space-y-3">
+   560→        {subjects.map((s) => {
+   561→          const m = markOf(target, s.id)
+   562→          const val = editing[s.id]
+   563→          return (
+   564→            <StaggerItem key={s.id}>
+   565→              <div className="card flex flex-wrap items-center gap-4">
+   566→                <div className="min-w-0 flex-1">
+   567→                  <p className="text-[15px] font-bold">📚 {s.name}</p>
+   568→                  <p className="text-xs text-muted-foreground">
+   569→                    Max {s.max} · {typeof m?.marks === 'number' ? `current: ${m.marks}` : 'no marks'}
+   570→                    {m?.pending !== null && m?.pending !== undefined ? ` · pending: ${m.pending}` : ''}
+   571→                  </p>
+   572→                </div>
+   573→                <div className="flex items-center gap-2">
+   574→                  <input
+   575→                    className="input w-24 py-2 text-sm" type="number" min={0} max={s.max}
+   576→                    placeholder={typeof m?.marks === 'number' ? String(m.marks) : 'Marks'}
+   577→                    value={val ?? (typeof m?.marks === 'number' ? String(m.marks) : '')}
+   578→                    onChange={(e) => setEditing((p) => ({ ...p, [s.id]: e.target.value }))}
+   579→                  />
+   580→                  <motion.button whileTap={{ scale: 0.92 }} className="btn btn-sm btn-primary" onClick={() => saveMarks(target, s.id)}>💾 Save</motion.button>
+   581→                  {me.role === 'admin' && (
+   582→                    <button className="icon-btn sm" onClick={() => removeSubject(s)} title="Remove subject">🗑️</button>
+   583→                  )}
+   584→                </div>
+   585→              </div>
+   586→            </StaggerItem>
+   587→          )
+   588→        })}
+   589→      </StaggerList>
+   590→    </div>
+   591→  )
+   592→}
+   593→

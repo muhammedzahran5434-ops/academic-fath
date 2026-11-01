@@ -1,0 +1,149 @@
+{
+  "errs": [],
+  "report": [
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "dashboard"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,attach-post,submit-post,open-profile-id,del-post,like,comments",
+      "st": "OK",
+      "view": "feed"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,add-status",
+      "st": "OK",
+      "view": "status"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "chats"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,add-award,aw-filter,approve-award,reject-award,del-award",
+      "st": "OK",
+      "view": "awards"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "board"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,add-admission,open-profile,make-vip,disable-user,reset-pass,del-user",
+      "st": "OK",
+      "view": "members"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "vault"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,ac-subject,save-marks",
+      "st": "OK",
+      "view": "academic"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,add-notice,del-notice",
+      "st": "OK",
+      "view": "notices"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,toggle-cp,signout",
+      "st": "OK",
+      "view": "settings"
+    },
+    {
+      "act": "pass1",
+      "msg": "nav,theme,bell,menu,edit-own,change-photo,add-skill",
+      "st": "OK",
+      "view": "profile"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "dashboard"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,attach-post,submit-post",
+      "st": "OK",
+      "view": "feed"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,add-status",
+      "st": "OK",
+      "view": "status"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "chats"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,add-award,aw-filter,del-award",
+      "st": "OK",
+      "view": "awards"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "board"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,add-admission,open-profile,un-vip,enable-user,reset-pass,del-user,make-vip,disable-user",
+      "st": "OK",
+      "view": "members"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,open-profile",
+      "st": "OK",
+      "view": "vault"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,ac-subject,save-marks",
+      "st": "OK",
+      "view": "academic"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,add-notice,del-notice",
+      "st": "OK",
+      "view": "notices"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,toggle-cp,signout",
+      "st": "OK",
+      "view": "settings"
+    },
+    {
+      "act": "pass2",
+      "msg": "nav,theme,bell,menu,edit-own,change-photo,add-skill",
+      "st": "OK",
+      "view": "profile"
+    }
+  ]
+}

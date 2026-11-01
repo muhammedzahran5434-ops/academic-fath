@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  password    String
+  role        String   @default("member") // admin | vip | member
+  disabled    Boolean  @default(false)
+  fullName    String?
+  dob         String?
+  klass       String?
+  guardian    String?
+  phone       String?
+  address     String?
+  bio         String?
+  photoId     String?
+  avatarColor String?
+  onlineAt    DateTime?
+  vipSince    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  skills       Skill[]
+  achievements Achievement[]
+  posts        Post[]
+  stories      Story[]
+  comments     Comment[]
+  cceMarks     CceMark[]
+  files        File[]
+  sessions     Session[]
+  notifications Notification[]
+  announcements Announcement[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Skill {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name   String
+  level  Int    @default(60) // 0-100
+  createdAt DateTime @default(now())
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  category    String   @default("Other") // Academic|Sports|Arts|Community|Religious|Other
+  description String?
+  mediaId     String?
+  status      String   @default("pending") // pending | approved | rejected
+  points      Int      @default(0)
+  note        String?  // admin note on reject
+  createdAt   DateTime @default(now())
+  decidedAt   DateTime?
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  media     String   @default("[]") // JSON [{id,name,type,mime}]
+  likes     String   @default("[]") // JSON [username]
+  comments  Comment[]
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+}
+
+model Story {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("text") // text | image | video
+  content   String?
+  mediaId   String?
+  bg        String?
+  seenBy    String   @default("[]") // JSON [username]
+  replies   String   @default("[]") // JSON [{from,text,ts}]
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  pair      String   // sorted "a__b"
+  fromId    String
+  toId      String
+  text      String?
+  mediaId   String?
+  mediaType String?
+  replyTo   String?
+  reactions String   @default("{}") // JSON {username:"emoji"}
+  deleted   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  important Boolean  @default(false)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  type      String   @default("info")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Subject {
+  id    String @id @default(cuid())
+  name  String
+  max   Float  @default(50)
+  marks CceMark[]
+}
+
+model CceMark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  marks     Float?
+  pending   Float?
+  updatedAt DateTime @updatedAt
+  @@unique([userId, subjectId])
+}
+
+model File {
+  id         String   @id @default(cuid())
+  name       String
+  mime       String
+  kind       String   @default("file") // image | video | audio | file
+  size       Int      @default(0)
+  path       String
+  uploaderId String?
+  uploader   User?    @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+}

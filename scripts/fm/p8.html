@@ -1,0 +1,139 @@
+<script>
+/* ─────────── awards / achievements ─────────── */
+const CATS=[['Academic',15,'book'],['Sports',12,'trophy'],['Arts',10,'palette'],['Community',10,'users'],['Religious',10,'star'],['Other',8,'sparkles']];
+let awCat='Academic',awMedia=null;
+function catColor(c){return{Academic:'var(--grad2)',Sports:'linear-gradient(135deg,#f59e0b,#ef4444)',Arts:'linear-gradient(135deg,#ec4899,#f97316)',Community:'linear-gradient(135deg,#0891b2,#7c3aed)',Religious:'linear-gradient(135deg,#059669,#0d9488)',Other:'linear-gradient(135deg,#64748b,#334155)'}[c]||'var(--grad2)'}
+function catIcon(c){return({Academic:'book',Sports:'trophy',Arts:'palette',Community:'users',Religious:'star',Other:'sparkles'})[c]||'sparkles'}
+function renderAwards(){
+  const m=me(),all=DB.achievements;
+  const mine=all.filter(a=>a.userId===m.id);
+  const myPts=pointsOf(m.id),approved=myPts;
+  const list=all.filter(a=>state.awardFilter==='all'||a.status===state.awardFilter).sort((a,b)=>b.at.localeCompare(a.at));
+  return `<div class="phead"><div class="row"><div><div class="kick">Recognition</div><h1>Achievements</h1>
+    <p>Submit your achievements — moderators approve them for leaderboard points.</p></div>
+    <button class="btn btn-primary" data-act="add-award">${icon('plus',16)} Add Achievement</button></div></div>
+  <div class="tiles" style="grid-template-columns:repeat(3,1fr);margin-bottom:18px">
+    <div class="tile"><span class="tv">My points</span><div class="tn mono">${myPts}</div><div class="ts">approved</div></div>
+    <div class="tile"><span class="tv">My rank</span><div class="tn mono">#${rankOf(m.id)}</div><div class="ts">on the board</div></div>
+    <div class="tile"><span class="tv">Pending</span><div class="tn mono">${mine.filter(a=>a.status==='pending').length}</div><div class="ts">awaiting review</div></div>
+  </div>
+  <div class="filters">${['all','pending','approved','rejected'].map(f=>`<button class="chip ${state.awardFilter===f?'on':''}" data-act="aw-filter" data-f="${f}" style="text-transform:capitalize">${f} (${f==='all'?all.length:all.filter(a=>a.status===f).length})</button>`).join('')}</div>
+  <div class="card" style="overflow:hidden">
+    ${list.length?list.map(a=>renderAward(a)).join(''):`<div class="empty">${icon('trophy',26)}<b>Nothing here</b><p>${state.awardFilter==='all'?'No achievements submitted yet.':'No '+state.awardFilter+' achievements.'}</p></div>`}
+  </div>`;
+}
+function renderAward(a){
+  const m=me(),u=userById(a.userId);
+  return `<div class="award" style="border-bottom:1px solid var(--border)">
+    <span class="ai" style="background:${catColor(a.category)}">${icon(catIcon(a.category),20)}</span>
+    <div style="flex:1;min-width:0">
+      <div class="t">${esc(a.title)}<span class="pts">+${a.points} pts</span><span class="badge b-${a.status}" style="text-transform:capitalize">${a.status}</span></div>
+      <div class="desc">${esc(u?displayName(u):'—')} · #${esc(u?u.username:'—')} · ${fmtDate(a.at)} · ${esc(a.category)}</div>
+      ${a.description?`<div class="desc" style="color:var(--text);margin-top:6px">${esc(a.description)}</div>`:''}
+      ${a.mediaId?`<img class="proof" data-media="${a.mediaId}">`:''}
+      ${a.note?`<span class="anote">Reviewer note: ${esc(a.note)}</span>`:''}
+      ${canMod(m)&&a.status==='pending'?`<div style="display:flex;gap:8px;margin-top:11px">
+        <button class="btn btn-primary" style="padding:7px 13px;font-size:12.5px" data-act="approve-award" data-id="${a.id}">${icon('check',14)} Approve</button>
+        <button class="btn btn-danger" style="padding:7px 13px;font-size:12.5px" data-act="reject-award" data-id="${a.id}">${icon('x',14)} Reject</button></div>`:''}
+      ${(u&&u.id===m.id&&a.status==='pending')||canMod(m)?`<button class="btn-ghost" data-act="del-award" data-id="${a.id}" style="margin-top:8px;font-size:12px;color:var(--red);width:auto;padding:4px 8px">${icon('trash',13)} Remove</button>`:''}
+    </div></div>`;
+}
+function openAwardModal(){
+  awCat='Academic';awMedia=null;
+  openModal(`<div class="sh"><h3>Add Achievement</h3><button class="btn-ghost btn-icon" data-act="close-modal">${icon('x')}</button></div>
+    <label class="lbl">Title</label>
+    <input class="input" id="aw-title" placeholder="e.g. Won 1st prize in Quran recitation">
+    <label class="lbl" style="margin-top:14px">Category</label>
+    <div class="catgrid">${CATS.map(([c,p,ic])=>`<div class="cato ${c===awCat?'on':''}" data-act="aw-cat" data-c="${c}">
+      <span class="ci" style="background:${catColor(c)}">${icon(ic,16)}</span><span>${c}<small>+${p} points</small></span></div>`).join('')}</div>
+    <label class="lbl" style="margin-top:14px">Description</label>
+    <textarea class="input" id="aw-desc" placeholder="Tell more about it…"></textarea>
+    <div id="aw-prev" style="margin-top:10px"></div>
+    <div style="display:flex;gap:9px;margin-top:16px;align-items:center">
+      <button class="btn" data-act="aw-attach">${icon('clip',15)} Attach proof</button><span class="small muted">photo or certificate (optional)</span></div>
+    <div style="display:flex;gap:9px;margin-top:18px">
+      <span style="flex:1"></span>
+      <button class="btn btn-primary" data-act="submit-award">${icon('send',15)} Submit for approval</button></div>`);
+}
+async function submitAward(){
+  const m=me(),title=$('#aw-title').value.trim(),desc=$('#aw-desc').value.trim();
+  if(!title)return toast('Give the achievement a title','warning');
+  const pts=CATS.find(c=>c[0]===awCat)[1];
+  DB.achievements.unshift({id:uid(),userId:m.id,title,category:awCat,description:desc,mediaId:awMedia?awMedia.id:'',status:'pending',points:pts,note:'',at:nowISO(),decidedAt:''});
+  saveDB();closeModal();awMedia=null;
+  toast('Submitted for approval — a moderator will review it','success');
+  state.view='awards';renderApp();
+}
+function approveAward(id){
+  const a=DB.achievements.find(x=>x.id===id);if(!a)return;
+  const m=me();
+  a.status='approved';a.decidedAt=nowISO();a.note='';
+  notify(a.userId,`Your achievement "${a.title}" was approved — +${a.points} points!`,'success');
+  saveDB();renderApp();toast(`Approved — ${displayName(userById(a.userId))} earned ${a.points} points`,'success');
+}
+async function rejectAward(id){
+  const a=DB.achievements.find(x=>x.id===id);if(!a)return;
+  const note=await promptText('Reject — add a note (optional)','','Reason…');
+  if(note===null)return;
+  a.status='rejected';a.decidedAt=nowISO();a.note=note;
+  notify(a.userId,`Your achievement "${a.title}" was rejected.${note?' Note: '+note:''}`,'error');
+  saveDB();renderApp();toast('Achievement rejected','info');
+}
+
+/* ─────────── leaderboard ─────────── */
+function renderBoard(){
+  const m=me();
+  const rows=DB.users.map(u=>({u,pts:pointsOf(u.id)})).sort((a,b)=>b.pts-a.pts||a.u.username.localeCompare(b.u.username));
+  const podium=[rows[1],rows[0],rows[2]];
+  return `<div class="phead"><div class="kick">Hall of fame</div><h1>Leaderboard</h1><p>Ranked by approved achievement points.</p></div>
+  <div class="card pad" style="margin-bottom:16px"><div class="podium">
+    ${podium.map((r,i)=>{if(!r)return'';const place=i===1?1:i===0?2:3;const cls=i===1?'p1':i===0?'p2':'p3';
+      return `<div class="pod ${cls}">${place===1?`<span class="crown">${icon('crown',26)}</span>`:''}
+      ${avHtml(r.u,place===1?62:48,isOnline(r.u))}
+      <b style="display:block;font-size:13px;margin-top:6px">${esc(displayName(r.u))}</b>
+      <span class="small muted">#${esc(r.u.username)}</span>
+      <div class="bar"><span>${r.pts}</span></div>
+      <span class="small" style="font-weight:800;margin-top:-22px;display:block;color:var(--muted)">#${place}</span></div>`}).join('')}
+  </div></div>
+  <div class="card pad">
+    ${rows.map((r,i)=>`<div class="lbrow ${r.u.id===m.id?'me':''}" style="cursor:pointer" data-act="open-profile" data-user="${esc(r.u.username)}">
+      <span class="rank">${i+1}</span>${avHtml(r.u,40,isOnline(r.u))}
+      <span style="flex:1;min-width:0"><span class="n" style="font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">${esc(displayName(r.u))}
+        ${r.u.role==='admin'?'<span class="badge b-admin">Admin</span>':r.u.role==='vip'?'<span class="badge b-vip">VIP</span>':''}</span>
+        <span class="s" style="display:block;font-size:12px;color:var(--muted)">#${esc(r.u.username)}</span></span>
+      <b class="mono">${r.pts} pts</b></div>`).join('')}
+  </div>`;
+}
+
+/* ─────────── notices / announcements ─────────── */
+function renderNotices(){
+  const m=me(),list=[...DB.announcements].sort((a,b)=>b.at.localeCompare(a.at));
+  return `<div class="phead"><div class="row"><div><div class="kick">Announcements</div><h1>Notice Board</h1><p>Official updates from the college.</p></div>
+    ${canMod(m)?`<button class="btn btn-primary" data-act="add-notice">${icon('plus',16)} New Notice</button>`:''}</div></div>
+  <div style="display:flex;flex-direction:column;gap:13px">
+    ${list.length?list.map(n=>{const a=userById(n.author);return `<div class="card pad notice ${n.important?'imp':''}">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div><b style="font-size:16px">${esc(n.title)}</b>${n.important?`<span class="badge b-pending" style="margin-left:8px">Important</span>`:''}</div>
+        ${canMod(m)?`<button class="btn-ghost btn-icon" data-act="del-notice" data-id="${n.id}">${icon('trash',16)}</button>`:''}</div>
+      <p style="margin-top:8px;font-size:14px;white-space:pre-wrap">${esc(n.content)}</p>
+      <p class="small muted" style="margin-top:10px">— ${esc(a?displayName(a):'Office')} · ${fmtDate(n.at)}</p></div>`}).join('')
+    :`<div class="card empty">${icon('bell',26)}<b>No notices yet</b><p>Official announcements will appear here.</p></div>`}
+  </div>`;
+}
+function openNoticeModal(){
+  openModal(`<div class="sh"><h3>New Notice</h3><button class="btn-ghost btn-icon" data-act="close-modal">${icon('x')}</button></div>
+    <label class="lbl">Title</label><input class="input" id="nt-title" placeholder="e.g. Exam timetable published">
+    <label class="lbl" style="margin-top:13px">Content</label><textarea class="input" id="nt-body" style="min-height:120px" placeholder="Write the notice…"></textarea>
+    <label style="display:flex;gap:9px;align-items:center;margin-top:13px;font-weight:700;font-size:13.5px">
+      <input type="checkbox" id="nt-imp" style="width:17px;height:17px;accent-color:var(--primary)"> Mark as important</label>
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px">
+      <button class="btn btn-primary" data-act="submit-notice">Publish notice</button></div>`);
+}
+function submitNotice(){
+  const m=me(),t=$('#nt-title').value.trim(),b=$('#nt-body').value.trim();
+  if(!t||!b)return toast('Title and content are required','warning');
+  DB.announcements.unshift({id:uid(),title:t,content:b,important:$('#nt-imp').checked,author:m.id,at:nowISO()});
+  if($('#nt-imp').checked)for(const u of DB.users)if(u.id!==m.id)notify(u.id,'New important notice: '+t,'info');
+  saveDB();closeModal();renderApp();toast('Notice published','success');
+}
+</script>

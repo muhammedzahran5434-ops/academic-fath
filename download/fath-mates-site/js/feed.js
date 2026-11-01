@@ -1,0 +1,136 @@
+/* ─────────── dashboard ─────────── */
+function greet(){const h=new Date().getHours();return h<12?'GOOD MORNING':h<17?'GOOD AFTERNOON':'GOOD EVENING'}
+function renderDashboard(){
+  const m=me();
+  const approved=DB.achievements.filter(a=>a.status==='approved');
+  const online=DB.users.filter(u=>isOnline(u)&&u.id!==m.id);
+  const notices=DB.announcements.slice(0,2);
+  const top=[...DB.users].sort((a,b)=>pointsOf(b)-pointsOf(a)).slice(0,5);
+  const tiles=[
+    ['users','Members',DB.users.length,DB.users.filter(u=>isOnline(u)).length+' online now','var(--primary)'],
+    ['news','Posts',DB.posts.length,'shared by mates','var(--sky)'],
+    ['trophy','Approved Awards',approved.length,'campus wins','var(--amber)'],
+    ['chart','My Rank','#'+rankOf(m.id),pointsOf(m.id)+' points','var(--pink,#db2777)']];
+  const quicks=[['feed','Share Post','news','Text, photo, video','var(--grad2)'],['status','Add Status','camera','24h story','linear-gradient(135deg,#0d9488,#059669)'],
+    ['awards','New Award','trophy','Earn points','linear-gradient(135deg,#f59e0b,#ef4444)'],['chat','Open Chats','chat','Message mates','linear-gradient(135deg,#0891b2,#7c3aed)'],
+    ['profile','My Skills','target','Show talents','linear-gradient(135deg,#ec4899,#f97316)'],['notices','Notice Board','bell','Announcements','linear-gradient(135deg,#1e1b3a,#4f46e5)']];
+  if(canMod(m))quicks.push(['members','Members','shield','Control panel','linear-gradient(135deg,#334155,#0f172a)'],['media','Media Vault','film','All photos & videos','linear-gradient(135deg,#7c3aed,#db2777)'],['academic','CCE Marks','book','Manage marks','linear-gradient(135deg,#059669,#0d9488)']);
+  return `<div class="phead"><div class="row"><div>
+      <div class="kick">${greet()}, ${esc(m.username)}</div><h1>Dashboard</h1>
+      <p>Your campus at a glance.</p></div></div></div>
+  <div class="tiles">${tiles.map(([ic,t,n,s,c],i)=>`<div class="tile a-pop" style="animation-delay:${.05*i}s">
+      <span class="tv">${t}</span><div class="tn mono">${n}</div><div class="ts">${s}</div>
+      <span class="ic-bg" style="color:${c}">${icon(ic,64)}</span></div>`).join('')}</div>
+  <div style="margin-top:26px" class="sect-h"><h3>Quick actions</h3></div>
+  <div class="qgrid">${quicks.map(([v,t,ic,d,bg],i)=>`<button class="qa a-pop" style="animation-delay:${.04*i}s" data-act="nav" data-view="${v}">
+      <span class="qi" style="background:${bg}">${icon(ic,21)}</span><b>${t}</b><span>${d}</span></button>`).join('')}</div>
+  <div class="grid2" style="margin-top:26px">
+    <div>
+      <div class="sect-h"><h3>Notice board</h3>${DB.announcements.length?`<button class="link-btn" data-act="nav" data-view="notices">View all ${icon('right',13)}</button>`:''}</div>
+      <div class="card">${notices.length?notices.map(n=>{const a=userById(n.author);return `<div class="pad notice ${n.important?'imp':''}" style="cursor:pointer" data-act="nav" data-view="notices">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b style="font-size:14.5px">${esc(n.title)}</b>${n.important?`<span class="badge b-pending">Important</span>`:''}</div>
+        <p class="small muted" style="margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(n.content)}</p>
+        <p class="small muted" style="margin-top:7px;font-size:11.5px">${esc(a?displayName(a):'Office')} · ${fmtAgo(n.at)}</p></div>`}).join('')
+      :`<div class="empty">${icon('bell',26)}<b>No notices</b><p>Announcements will appear here.</p></div>`}</div>
+      <div class="sect-h" style="margin-top:24px"><h3>Leaderboard — top 5</h3><button class="link-btn" data-act="nav" data-view="board">Full board ${icon('right',13)}</button></div>
+      <div class="card pad">${top.map((u,i)=>`<div class="rowline" style="cursor:pointer" data-act="open-profile" data-user="${esc(u.username)}">
+        <span class="rank" style="width:26px;height:26px;border-radius:8px;background:${i===0?'linear-gradient(135deg,#f59e0b,#ef4444);color:#fff':'var(--card2)'};border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11.5px">${i+1}</span>
+        ${avHtml(u,34,isOnline(u))}<span style="flex:1;min-width:0"><span class="n">${esc(displayName(u))}</span>
+        <span class="s" style="display:block">#${esc(u.username)}${u.role==='vip'?' · VIP':''}</span></span>
+        <b class="mono">${pointsOf(u.id)} pts</b></div>`).join('')}</div>
+    </div>
+    <div>
+      <div class="sect-h"><h3>Online now</h3><span class="card-tag">${online.length+1} active</span></div>
+      <div class="card pad">
+        <div class="rowline">${avHtml(m,36,true)}<span style="flex:1"><span class="n">${esc(displayName(m))} (you)</span><span class="s" style="display:block">#${esc(m.username)}</span></span></div>
+        ${online.map(u=>`<div class="rowline" style="cursor:pointer" data-act="open-profile" data-user="${esc(u.username)}">${avHtml(u,36,true)}
+          <span style="flex:1;min-width:0"><span class="n">${esc(displayName(u))}</span><span class="s" style="display:block">#${esc(u.username)}</span></span>
+          <button class="btn" data-act="chat-with" data-id="${u.id}" style="padding:7px 11px;font-size:12px">${icon('chat',13)} Chat</button></div>`).join('')}
+        ${online.length===0?'<p class="small muted" style="padding:8px 4px">None of your mates are online right now.</p>':''}
+      </div>
+      <div class="sect-h" style="margin-top:24px"><h3>Latest awards</h3></div>
+      <div class="card pad">
+        ${approved.slice(-4).reverse().map(a=>{const u=userById(a.userId);return `<div class="rowline">
+          <span class="av" style="width:32px;height:32px;background:var(--primary-soft);color:var(--primary)">${icon('trophy',15)}</span>
+          <span style="flex:1;min-width:0"><span class="n">${esc(a.title)}</span><span class="s" style="display:block">${esc(u?displayName(u):'—')} · +${a.points} pts</span></span></div>`}).join('')
+        ||'<p class="small muted" style="padding:6px 4px">No approved awards yet — be the first!</p>'}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ─────────── feed ─────────── */
+let feedDraft={media:null};
+function renderFeed(){
+  const m=me();
+  const posts=[...DB.posts].sort((a,b)=>b.at.localeCompare(a.at));
+  return `<div class="phead"><div class="kick">Campus feed</div><h1>Feed</h1><p>What's happening around campus.</p></div>
+  <div class="card pad composer" style="margin-bottom:16px">
+    <div class="top-row">${avHtml(m,40,isOnline(m))}
+      <textarea id="post-text" placeholder="Share something with your mates…"></textarea></div>
+    <div id="post-media-preview">${feedDraft.media?renderMediaPreview(feedDraft.media):''}</div>
+    <div class="foot">
+      <button class="pact" data-act="attach-post">${icon('clip',16)} Photo / Video</button>
+      <span style="flex:1"></span>
+      <button class="btn btn-primary" data-act="submit-post">${icon('send',15)} Post</button>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    ${posts.length?posts.map(p=>renderPost(p)).join('')
+    :`<div class="card empty">${icon('news',26)}<b>No posts yet</b><p>Be the first to share something!</p></div>`}
+  </div>`;
+}
+function renderMediaPreview(md){
+  if(!md)return'';
+  if(md.kind==='image')return `<img data-media="${md.id}" style="border-radius:13px;margin-top:10px;max-height:340px;object-fit:cover;width:100%">`;
+  if(md.kind==='video')return `<video data-media="${md.id}" controls style="border-radius:13px;margin-top:10px;max-height:340px;width:100%"></video>`;
+  return `<span class="chip" style="margin-top:10px">${icon('file',14)} ${esc(md.name)}</span>`;
+}
+function renderPost(p){
+  const m=me(),u=userById(p.userId);if(!u)return'';
+  const liked=p.likes.includes(m.id);
+  const open=state['copen_'+p.id];
+  return `<div class="card pad post" data-post="${p.id}">
+    <div class="head">
+      <span style="cursor:pointer" data-act="open-profile-id" data-id="${u.id}">${avHtml(u,42,isOnline(u))}</span>
+      <div style="flex:1;min-width:0;cursor:pointer" data-act="open-profile-id" data-id="${u.id}">
+        <b style="font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${esc(displayName(u))}
+          ${u.role==='admin'?'<span class="badge b-admin">Admin</span>':u.role==='vip'?'<span class="badge b-vip">VIP</span>':''}</b>
+        <span class="small muted">#${esc(u.username)} · ${fmtAgo(p.at)}</span></div>
+      ${canMod(m)||u.id===m.id?`<button class="btn-ghost btn-icon" data-act="del-post" data-id="${p.id}" title="Delete">${icon('trash',16)}</button>`:''}
+    </div>
+    ${p.content?`<div class="body" style="margin-top:10px">${esc(p.content)}</div>`:''}
+    ${p.media&&p.media.length?`<div class="media">${renderMediaPreview(p.media[0])}</div>`:''}
+    <div class="acts">
+      <button class="pact ${liked?'on':''}" data-act="like" data-id="${p.id}">${icon('heart',16)} <span class="mono">${p.likes.length||''}</span> Like</button>
+      <button class="pact ${open?'onl':''}" data-act="comments" data-id="${p.id}">${icon('chat',16)} <span class="mono">${p.comments.length||''}</span> Comments</button>
+      ${p.media&&p.media[0]&&p.media[0].kind!=='file'?`<a class="pact" data-act="noop" href="#" onclick="return false" data-dl="${p.media[0].id}">${icon('down',16)} Save</a>`:''}
+    </div>
+    ${open?`<div class="comments">
+      ${p.comments.map(c=>{const cu=userById(c.userId);return `<div class="crow">${avHtml(cu||{username:'?',fullName:'?',avatarColor:'#888'},30)}
+        <div class="bub"><b>${esc(cu?displayName(cu):'Unknown')}</b> <span class="muted small">· ${fmtAgo(c.at)}</span>
+        <div>${esc(c.text)}</div></div>
+        ${cu&&(cu.id===m.id||canMod(m))?`<button class="btn-ghost btn-icon" data-act="del-comment" data-id="${p.id}" data-cid="${c.id}">${icon('trash',13)}</button>`:''}</div>`}).join('')
+      ||'<p class="small muted">No comments yet.</p>'}
+      <form class="cform" data-form="comment" data-id="${p.id}"><input class="input" placeholder="Write a comment…" data-role="c-input"><button class="btn btn-primary btn-icon">${icon('send',15)}</button></form>
+    </div>`:''}
+  </div>`;
+}
+async function submitPost(){
+  const m=me(),text=$('#post-text').value.trim();
+  if(!text&&!feedDraft.media)return toast('Write something or attach a photo first','warning');
+  const p={id:uid(),userId:m.id,content:text,media:feedDraft.media?[feedDraft.media]:[],likes:[],comments:[],at:nowISO()};
+  DB.posts.unshift(p);saveDB();
+  feedDraft.media=null;state.view='feed';renderApp();
+  toast('Posted to the feed','success');
+}
+async function attachMedia(which){
+  const inp=document.createElement('input');inp.type='file';
+  inp.accept=which==='video'?'video/*':'image/*,video/*';
+  inp.onchange=async()=>{
+    const f=inp.files[0];if(!f)return;
+    try{toast('Processing media…','info');feedDraft.media=await storeMedia(f);renderApp()}
+    catch(e){toast(e.message,'error')}
+  };
+  inp.click();
+}
